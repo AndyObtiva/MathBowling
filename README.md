@@ -1,6 +1,6 @@
 # MathBowl
 
-Bowling game that tests math skills. Built with Glimmer.
+Bowling game that tests math skills. Built with Glimmer and Ruby (JRuby).
 
 This will be a single player game. In the future, it can become a multiplayer game.
 
