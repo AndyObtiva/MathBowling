@@ -39,3 +39,7 @@ V0.3 Alpha 3 Release:
 1. Display static image when bowling
 1. Display static image when answering math question
 1. Display static images for getting strike, spare, or a number of pins knocked off
+
+# License
+
+Copyright (c) 2019 Annas "Andy" Al Maleh. See LICENSE.txt for further details.
