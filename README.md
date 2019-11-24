@@ -19,6 +19,11 @@ UC2: Bowl
 1. System scores frame based on user response to question
 1. System determines whether user can bowl again or game is over, displaying status accordingly (win or lose)
 
+UC3: Exit Game
+
+1. User chooses to exit game
+2. System exits
+
 # Stories
 
 V0.1 Alpha 1 Release:
