@@ -1,4 +1,4 @@
-# MathBowl
+# Math Bowling
 
 Bowling game that tests math skills. Built with Glimmer and Ruby (JRuby).
 
@@ -47,4 +47,4 @@ V0.3 Alpha 3 Release:
 
 # License
 
-Copyright (c) 2019 Annas "Andy" Al Maleh. See LICENSE.txt for further details.
+Copyright (c) 2019-2020 Andy Maleh. See LICENSE.txt for further details.
