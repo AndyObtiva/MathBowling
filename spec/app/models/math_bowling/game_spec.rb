@@ -1,6 +1,6 @@
-require_relative '../../../../app/models/math_bowl/game'
+require_relative '../../../../app/models/math_bowling/game'
 
-describe MathBowl::Game do
+describe MathBowling::Game do
   describe 'score_sheet' do
     it "returns nil if no game is started" do
       expect(subject.score_sheet).to be_nil
