@@ -2,6 +2,7 @@ require_relative '../math_bowl'
 
 class MathBowl::Frame
   def roles
+    # TODO if 10th give 3 roles
     [nil, nil]
   end
 
