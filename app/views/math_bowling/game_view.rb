@@ -21,31 +21,50 @@ module MathBowling
           composite {
             layout GridLayout.new(1, false)
             composite {
-              # bind_collection(@game, "score_sheet.frames") do |frame, index|
-              #   composite {
-              #     label {
-              #       text (frame.roles&.first).to_s
-              #     }
-              #     label {
-              #       text (frame.roles&.last).to_s
-              #     }
-              #     label {
-              #       text (frame.score).to_s
-              #     }
-              #   }
-              # end
+              layout FillLayout.new(SWT::HORIZONTAL)
+              @game.score_sheet.frames.each_with_index.map do |frame, index|
+                composite {
+                  layout FillLayout.new(SWT::HORIZONTAL)
+                  label {
+                    text (frame.roles&.first).to_s
+                  }
+                  label {
+                    text (frame.roles&.last).to_s
+                  }
+                  label {
+                    text (frame.score).to_s
+                  }
+                }
+              end
             }
-            button {
-              text "Start Game"
-              enabled bind(@game, :game_not_started, computed_by: [:score_sheet])
-              on_widget_selected {
-                @game.start
+            composite {
+              layout FillLayout.new(SWT::HORIZONTAL)
+              button {
+                text "Start Game"
+                enabled bind(@game, :game_not_started, computed_by: [:game_started])
+                on_widget_selected {
+                  @game.start
+                }
               }
-            }
-            button {
-              text "Quit"
-              on_widget_selected {
-                exit(true)
+              button {
+                text "Restart Game"
+                enabled bind(@game, :game_started)
+                on_widget_selected {
+                  @game.restart
+                }
+              }
+              button {
+                text "Quit"
+                enabled bind(@game, :game_started)
+                on_widget_selected {
+                  @game.quit
+                }
+              }
+              button {
+                text "Exit"
+                on_widget_selected {
+                  exit(true)
+                }
               }
             }
           }

@@ -3,19 +3,27 @@ require_relative 'score_sheet'
 module MathBowling
   class Game
     attr_accessor :score_sheet
+    attr_accessor :game_started
 
-    def start
+    def initialize
+      self.game_started = false
       self.score_sheet = MathBowling::ScoreSheet.new
     end
 
-    # TODO implement restart
+    def start
+      self.game_started = true
+    end
+
+    def restart
+      self.score_sheet = MathBowling::ScoreSheet.new
+    end
 
     def quit
-      self.score_sheet = nil
+      initialize
     end
 
     def game_not_started
-      !score_sheet
+      !game_started
     end
 
     # TODO TDD
