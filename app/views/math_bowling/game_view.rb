@@ -22,17 +22,26 @@ module MathBowling
             layout GridLayout.new(1, false)
             composite {
               layout FillLayout.new(SWT::HORIZONTAL)
-              @game.score_sheet.frames.each_with_index.map do |frame, index|
+              10.times.map do |index|
                 composite {
-                  layout FillLayout.new(SWT::HORIZONTAL)
-                  label {
-                    text (frame.roles&.first).to_s
+                  layout FillLayout.new(SWT::VERTICAL)
+                  composite {
+                    layout RowLayout.new
+                    label {
+                      text bind(@game, "score_sheet.frames[#{index}].roles.first")
+                      layout_data RowData.new(10, 20)
+                    }
+                    label {
+                      text bind(@game, "score_sheet.frames[#{index}].roles.last")
+                      layout_data RowData.new(10, 20)
+                    }
                   }
-                  label {
-                    text (frame.roles&.last).to_s
-                  }
-                  label {
-                    text (frame.score).to_s
+                  composite {
+                    layout RowLayout.new
+                    label {
+                      text bind(@game, "score_sheet.frames[#{index}].score")
+                      layout_data RowData.new(20, 20)
+                    }
                   }
                 }
               end
@@ -41,21 +50,21 @@ module MathBowling
               layout FillLayout.new(SWT::HORIZONTAL)
               button {
                 text "Start Game"
-                enabled bind(@game, :game_not_started, computed_by: [:game_started])
+                enabled bind(@game, :game_not_started, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.start
                 }
               }
               button {
                 text "Restart Game"
-                enabled bind(@game, :game_started)
+                enabled bind(@game, :game_started, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.restart
                 }
               }
               button {
                 text "Quit"
-                enabled bind(@game, :game_started)
+                enabled bind(@game, :game_started, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.quit
                 }
