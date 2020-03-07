@@ -13,10 +13,8 @@ module MathBowling
     end
 
     def play
-      self.score_sheet.frames.each do |frame|
-        frame.rolls[0] = (rand*11).to_i
-        frame.rolls[1] = (rand*(11 - frame.rolls[0])).to_i
-      end
+      restart
+      self.score_sheet.frames.each {|frame| 2.times {frame.roll}}
     end
 
     def restart
