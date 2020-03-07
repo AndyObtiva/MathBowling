@@ -56,6 +56,13 @@ module MathBowling
                 }
               }
               button {
+                text "Roll"
+                enabled bind(@game, :game_started, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].roles"})
+                on_widget_selected {
+                  @game.roll
+                }
+              }
+              button {
                 text "Play Game"
                 enabled bind(@game, :game_started, computed_by: [:score_sheet])
                 on_widget_selected {

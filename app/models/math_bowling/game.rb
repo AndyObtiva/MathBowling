@@ -8,6 +8,10 @@ module MathBowling
       self.score_sheet = MathBowling::ScoreSheet.new
     end
 
+    def roll
+      self.score_sheet.current_frame.roll
+    end
+
     def play
       self.score_sheet.frames.each do |frame|
         frame.roles[0] = (rand*11).to_i
@@ -24,12 +28,12 @@ module MathBowling
     end
 
     def game_not_started
-      !score_sheet
+      !game_started
     end
 
     # TODO TDD
     def game_started
-      !!score_sheet
+      !!(score_sheet && !score_sheet.game_over?)
     end
     #
     # def game_over?
