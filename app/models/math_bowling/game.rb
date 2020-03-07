@@ -14,8 +14,8 @@ module MathBowling
 
     def play
       self.score_sheet.frames.each do |frame|
-        frame.roles[0] = (rand*11).to_i
-        frame.roles[1] = (rand*(11 - frame.roles[0])).to_i
+        frame.rolls[0] = (rand*11).to_i
+        frame.rolls[1] = (rand*(11 - frame.rolls[0])).to_i
       end
     end
 

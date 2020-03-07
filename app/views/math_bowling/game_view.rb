@@ -28,18 +28,18 @@ module MathBowling
                   composite {
                     layout RowLayout.new
                     label {
-                      text bind(@game, "score_sheet.frames[#{index}].roles[0]")
+                      text bind(@game, "score_sheet.frames[#{index}].rolls[0]")
                       layout_data RowData.new(10, 20)
                     }
                     label {
-                      text bind(@game, "score_sheet.frames[#{index}].roles[1]")
+                      text bind(@game, "score_sheet.frames[#{index}].rolls[1]")
                       layout_data RowData.new(10, 20)
                     }
                   }
                   composite {
                     layout RowLayout.new
                     label {
-                      text bind(@game, "score_sheet.frames[#{index}].score", computed_by: ["score_sheet.frames[#{index}].roles"])
+                      text bind(@game, "score_sheet.frames[#{index}].score", computed_by: ["score_sheet.frames[#{index}].rolls"])
                       layout_data RowData.new(20, 20)
                     }
                   }
@@ -57,7 +57,7 @@ module MathBowling
               }
               button {
                 text "Roll"
-                enabled bind(@game, :in_progress?, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].roles"})
+                enabled bind(@game, :in_progress?, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
                 on_widget_selected {
                   @game.roll
                 }
