@@ -50,35 +50,35 @@ module MathBowling
               layout FillLayout.new(SWT::HORIZONTAL)
               button {
                 text "Start Game"
-                enabled bind(@game, :game_not_started, computed_by: [:score_sheet])
+                enabled bind(@game, :not_in_progress?, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.start
                 }
               }
               button {
                 text "Roll"
-                enabled bind(@game, :game_started, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].roles"})
+                enabled bind(@game, :in_progress?, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].roles"})
                 on_widget_selected {
                   @game.roll
                 }
               }
               button {
                 text "Play Game"
-                enabled bind(@game, :game_started, computed_by: [:score_sheet])
+                enabled bind(@game, :in_progress?, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.play
                 }
               }
               button {
                 text "Restart Game"
-                enabled bind(@game, :game_started, computed_by: [:score_sheet])
+                enabled bind(@game, :in_progress?, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.restart
                 }
               }
               button {
                 text "Quit"
-                enabled bind(@game, :game_started, computed_by: [:score_sheet])
+                enabled bind(@game, :in_progress?, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.quit
                 }
