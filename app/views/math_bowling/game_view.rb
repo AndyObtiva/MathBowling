@@ -28,18 +28,18 @@ module MathBowling
                   composite {
                     layout RowLayout.new
                     label {
-                      text bind(@game, "score_sheet.frames[#{index}].roles.first")
+                      text bind(@game, "score_sheet.frames[#{index}].roles[0]")
                       layout_data RowData.new(10, 20)
                     }
                     label {
-                      text bind(@game, "score_sheet.frames[#{index}].roles.last")
+                      text bind(@game, "score_sheet.frames[#{index}].roles[1]")
                       layout_data RowData.new(10, 20)
                     }
                   }
                   composite {
                     layout RowLayout.new
                     label {
-                      text bind(@game, "score_sheet.frames[#{index}].score")
+                      text bind(@game, "score_sheet.frames[#{index}].score", computed_by: ["score_sheet.frames[#{index}].roles"])
                       layout_data RowData.new(20, 20)
                     }
                   }
@@ -53,6 +53,13 @@ module MathBowling
                 enabled bind(@game, :game_not_started, computed_by: [:score_sheet])
                 on_widget_selected {
                   @game.start
+                }
+              }
+              button {
+                text "Play Game"
+                enabled bind(@game, :game_started, computed_by: [:score_sheet])
+                on_widget_selected {
+                  @game.play
                 }
               }
               button {

@@ -1,12 +1,13 @@
 module MathBowling
   class Frame
-    def roles
-      # TODO if 10th give 3 roles
-      [nil, nil]
+    attr_accessor :roles
+
+    def initialize
+      @roles = [nil, nil]
     end
 
     def score
-      nil
+      @roles.count(nil) == 2 ? nil : @roles.map(&:to_i).sum
     end
 
     def done?
