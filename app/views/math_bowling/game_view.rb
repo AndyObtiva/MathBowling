@@ -51,13 +51,19 @@ module MathBowling
               end
             }
             composite {
-              layout FillLayout.new(SWT::HORIZONTAL)
-              button {
-                text "Start Game"
-                enabled bind(@game, :not_in_progress?, computed_by: [:score_sheet])
-                on_widget_selected {
-                  @game.start
-                }
+              layout FillLayout.new(SWT::VERTICAL)
+              label {
+                text "Pins Remaining:"
+              }
+              label {
+                text bind(@game, "score_sheet.current_frame.pins_remaining", computed_by: 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
+              }
+              label {
+                text bind(@game, "question")
+              }
+              text {
+                text bind(@game, "answer")
+                enabled bind(@game, :in_progress?, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
               }
               button {
                 text "Roll"
@@ -65,12 +71,15 @@ module MathBowling
                 on_widget_selected {
                   @game.roll
                 }
-              }
+              }              
+            }
+            composite {
+              layout FillLayout.new(SWT::HORIZONTAL)
               button {
-                text "Play Game"
-                enabled bind(@game, :in_progress?, computed_by: [:score_sheet])
+                text "Start Game"
+                enabled bind(@game, :not_in_progress?, computed_by: [:score_sheet])
                 on_widget_selected {
-                  @game.play
+                  @game.start
                 }
               }
               button {

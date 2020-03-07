@@ -108,19 +108,20 @@ module MathBowling
       @number == 10
     end
 
-    def roll
+    def roll(fallen_pins=nil)
+      fallen_pins ||= random_roll_fallen_pins
       return if done?
       if rolls[0].nil?
-        self.rolls[0] = random_roll_fallen_pins
+        self.rolls[0] = fallen_pins
         self.rolls[0] = 'X' if rolls[0] == 10
       elsif rolls[1].nil? && !strike?
-        self.rolls[1] = random_roll_fallen_pins
+        self.rolls[1] = fallen_pins
         self.rolls[1] = '/' if score == 10
       elsif rolls[1].nil? && strike? && last?
-        self.rolls[1] = random_roll_fallen_pins
+        self.rolls[1] = fallen_pins
         self.rolls[1] = 'X' if rolls[1] == 10
       elsif rolls[2].nil? && last? && cleared?
-        self.rolls[2] = random_roll_fallen_pins
+        self.rolls[2] = fallen_pins
         self.rolls[2] = 'X' if rolls[2] == 10
         self.rolls[2] = '/' if !double_strike? && (indexed_roll_score(1) + indexed_roll_score(2)) == 10
       end

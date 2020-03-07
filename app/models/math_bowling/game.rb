@@ -2,14 +2,17 @@ require_relative 'score_sheet'
 
 module MathBowling
   class Game
-    attr_accessor :score_sheet
+    attr_accessor :score_sheet, :question, :answer
 
     def start
       self.score_sheet = MathBowling::ScoreSheet.new
+      self.question = "1 + 1 ="
     end
 
     def roll
-      self.score_sheet.current_frame.roll
+      return if self.score_sheet.current_frame.nil?
+      fallen_pins = self.answer == '2' ? self.score_sheet.current_frame.pins_remaining : self.score_sheet.current_frame.pins_remaining / 2
+      self.score_sheet.current_frame.roll(fallen_pins)
     end
 
     def play
@@ -18,7 +21,7 @@ module MathBowling
     end
 
     def restart
-      self.score_sheet = MathBowling::ScoreSheet.new
+      start
     end
 
     def quit
