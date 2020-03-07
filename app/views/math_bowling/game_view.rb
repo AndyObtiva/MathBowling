@@ -35,6 +35,10 @@ module MathBowling
                       text bind(@game, "score_sheet.frames[#{index}].rolls[1]")
                       layout_data RowData.new(10, 20)
                     }
+                    label {
+                      text bind(@game, "score_sheet.frames[#{index}].rolls[2]")
+                      layout_data RowData.new(10, 20)
+                    }
                   }
                   composite {
                     layout RowLayout.new

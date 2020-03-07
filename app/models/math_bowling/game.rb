@@ -14,7 +14,7 @@ module MathBowling
 
     def play
       restart
-      self.score_sheet.frames.each {|frame| 2.times {frame.roll}}
+      self.score_sheet.frames.each {|frame| 3.times {frame.roll}}
     end
 
     def restart
