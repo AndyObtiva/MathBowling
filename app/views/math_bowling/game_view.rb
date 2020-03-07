@@ -39,7 +39,7 @@ module MathBowling
                   composite {
                     layout RowLayout.new
                     label {
-                      text bind(@game, "score_sheet.frames[#{index}].score", computed_by: ["score_sheet.frames[#{index}].rolls"])
+                      text bind(@game, "score_sheet.frames[#{index}].running_score", computed_by: 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
                       layout_data RowData.new(20, 20)
                     }
                   }
