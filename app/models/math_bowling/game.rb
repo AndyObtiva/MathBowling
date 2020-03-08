@@ -3,15 +3,20 @@ require_relative 'player'
 module MathBowling
   class Game
     QUESTION_OPERATIONS = %w[+ - * /]
-    attr_accessor :player, :question, :answer
+    attr_accessor :player_count, :players, :current_player, :question, :answer, :is_one_player, :is_two_players #consider currying/higher-order functions for is_*
+
+    def initialize
+      self.is_one_player = true
+    end
 
     def start
-      self.player = MathBowling::Player.new
+      self.players = player_count.times.map { MathBowling::Player.new }
+      self.current_player = players.first
       self.generate_question
     end
 
     def generate_question
-      if self.player.score_sheet.current_frame.nil?
+      if current_player.score_sheet.current_frame.nil?
         teh_question = ''
       else
         begin
@@ -27,16 +32,23 @@ module MathBowling
     end
 
     def roll
-      return if self.player.score_sheet.current_frame.nil?
-      fallen_pins = self.player.score_sheet.current_frame.pins_remaining - (self.answer.to_i - eval(self.question)).abs
+      return if self.current_player.score_sheet.current_frame.nil?
+      fallen_pins = self.current_player.score_sheet.current_frame.pins_remaining - (self.answer.to_i - eval(self.question)).abs
       fallen_pins = [fallen_pins, 0].max
-      self.player.score_sheet.current_frame.roll(fallen_pins)
+      self.current_player.score_sheet.current_frame.roll(fallen_pins)
       self.generate_question
+      if self.current_player.score_sheet.current_frame.done?
+        self.current_player.score_sheet.switch_to_next_frame
+        self.switch_player
+      end
+      if over?
+        self.question = ''
+      end
     end
 
     def play
       restart
-      self.player.score_sheet.frames.each {|frame| 3.times {frame.roll}}
+      self.current_player.score_sheet.frames.each {|frame| 3.times {frame.roll}}
     end
 
     def restart
@@ -44,12 +56,27 @@ module MathBowling
     end
 
     def quit
-      self.player = nil
+      self.players = nil
+      self.current_player = nil
+    end
+
+    def switch_player
+      self.current_player = players[(players.index(current_player) + 1) % players.count]
+    end
+
+    def is_one_player=(value)
+      @is_one_player = value
+      self.player_count = 1
+    end
+
+    def is_two_players=(value)
+      @is_two_players = value
+      self.player_count = 2
     end
 
     # TODO TDD
     def not_started?
-      !player
+      !current_player
     end
 
     # TODO TDD
@@ -59,7 +86,7 @@ module MathBowling
 
     # TODO TDD
     def in_progress?
-      started? && !player.score_sheet.game_over?
+      started? && !current_player.score_sheet.game_over?
     end
 
     # TODO TDD
@@ -69,7 +96,7 @@ module MathBowling
 
     # TODO TDD
     def over?
-      started? && player.score_sheet.game_over?
+      started? && players.map {|player| player.score_sheet.game_over?}.reduce(:&)
     end
   end
 end

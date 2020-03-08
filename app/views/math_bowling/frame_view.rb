@@ -8,8 +8,9 @@ module MathBowling
     include_package 'org.eclipse.swt.widgets'
     include_package 'org.eclipse.swt.layout'
 
-    def initialize(game, frame_index)
+    def initialize(game, player_index, frame_index)
       @game = game
+      @player_index = player_index
       @frame_index = frame_index
     end
 
@@ -19,22 +20,22 @@ module MathBowling
         composite {
           layout RowLayout.new
           label {
-            text bind(@game, "player.score_sheet.frames[#{@frame_index}].rolls[0]")
+            text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[0]")
             layout_data RowData.new(10, 20)
           }
           label {
-            text bind(@game, "player.score_sheet.frames[#{@frame_index}].rolls[1]")
+            text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[1]")
             layout_data RowData.new(10, 20)
           }
           label {
-            text bind(@game, "player.score_sheet.frames[#{@frame_index}].rolls[2]")
+            text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[2]")
             layout_data RowData.new(10, 20)
           }
         }
         composite {
           layout RowLayout.new
           label {
-            text bind(@game, "player.score_sheet.frames[#{@frame_index}].running_score", computed_by: 10.times.map {|index| "player.score_sheet.frames[#{@frame_index}].rolls"})
+            text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].running_score", computed_by: 10.times.map {|index| "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls"})
             layout_data RowData.new(20, 20)
           }
         }

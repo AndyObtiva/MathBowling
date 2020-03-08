@@ -2,7 +2,7 @@ require_relative 'frame'
 
 module MathBowling
   class ScoreSheet
-    attr_accessor :frames
+    attr_accessor :frames, :current_frame
     def initialize
       @frames = 10.times.map {|index| MathBowling::Frame.new(index + 1)}
       next_frames = @frames.rotate(1)
@@ -15,9 +15,10 @@ module MathBowling
       @frames.zip(previous_frames).each do |frame, previous_frame|
         frame.previous_frame = previous_frame
       end
+      self.current_frame = @frames.first
     end
-    def current_frame
-      @frames.detect {|frame| !frame.done?}
+    def switch_to_next_frame
+      self.current_frame = frames[(frames.index(current_frame) + 1)]
     end
     def total_score
       frames.map(&:score).map(&:to_i).sum
