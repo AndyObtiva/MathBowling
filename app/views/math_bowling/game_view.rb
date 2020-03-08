@@ -2,6 +2,8 @@ require 'glimmer'
 require 'puts_debuggerer'
 Glimmer.logger.level = Logger::DEBUG
 
+require_relative 'frame_view'
+
 module MathBowling
   class GameView
     include Glimmer
@@ -23,31 +25,7 @@ module MathBowling
             composite {
               layout FillLayout.new(SWT::HORIZONTAL)
               10.times.map do |index|
-                composite {
-                  layout FillLayout.new(SWT::VERTICAL)
-                  composite {
-                    layout RowLayout.new
-                    label {
-                      text bind(@game, "score_sheet.frames[#{index}].rolls[0]")
-                      layout_data RowData.new(10, 20)
-                    }
-                    label {
-                      text bind(@game, "score_sheet.frames[#{index}].rolls[1]")
-                      layout_data RowData.new(10, 20)
-                    }
-                    label {
-                      text bind(@game, "score_sheet.frames[#{index}].rolls[2]")
-                      layout_data RowData.new(10, 20)
-                    }
-                  }
-                  composite {
-                    layout RowLayout.new
-                    label {
-                      text bind(@game, "score_sheet.frames[#{index}].running_score", computed_by: 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
-                      layout_data RowData.new(20, 20)
-                    }
-                  }
-                }
+                MathBowling::FrameView.new(@game, index).render
               end
             }
             composite {
@@ -71,7 +49,7 @@ module MathBowling
                 on_widget_selected {
                   @game.roll
                 }
-              }              
+              }
             }
             composite {
               layout FillLayout.new(SWT::HORIZONTAL)
