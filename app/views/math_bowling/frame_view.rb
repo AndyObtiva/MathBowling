@@ -19,22 +19,22 @@ module MathBowling
         composite {
           layout RowLayout.new
           label {
-            text bind(@game, "score_sheet.frames[#{@frame_index}].rolls[0]")
+            text bind(@game, "player.score_sheet.frames[#{@frame_index}].rolls[0]")
             layout_data RowData.new(10, 20)
           }
           label {
-            text bind(@game, "score_sheet.frames[#{@frame_index}].rolls[1]")
+            text bind(@game, "player.score_sheet.frames[#{@frame_index}].rolls[1]")
             layout_data RowData.new(10, 20)
           }
           label {
-            text bind(@game, "score_sheet.frames[#{@frame_index}].rolls[2]")
+            text bind(@game, "player.score_sheet.frames[#{@frame_index}].rolls[2]")
             layout_data RowData.new(10, 20)
           }
         }
         composite {
           layout RowLayout.new
           label {
-            text bind(@game, "score_sheet.frames[#{@frame_index}].running_score", computed_by: 10.times.map {|index| "score_sheet.frames[#{@frame_index}].rolls"})
+            text bind(@game, "player.score_sheet.frames[#{@frame_index}].running_score", computed_by: 10.times.map {|index| "player.score_sheet.frames[#{@frame_index}].rolls"})
             layout_data RowData.new(20, 20)
           }
         }

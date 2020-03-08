@@ -34,18 +34,18 @@ module MathBowling
                 text "Pins Remaining:"
               }
               label {
-                text bind(@game, "score_sheet.current_frame.pins_remaining", computed_by: 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
+                text bind(@game, "player.score_sheet.current_frame.pins_remaining", computed_by: 10.times.map {|index| "player.score_sheet.frames[#{index}].rolls"})
               }
               label {
                 text bind(@game, "question")
               }
               text {
                 text bind(@game, "answer")
-                enabled bind(@game, :in_progress?, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
+                enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "player.score_sheet.frames[#{index}].rolls"})
               }
               button {
                 text "Roll"
-                enabled bind(@game, :in_progress?, computed_by: ['score_sheet'] + 10.times.map {|index| "score_sheet.frames[#{index}].rolls"})
+                enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "player.score_sheet.frames[#{index}].rolls"})
                 on_widget_selected {
                   @game.roll
                 }
@@ -55,21 +55,21 @@ module MathBowling
               layout FillLayout.new(SWT::HORIZONTAL)
               button {
                 text "Start Game"
-                enabled bind(@game, :not_in_progress?, computed_by: [:score_sheet])
+                enabled bind(@game, :not_in_progress?, computed_by: [:player])
                 on_widget_selected {
                   @game.start
                 }
               }
               button {
                 text "Restart Game"
-                enabled bind(@game, :in_progress?, computed_by: [:score_sheet])
+                enabled bind(@game, :in_progress?, computed_by: [:player])
                 on_widget_selected {
                   @game.restart
                 }
               }
               button {
                 text "Quit"
-                enabled bind(@game, :in_progress?, computed_by: [:score_sheet])
+                enabled bind(@game, :in_progress?, computed_by: [:player])
                 on_widget_selected {
                   @game.quit
                 }

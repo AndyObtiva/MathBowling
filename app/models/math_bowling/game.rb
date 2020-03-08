@@ -1,17 +1,17 @@
-require_relative 'score_sheet'
+require_relative 'player'
 
 module MathBowling
   class Game
     QUESTION_OPERATIONS = %w[+ - * /]
-    attr_accessor :score_sheet, :question, :answer
+    attr_accessor :player, :question, :answer
 
     def start
-      self.score_sheet = MathBowling::ScoreSheet.new
+      self.player = MathBowling::Player.new
       self.generate_question
     end
 
     def generate_question
-      if self.score_sheet.current_frame.nil?
+      if self.player.score_sheet.current_frame.nil?
         teh_question = ''
       else
         begin
@@ -27,16 +27,16 @@ module MathBowling
     end
 
     def roll
-      return if self.score_sheet.current_frame.nil?
-      fallen_pins = self.score_sheet.current_frame.pins_remaining - (self.answer.to_i - eval(self.question)).abs
+      return if self.player.score_sheet.current_frame.nil?
+      fallen_pins = self.player.score_sheet.current_frame.pins_remaining - (self.answer.to_i - eval(self.question)).abs
       fallen_pins = [fallen_pins, 0].max
-      self.score_sheet.current_frame.roll(fallen_pins)
+      self.player.score_sheet.current_frame.roll(fallen_pins)
       self.generate_question
     end
 
     def play
       restart
-      self.score_sheet.frames.each {|frame| 3.times {frame.roll}}
+      self.player.score_sheet.frames.each {|frame| 3.times {frame.roll}}
     end
 
     def restart
@@ -44,12 +44,12 @@ module MathBowling
     end
 
     def quit
-      self.score_sheet = nil
+      self.player = nil
     end
 
     # TODO TDD
     def not_started?
-      !score_sheet
+      !player
     end
 
     # TODO TDD
@@ -59,7 +59,7 @@ module MathBowling
 
     # TODO TDD
     def in_progress?
-      started? && !score_sheet.game_over?
+      started? && !player.score_sheet.game_over?
     end
 
     # TODO TDD
@@ -69,7 +69,7 @@ module MathBowling
 
     # TODO TDD
     def over?
-      started? && score_sheet.game_over?
+      started? && player.score_sheet.game_over?
     end
   end
 end
