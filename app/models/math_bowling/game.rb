@@ -3,7 +3,7 @@ require_relative 'player'
 module MathBowling
   class Game
     QUESTION_OPERATIONS = %w[+ - * /]
-    attr_accessor :player_count, :players, :current_player, :question, :answer, :is_one_player, :is_two_players #consider currying/higher-order functions for is_*
+    attr_accessor :player_count, :players, :current_player, :question, :answer, :is_one_player, :is_two_players
 
     def initialize
       self.is_one_player = true
