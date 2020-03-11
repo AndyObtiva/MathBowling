@@ -6,7 +6,6 @@ module MathBowling
     attr_accessor :player_count, :players, :current_player, :question, :answer, :is_one_player, :is_two_players
 
     def initialize
-      self.is_one_player = true
     end
 
     def start
@@ -65,6 +64,7 @@ module MathBowling
     end
 
     def is_one_player=(value)
+      quit
       pd value, caller: true
       @is_one_player = value
       @is_two_players = false
@@ -72,6 +72,7 @@ module MathBowling
     end
 
     def is_two_players=(value)
+      quit
       pd value, caller: true
       @is_two_players = value
       @is_one_player = false

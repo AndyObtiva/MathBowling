@@ -11,18 +11,54 @@ module MathBowling
     def initialize(game)
       @game = game
       @game_container = shell
-      @score_board_view = MathBowling::ScoreBoardView.new(@game_container, @game)
+      @display = @game_container.display
+      request_game_type
     end
 
-    def render
-      add_contents(@game_container) {
+    def request_game_type
+      add_contents(@game_type_container = shell(@display)) {
+        composite {
+          layout FillLayout.new(SWT::HORIZONTAL)
+          group {
+            layout RowLayout.new(SWT::HORIZONTAL)
+            composite {
+              label {
+                text "Game Type:"
+              }
+            }
+            composite {
+              button(:radio) {
+                text "1 Player"
+                selection bind(@game, :is_one_player)
+                on_widget_selected {
+                  @game_type_container.widget.dispose
+                  play_game
+                }
+              }
+            }
+            composite {
+              button(:radio) {
+                text "2 Players"
+                selection bind(@game, :is_two_players)
+                on_widget_selected {
+                  @game_type_container.widget.dispose
+                  play_game
+                }
+              }
+            }
+          }
+        }
+      }
+      @game_type_container.open
+    end
+
+    def play_game
+      add_contents(@game_container = shell(@display)) {
         text "Math Bowl"
         composite {
           composite {
             layout GridLayout.new(1, false)
-            @score_board_container = composite {
-              @score_board_view.render
-            }
+            MathBowling::ScoreBoardView.new(@game_container, @game).render
             composite {
               layout FillLayout.new(SWT::VERTICAL)
               label {
@@ -48,39 +84,6 @@ module MathBowling
             }
             composite {
               layout FillLayout.new(SWT::HORIZONTAL)
-              group {
-                layout RowLayout.new(SWT::HORIZONTAL)
-                label {
-                  text "Game Type:"
-                }
-                button(:radio) {
-                  text "1 Player"
-                  enabled bind(@game, :not_in_progress?, computed_by: [:current_player])
-                  selection bind(@game, :is_one_player)
-                  on_widget_selected {
-                    @score_board_view.content.widget.dispose
-                    add_contents(@score_board_container) {
-                      @score_board_view.render
-                    }
-                    @game_container.widget.pack
-                  }
-                }
-                button(:radio) {
-                  text "2 Players"
-                  enabled bind(@game, :not_in_progress?, computed_by: [:current_player])
-                  selection bind(@game, :is_two_players)
-                  on_widget_selected {
-                    @score_board_view.content.widget.dispose
-                    add_contents(@score_board_container) {
-                      @score_board_view.render
-                    }
-                    @game_container.widget.pack
-                  }
-                }
-              }
-            }
-            composite {
-              layout FillLayout.new(SWT::HORIZONTAL)
               button {
                 text "Start Game"
                 enabled bind(@game, :not_in_progress?, computed_by: [:current_player])
@@ -100,6 +103,13 @@ module MathBowling
                 enabled bind(@game, :in_progress?, computed_by: [:current_player])
                 on_widget_selected {
                   @game.quit
+                }
+              }
+              button {
+                text "Switch To #{(@game.player_count % 2) + 1}-Player Game"
+                on_widget_selected {
+                  @game_container.widget.dispose
+                  request_game_type
                 }
               }
               button {
