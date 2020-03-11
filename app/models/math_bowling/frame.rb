@@ -54,7 +54,7 @@ module MathBowling
       if roll == 'X'
         10
       elsif roll == '/'
-        10 - previous_roll
+        10 - previous_roll.to_i
       else
         roll.to_i
       end

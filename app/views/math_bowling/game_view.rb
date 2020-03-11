@@ -1,6 +1,6 @@
 require 'glimmer'
 require 'puts_debuggerer'
-Glimmer.logger.level = Logger::DEBUG
+# Glimmer.logger.level = Logger::DEBUG
 
 require_relative 'score_board_view'
 
@@ -8,22 +8,20 @@ module MathBowling
   class GameView
     include Glimmer
 
-    include_package 'org.eclipse.swt'
-    include_package 'org.eclipse.swt.widgets'
-    include_package 'org.eclipse.swt.layout'
-
     def initialize(game)
       @game = game
+      @game_container = shell
+      @display = @game_container.display
     end
 
     def render
-      @game_container = shell {
+      add_contents(@game_container) {
         text "Math Bowl"
         composite {
           composite {
             layout GridLayout.new(1, false)
             @score_board_container = composite {
-              @score_board_view = MathBowling::ScoreBoardView.new(@game).render
+              @score_board_view = MathBowling::ScoreBoardView.new(@game, @display).render
             }
             composite {
               layout FillLayout.new(SWT::VERTICAL)
@@ -60,11 +58,9 @@ module MathBowling
                   enabled bind(@game, :not_in_progress?, computed_by: [:current_player])
                   selection bind(@game, :is_one_player)
                   on_widget_selected {
-                    #TODO consider automatic relayout of "glimmer components" or as an option
-                    puts ">>1 Player"
                     @score_board_view.widget.dispose
                     add_contents(@score_board_container) {
-                      @score_board_view = MathBowling::ScoreBoardView.new(@game).render
+                      @score_board_view = MathBowling::ScoreBoardView.new(@game, @display).render
                     }
                     @game_container.widget.pack
                   }
@@ -74,10 +70,9 @@ module MathBowling
                   enabled bind(@game, :not_in_progress?, computed_by: [:current_player])
                   selection bind(@game, :is_two_players)
                   on_widget_selected {
-                    puts ">>2 Players"
                     @score_board_view.widget.dispose
                     add_contents(@score_board_container) {
-                      @score_board_view = MathBowling::ScoreBoardView.new(@game).render
+                      @score_board_view = MathBowling::ScoreBoardView.new(@game, @display).render
                     }
                     @game_container.widget.pack
                   }

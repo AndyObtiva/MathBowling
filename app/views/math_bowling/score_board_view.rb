@@ -6,12 +6,9 @@ module MathBowling
   class ScoreBoardView
     include Glimmer
 
-    include_package 'org.eclipse.swt'
-    include_package 'org.eclipse.swt.widgets'
-    include_package 'org.eclipse.swt.layout'
-
-    def initialize(game)
+    def initialize(game, display)
       @game = game
+      @display = display
     end
 
     def render
@@ -21,7 +18,7 @@ module MathBowling
           composite {
             layout FillLayout.new(SWT::HORIZONTAL)
             10.times.map do |frame_index|
-              MathBowling::FrameView.new(@game, player_index, frame_index).render
+              MathBowling::FrameView.new(@game, @display, player_index, frame_index).render
             end
           }
         end
