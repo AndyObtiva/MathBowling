@@ -1,5 +1,6 @@
 # TODO TDD
 module MathBowling
+  MAX_PIN_COUNT = 10
   # TODO handle case for last frame giving a 3rd roll when scoring a spare/strike
   class Frame
     attr_accessor :rolls
@@ -52,9 +53,9 @@ module MathBowling
 
     def roll_score(roll, previous_roll)
       if roll == 'X'
-        10
+        MAX_PIN_COUNT
       elsif roll == '/'
-        10 - previous_roll.to_i
+        MAX_PIN_COUNT - previous_roll.to_i
       else
         roll.to_i
       end
@@ -62,14 +63,14 @@ module MathBowling
 
     def partial_score
       if @rolls[0] == 'X'
-        10
+        MAX_PIN_COUNT
       else
         @rolls[0]
       end
     end
 
     def final_roll_score
-      @rolls[2] == 'X' ? 10 : @rolls[2]
+      @rolls[2] == 'X' ? MAX_PIN_COUNT : @rolls[2]
     end
 
     def running_score
@@ -105,7 +106,7 @@ module MathBowling
     end
 
     def last?
-      @number == 10
+      @number == MAX_PIN_COUNT
     end
 
     def roll(fallen_pins=nil)
@@ -113,17 +114,17 @@ module MathBowling
       return if done?
       if rolls[0].nil?
         self.rolls[0] = fallen_pins
-        self.rolls[0] = 'X' if rolls[0] == 10
+        self.rolls[0] = 'X' if rolls[0] == MAX_PIN_COUNT
       elsif rolls[1].nil? && !strike?
         self.rolls[1] = fallen_pins
-        self.rolls[1] = '/' if score == 10
+        self.rolls[1] = '/' if score == MAX_PIN_COUNT
       elsif rolls[1].nil? && strike? && last?
         self.rolls[1] = fallen_pins
-        self.rolls[1] = 'X' if rolls[1] == 10
+        self.rolls[1] = 'X' if rolls[1] == MAX_PIN_COUNT
       elsif rolls[2].nil? && last? && cleared?
         self.rolls[2] = fallen_pins
-        self.rolls[2] = 'X' if rolls[2] == 10
-        self.rolls[2] = '/' if !double_strike? && (indexed_roll_score(1) + indexed_roll_score(2)) == 10
+        self.rolls[2] = 'X' if rolls[2] == MAX_PIN_COUNT
+        self.rolls[2] = '/' if !double_strike? && (indexed_roll_score(1) + indexed_roll_score(2)) == MAX_PIN_COUNT
       end
     end
 
@@ -133,11 +134,11 @@ module MathBowling
 
     def pins_remaining
       if last? && (spare? || (strike? && rolls[1].nil?) || double_strike?)
-        10
+        MAX_PIN_COUNT
       elsif last? && strike? && !double_strike? && !rolls[1].nil?
-        10 - rolls[1]
+        MAX_PIN_COUNT - rolls[1]
       else
-        10 - local_score
+        MAX_PIN_COUNT - local_score
       end
     end
 

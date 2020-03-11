@@ -11,7 +11,7 @@ module MathBowling
     def initialize(game)
       @game = game
       @game_container = shell
-      @display = @game_container.display
+      @score_board_view = MathBowling::ScoreBoardView.new(@game_container, @game)
     end
 
     def render
@@ -21,7 +21,7 @@ module MathBowling
           composite {
             layout GridLayout.new(1, false)
             @score_board_container = composite {
-              @score_board_view = MathBowling::ScoreBoardView.new(@game, @display).render
+              @score_board_view.render
             }
             composite {
               layout FillLayout.new(SWT::VERTICAL)
@@ -58,9 +58,9 @@ module MathBowling
                   enabled bind(@game, :not_in_progress?, computed_by: [:current_player])
                   selection bind(@game, :is_one_player)
                   on_widget_selected {
-                    @score_board_view.widget.dispose
+                    @score_board_view.content.widget.dispose
                     add_contents(@score_board_container) {
-                      @score_board_view = MathBowling::ScoreBoardView.new(@game, @display).render
+                      @score_board_view.render
                     }
                     @game_container.widget.pack
                   }
@@ -70,9 +70,9 @@ module MathBowling
                   enabled bind(@game, :not_in_progress?, computed_by: [:current_player])
                   selection bind(@game, :is_two_players)
                   on_widget_selected {
-                    @score_board_view.widget.dispose
+                    @score_board_view.content.widget.dispose
                     add_contents(@score_board_container) {
-                      @score_board_view = MathBowling::ScoreBoardView.new(@game, @display).render
+                      @score_board_view.render
                     }
                     @game_container.widget.pack
                   }

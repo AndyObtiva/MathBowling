@@ -65,12 +65,16 @@ module MathBowling
     end
 
     def is_one_player=(value)
+      pd value, caller: true
       @is_one_player = value
+      @is_two_players = false
       self.player_count = 1
     end
 
     def is_two_players=(value)
+      pd value, caller: true
       @is_two_players = value
+      @is_one_player = false
       self.player_count = 2
     end
 
