@@ -13,10 +13,10 @@ module MathBowling
       @display = @game_container.display
       @player_index = player_index
       @frame_index = frame_index
-      @red = Color.new(@display, 138, 31, 41)
-      @blue = Color.new(@display, 31, 26, 150)
+      @red = rgb(138, 31, 41)
+      @blue = rgb(31, 26, 150)
       @background = player_index % 2 == 0 ? @red : @blue
-      @foreground = Color.new(@display, 255, 255, 255)
+      @foreground = rgb(255, 255, 255)
 
       fd = @game_container.widget.getFont.getFontData;
       fd[0].setHeight(36);

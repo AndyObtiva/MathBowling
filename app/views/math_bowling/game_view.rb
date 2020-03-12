@@ -92,14 +92,14 @@ module MathBowling
         @game_containers[game_index].widget.setVisible(true)
       else
         @game_containers[game_index] = shell(@display)
-        @background = Color.new(@display, 255, 255, 255)
-        @foreground = Color.new(@display, 0, 0, 0)
         fd = @game_containers[game_index].widget.getFont.getFontData;
         fd[0].setHeight(36);
         @font = Font.new(@display, fd[0]);
         fd[0].setHeight(30);
         @font_button = Font.new(@display, fd[0]);
         add_contents(@game_containers[game_index]) {
+          @background = :color_white
+          @foreground = :color_black
           text "Math Bowl"
           composite {
             MathBowling::ScoreBoardView.new(@game_containers[game_index], @games[game_index]).render
@@ -147,7 +147,6 @@ module MathBowling
               layout FillLayout.new(SWT::HORIZONTAL)
               button {
                 text "Restart Game"
-                enabled bind(@games[game_index], :in_progress?, computed_by: [:current_player])
                 on_widget_selected {
                   @games[game_index].restart
                 }
