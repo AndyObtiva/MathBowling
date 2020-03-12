@@ -11,7 +11,7 @@ module MathBowling
     end
 
     def start
-      self.players = player_count.times.map { MathBowling::Player.new }
+      self.players = player_count.times.map { |player_index| MathBowling::Player.new(player_index) }
       self.current_player = players.first
       self.generate_question
     end

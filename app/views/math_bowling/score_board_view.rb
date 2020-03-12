@@ -32,7 +32,7 @@ module MathBowling
             composite(:border) {
               layout RowLayout.new(SWT::HORIZONTAL)
               background @background
-              label {
+              label(:center) {
                 text bind(@game, "players[#{player_index}].score_sheet.total_score", computed_by: 10.times.map {|index| "players[#{player_index}].score_sheet.frames[#{index}].rolls"})
                 layout_data RowData.new(135, 95)
                 background @background
