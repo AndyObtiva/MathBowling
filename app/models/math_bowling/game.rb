@@ -3,9 +3,11 @@ require_relative 'player'
 module MathBowling
   class Game
     QUESTION_OPERATIONS = %w[+ - * /]
-    attr_accessor :player_count, :players, :current_player, :question, :answer, :is_one_player, :is_two_players
+    attr_reader :player_count
+    attr_accessor :players, :current_player, :question, :answer, :is_one_player, :is_two_players
 
-    def initialize
+    def initialize(player_count = 1)
+      self.player_count = player_count
     end
 
     def start
@@ -63,20 +65,9 @@ module MathBowling
       self.current_player = players[(players.index(current_player) + 1) % players.count]
     end
 
-    def is_one_player=(value)
+    def player_count=(value)
       quit
-      pd value, caller: true
-      @is_one_player = value
-      @is_two_players = false
-      self.player_count = 1
-    end
-
-    def is_two_players=(value)
-      quit
-      pd value, caller: true
-      @is_two_players = value
-      @is_one_player = false
-      self.player_count = 2
+      @player_count = value
     end
 
     # TODO TDD

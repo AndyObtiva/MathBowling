@@ -3,9 +3,7 @@ require_relative 'views/math_bowling/game_view'
 
 module MathBowling
   def self.launch
-    game = MathBowling::Game.new
-    game_view = MathBowling::GameView.new(game)
-    game_view.render
+    MathBowling::GameView.new.render
   end
 end
 
