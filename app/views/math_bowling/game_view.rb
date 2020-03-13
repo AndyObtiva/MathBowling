@@ -19,10 +19,11 @@ module MathBowling
       # TODO refactor out into a presenter
       @games.each do |game|
         game.class.class_eval do
+          include Glimmer #TODO solve this another way by introducing a presenter
           attr_accessor :display
           def player_color
-            @red ||= Color.new(@display, 138, 31, 41)
-            @blue ||= Color.new(@display, 31, 26, 150)
+            @red ||= rgb(138, 31, 41)
+            @blue ||= rgb(31, 26, 150)
             if current_player.nil?
               @red
             else
