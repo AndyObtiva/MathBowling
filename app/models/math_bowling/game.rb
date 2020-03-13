@@ -3,8 +3,14 @@ require_relative 'player'
 module MathBowling
   class Game
     QUESTION_OPERATIONS = %w[+ - * /]
+    TRANSLATION = {
+      '+' => '+',
+      '-' => '-',
+      '*' => 'X',
+      '/' => '➗',
+    }
     attr_reader :player_count
-    attr_accessor :players, :current_player, :question, :answer, :is_one_player, :is_two_players
+    attr_accessor :players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players
 
     def initialize(player_count = 1)
       self.player_count = player_count
@@ -14,6 +20,7 @@ module MathBowling
       self.players = player_count.times.map { |player_index| MathBowling::Player.new(player_index) }
       self.current_player = players.first
       self.generate_question
+      self.answer_result = nil
     end
 
     def generate_question
@@ -24,7 +31,7 @@ module MathBowling
           first_number = (rand*10).to_i + 1
           operator = QUESTION_OPERATIONS[(rand*4).to_i]
           last_number = (rand*10).to_i + 1
-          teh_question = "#{first_number} #{operator} #{last_number}"
+          teh_question = "#{first_number} #{TRANSLATION[operator]} #{last_number}"
           teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
         end until teh_answer.to_i == teh_answer && teh_answer >= 0
       end
@@ -34,8 +41,16 @@ module MathBowling
 
     def roll
       return if self.current_player.score_sheet.current_frame.nil?
-      fallen_pins = self.current_player.score_sheet.current_frame.pins_remaining - (self.answer.to_i - eval(self.question)).abs
+      pins_remaining = self.current_player.score_sheet.current_frame.pins_remaining
+      fallen_pins = pins_remaining - (self.answer.to_i - calculate_answer).to_i.abs
       fallen_pins = [fallen_pins, 0].max
+      if fallen_pins == pins_remaining
+        self.answer_result = 'CORRECT'
+      elsif fallen_pins == 0
+        self.answer_result = 'WRONG'
+      else
+        self.answer_result = 'CLOSE'
+      end
       self.current_player.score_sheet.current_frame.roll(fallen_pins)
       self.generate_question
       if self.current_player.score_sheet.current_frame.done?
@@ -93,6 +108,12 @@ module MathBowling
     # TODO TDD
     def over?
       started? && players.map {|player| player.score_sheet.game_over?}.reduce(:&)
+    end
+
+    def calculate_answer
+      first_number, operator, last_number = question.split(' ')
+      operator = TRANSLATION.invert[operator]
+      eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
     end
   end
 end

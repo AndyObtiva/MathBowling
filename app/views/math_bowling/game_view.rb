@@ -1,5 +1,7 @@
 require 'glimmer'
 require 'puts_debuggerer'
+require 'sounder'
+
 # Glimmer.logger.level = Logger::DEBUG
 
 require_relative 'score_board_view'
@@ -32,6 +34,25 @@ module MathBowling
           end
         end
         game.display = @display
+      end
+      register_sound_effects
+    end
+
+    def register_sound_effects
+      # Sounder::System.set_volume 70 # 0-100
+      @games.each do |game|
+        answer_result_sound_observer = BlockObserver.new do |changed_value|
+          case changed_value
+          when 'CORRECT'
+            Sounder.play File.expand_path('../../../../sounds/strike.mp3', __FILE__)
+          when 'WRONG'
+            Sounder.play File.expand_path('../../../../sounds/bowling.mp3', __FILE__)
+          when 'CLOSE'
+            Sounder.play File.expand_path('../../../../sounds/spare.mp3', __FILE__)
+          end
+          sleep(2)
+        end
+        answer_result_sound_observer.observe(game, :answer_result)
       end
     end
 
@@ -112,13 +133,7 @@ module MathBowling
                 label(:center) {
                   background @background
                   foreground @foreground
-                  text "Pins Remaining:"
-                  font @font
-                }
-                label(:center) {
-                  background @background
-                  foreground @foreground
-                  text bind(@games[game_index], "current_player.score_sheet.current_frame.pins_remaining", computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
+                  text "What is the answer to this math question?"
                   font @font
                 }
                 label(:center) {
@@ -141,6 +156,19 @@ module MathBowling
                   on_widget_selected {
                     @games[game_index].roll
                   }
+                }
+                label(:center) {
+                  background @background
+                  foreground @foreground
+                  text "Your answer was: "
+                  visible bind(@games[game_index], 'answer_result')
+                  font @font
+                }
+                label(:center) {
+                  background @background
+                  foreground @foreground
+                  text bind(@games[game_index], 'answer_result')
+                  font @font
                 }
               }
             }
