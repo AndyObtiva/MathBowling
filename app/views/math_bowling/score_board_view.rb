@@ -11,9 +11,6 @@ module MathBowling
     def initialize(game_container, game)
       @game = game
       @game_container = game_container
-      fd = @game_container.widget.getFont.getFontData;
-      fd[0].setHeight(70);
-      @font = Font.new(@display, fd[0]);
     end
 
     def render
@@ -37,7 +34,7 @@ module MathBowling
                 layout_data RowData.new(135, 95)
                 background @background
                 foreground @foreground
-                font @font
+                font height: 70
               }
             }
           }
