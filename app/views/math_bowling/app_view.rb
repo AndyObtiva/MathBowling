@@ -18,12 +18,6 @@ module MathBowling
       temp_shell.widget.dispose
       @game_views = (1..2).to_a.map {|n| MathBowling::GameView.new(n, @display) }
       @game_views.each do |game_view|
-        # add_contents(game_view.game_container) do
-        #   on_paint_control do |paint_event|
-        #
-        #   end
-        # end
-
         BlockObserver.new do |game_view_visible|
           render unless game_view_visible
         end.observe(game_view, 'game_view_visible')
