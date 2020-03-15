@@ -13,6 +13,7 @@ module MathBowling
       @player_count = player_count
       @display = display
       @game = MathBowling::Game.new(player_count)
+      register_sound_effects
       build_game_container
     end
 
