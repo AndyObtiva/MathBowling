@@ -24,26 +24,33 @@ UC3: Exit Game
 1. User chooses to exit game
 2. System exits
 
-# Stories
+# Stories / Release Plan
 
-V0.1 Alpha 1 Release:
+0.1.0 Alpha Release:
 
 1. Start game
 1. Bowl with simple math question and fixed time limit
-1. Bowl with randomized time limit
-1. Bowl with randomized more complex math questions
 
-V0.2 Alpha 2 Release:
+0.2.0 Alpha Release:
 
 1. Start two player game
 1. Bowl the player whose turn it is to bowl
+1. Style with colors and fonts
+1. Layout content nicely
+1. Play sound effects for bowling with different sounds for strike/spare, partial knock, and miss
 
-V0.3 Alpha 3 Release:
+0.3.0 Alpha Release:
 
 1. Display static image when starting a game
 1. Display static image when bowling
-1. Display static image when answering math question
-1. Display static images for getting strike, spare, or a number of pins knocked off
+1. Temporarily display static image for getting a strike, a spare, a partial knock, or a miss.
+1. Show number of pins knocked out of total pins remaining after temporarily displaying static image for getting a strike, a spare, a partial knock, or a miss.
+
+0.9.0 Beta Release:
+
+1. Add question answering time limit
+1. Display video when bowling
+1. Replace temporary static image for getting a strike, a spare, a partial knock, or a miss with a video instead.
 
 # License
 
