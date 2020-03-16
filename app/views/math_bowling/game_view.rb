@@ -43,8 +43,8 @@ module MathBowling
     end
 
     def build_game_container
-      @font = {height: 36}
-      @font_button = {height: 30}
+      @font = CONFIG[:font].merge(height: 36)
+      @font_button = CONFIG[:font].merge(height: 30)
       @game_container = shell {
         @background = :color_white
         @foreground = :color_black
@@ -76,7 +76,7 @@ module MathBowling
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 font @font
                 on_key_pressed {|key_event|
-                  @game.roll if key_event.keyCode == GSWT[:cr] 
+                  @game.roll if key_event.keyCode == GSWT[:cr]
                 }
               }
               button(:center) {
@@ -87,6 +87,9 @@ module MathBowling
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 on_widget_selected {
                   @game.roll
+                }
+                on_key_pressed {|key_event|
+                  @game.roll if key_event.keyCode == GSWT[:cr]
                 }
               }
               label(:center) {
@@ -129,6 +132,9 @@ module MathBowling
           }
         }
       }
+      Observer.proc do |roll_done|
+        @focused_widget.widget.setFocus if roll_done
+      end.observe(@game, :roll_done)
     end
 
     def render
@@ -142,7 +148,7 @@ module MathBowling
         @game_container_opened = true
         @game_container.open
       end
-      @focused_widget.setFocus
+      @focused_widget.widget.setFocus
     end
   end
 end

@@ -27,41 +27,40 @@ module MathBowling
         @game_type_container.widget.setVisible(true)
       else
         @game_type_container = shell {
+          background CONFIG[:background]
+          layout GridLayout.new(1,true)
+          label(:center) {
+            layout_data GridData.new(GSWT[:fill], GSWT[:fill], true, true)
+            text "Math Bowling"
+            font CONFIG[:title_font]
+          }
           composite {
             layout FillLayout.new(SWT::HORIZONTAL)
-            group {
-              layout RowLayout.new(SWT::HORIZONTAL)
-              composite {
-                label {
-                  text "Game Type:"
-                }
+            layout_data GridData.new(GSWT[:center], GSWT[:center], true, true)
+            @focused_widget = button {
+              background CONFIG[:background]
+              text "1 Player"
+              font CONFIG[:font]
+              on_widget_selected {
+                @game_type_container.widget.setVisible(false)
+                @game_views[0].render
               }
-              composite {
-                @focused_widget = button {
-                  text "1 Player"
-                  on_widget_selected {
-                    @game_type_container.widget.setVisible(false)
-                    @game_views[0].render
-                  }
-                }
+            }
+            button {
+              text "2 Players"
+              font CONFIG[:font]
+              on_widget_selected {
+                @game_type_container.widget.setVisible(false)
+                @game_views[1].render
               }
-              composite {
-                button {
-                  text "2 Players"
-                  on_widget_selected {
-                    @game_type_container.widget.setVisible(false)
-                    @game_views[1].render
-                  }
-                }
-              }
-              composite {
-                button {
-                  text "Exit"
-                  on_widget_selected {
-                    exit(true)
-                  }
-                }
-              }
+            }
+          }
+          button {
+            layout_data GridData.new(GSWT[:center], GSWT[:center], true, true)
+            text "Exit"
+            font CONFIG[:font]
+            on_widget_selected {
+              exit(true)
             }
           }
         }

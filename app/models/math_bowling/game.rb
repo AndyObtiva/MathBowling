@@ -10,7 +10,7 @@ module MathBowling
       '/' => '➗',
     }
     attr_reader :player_count
-    attr_accessor :players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players
+    attr_accessor :players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players, :roll_done
 
     def initialize(player_count = 1)
       self.player_count = player_count
@@ -40,6 +40,7 @@ module MathBowling
     end
 
     def roll
+      self.roll_done = false
       return if self.current_player.score_sheet.current_frame.nil?
       pins_remaining = self.current_player.score_sheet.current_frame.pins_remaining
       fallen_pins = pins_remaining - (self.answer.to_i - calculate_answer).to_i.abs
@@ -60,6 +61,7 @@ module MathBowling
       if over?
         self.question = ''
       end
+      self.roll_done = true
     end
 
     def play
