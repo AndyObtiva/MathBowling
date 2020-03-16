@@ -18,7 +18,7 @@ module MathBowling
     end
 
     def register_sound_effects
-      answer_result_sound_observer = BlockObserver.new do |changed_value|
+      answer_result_sound_observer = Observer.proc do |changed_value|
         case changed_value
         when 'CORRECT'
           Sounder.play File.expand_path('../../../../sounds/strike.mp3', __FILE__)
@@ -43,10 +43,9 @@ module MathBowling
     end
 
     def build_game_container
-      @game_container = shell(@display)
       @font = {height: 36}
       @font_button = {height: 30}
-      add_contents(@game_container) {
+      @game_container = shell {
         @background = :color_white
         @foreground = :color_black
         text "Math Bowl"

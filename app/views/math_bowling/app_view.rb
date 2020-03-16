@@ -13,12 +13,10 @@ module MathBowling
     attr_reader :games
 
     def initialize
-      temp_shell = shell
-      @display = temp_shell.display
-      temp_shell.widget.dispose
+      @display = display.display
       @game_views = (1..2).to_a.map {|n| MathBowling::GameView.new(n, @display) }
       @game_views.each do |game_view|
-        BlockObserver.new do |game_view_visible|
+        Observer.proc do |game_view_visible|
           render unless game_view_visible
         end.observe(game_view, 'game_view_visible')
       end
@@ -28,7 +26,7 @@ module MathBowling
       if @game_type_container
         @game_type_container.widget.setVisible(true)
       else
-        add_contents(@game_type_container = shell(@display)) {
+        @game_type_container = shell {
           composite {
             layout FillLayout.new(SWT::HORIZONTAL)
             group {

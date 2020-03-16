@@ -26,18 +26,18 @@ UC3: Exit Game
 
 # Stories / Release Plan
 
-0.1.0 Alpha Release:
+[DONE] 0.1.0 Alpha Release:
 
-1. Start game
-1. Bowl with simple math question and fixed time limit
+1. [DONE] Start game
+1. [DONE] Bowl with simple math question and fixed time limit
 
-0.2.0 Alpha Release:
+[DONE] 0.2.0 Alpha Release:
 
-1. Start two player game
-1. Bowl the player whose turn it is to bowl
-1. Style with colors and fonts
+1. [DONE] Start two player game
+1. [DONE] Bowl the player whose turn it is to bowl
+1. [DONE] Style with colors and fonts
 1. Layout content nicely
-1. Play sound effects for bowling with different sounds for strike/spare, partial knock, and miss
+1. [DONE] Play sound effects for bowling with different sounds for strike/spare, partial knock, and miss
 
 0.3.0 Alpha Release:
 
