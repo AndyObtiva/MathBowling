@@ -37,7 +37,7 @@ module MathBowling
                 }
               }
               composite {
-                button {
+                @focused_widget = button {
                   text "1 Player"
                   on_widget_selected {
                     @game_type_container.widget.setVisible(false)
@@ -67,6 +67,7 @@ module MathBowling
         }
         @game_type_container.open
       end
+      @focused_widget.widget.setFocus
     end
   end
 end

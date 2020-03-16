@@ -51,8 +51,11 @@ module MathBowling
         text "Math Bowl"
         composite {
           MathBowling::ScoreBoardView.new(@game_container, @game).render
+          background @background
           composite {
             layout RowLayout.new(SWT::HORIZONTAL).tap {|l| l.pack = false; l.justify = true}
+            layout_data GridData.new(GSWT[:fill], GSWT[:fill], true, true)
+            background @background
             composite {
               layout FillLayout.new(SWT::VERTICAL)
               background @background
@@ -68,10 +71,13 @@ module MathBowling
                 text bind(@game, "question")
                 font @font
               }
-              text(:center, :border) {
+              @focused_widget = text(:center, :border) {
                 text bind(@game, "answer")
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 font @font
+                on_key_pressed {|key_event|
+                  @game.roll if key_event.keyCode == GSWT[:cr] 
+                }
               }
               button(:center) {
                 text "Roll"
@@ -100,6 +106,7 @@ module MathBowling
           }
           composite {
             layout FillLayout.new(SWT::HORIZONTAL)
+            layout_data GridData.new(GSWT[:center], GSWT[:center], true, true)
             button {
               text "Restart Game"
               on_widget_selected {
@@ -135,6 +142,7 @@ module MathBowling
         @game_container_opened = true
         @game_container.open
       end
+      @focused_widget.setFocus
     end
   end
 end
