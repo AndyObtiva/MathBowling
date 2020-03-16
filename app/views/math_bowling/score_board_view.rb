@@ -34,7 +34,7 @@ module MathBowling
                 layout_data RowData.new(135, 95)
                 background @background
                 foreground @foreground
-                font height: 70
+                font CONFIG[:scoreboard_font].merge(height: 70)
               }
             }
           }

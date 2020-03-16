@@ -4,11 +4,13 @@ require_relative 'views/math_bowling/app_view'
 module MathBowling
   DEFAULT = {
     font: {
-      name: "Cochin"
+      name: "Abadi MT Condensed Extra Bold"
     }
   }
   CONFIG = {
     font: DEFAULT[:font],
+    scoreboard_font: {
+    },
     title_font: DEFAULT[:font].merge(
       height: 60,
     ),

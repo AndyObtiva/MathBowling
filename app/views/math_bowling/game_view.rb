@@ -110,21 +110,28 @@ module MathBowling
           composite {
             layout FillLayout.new(SWT::HORIZONTAL)
             layout_data GridData.new(GSWT[:center], GSWT[:center], true, true)
-            button {
+            background @background
+            @restart_button = button {
+              background @background
               text "Restart Game"
+              font CONFIG[:font]
               on_widget_selected {
                 @game.restart
               }
             }
             button {
+              background @background
               text "Change Players"
+              font CONFIG[:font]
               on_widget_selected {
                 @game_container.widget.setVisible(false)
                 self.game_view_visible = false
               }
             }
             button {
+              background @background
               text "Exit"
+              font CONFIG[:font]
               on_widget_selected {
                 exit(true)
               }
@@ -133,13 +140,22 @@ module MathBowling
         }
       }
       Observer.proc do |roll_done|
-        @focused_widget.widget.setFocus if roll_done
+        if roll_done
+          if @game.over?
+            @restart_button.widget.setFocus
+          else
+            @focused_widget.widget.setFocus
+          end
+        end
       end.observe(@game, :roll_done)
+      Observer.proc do |answer_result|
+        @focused_widget.widget.setFocus if answer_result.nil?
+      end.observe(@game, :answer_result)
     end
 
     def render
       if @game_container_opened
-        @game.restart
+        @game.restart if @game.not_started?
         @game_container.widget.setVisible(true)
         self.game_view_visible = true
       else
