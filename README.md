@@ -1,5 +1,7 @@
 # Math Bowling
 
+![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
+
 Bowling game that tests math skills. Built with Glimmer and Ruby (JRuby).
 
 This will be a single player game. In the future, it can become a multiplayer game.
