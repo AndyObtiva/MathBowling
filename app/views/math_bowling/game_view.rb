@@ -48,16 +48,20 @@ module MathBowling
       @game_container = shell {
         @background = :color_white
         @foreground = :color_black
-        text "Math Bowl"
+        text "Math Bowling"
         composite {
           MathBowling::ScoreBoardView.new(@game_container, @game).render
           background @background
           composite {
-            layout RowLayout.new(SWT::HORIZONTAL).tap {|l| l.pack = false; l.justify = true}
+            row_layout {
+              type :horizontal
+              pack false
+              justify true
+            }
             layout_data GridData.new(GSWT[:fill], GSWT[:fill], true, true)
             background @background
             composite {
-              layout FillLayout.new(SWT::VERTICAL)
+              fill_layout :vertical
               background @background
               label(:center) {
                 background @background
@@ -108,8 +112,8 @@ module MathBowling
             }
           }
           composite {
-            layout FillLayout.new(SWT::HORIZONTAL)
-            layout_data GridData.new(GSWT[:center], GSWT[:center], true, true)
+            fill_layout :horizontal
+            layout_data :center, :center, true, true
             background @background
             @restart_button = button {
               background @background

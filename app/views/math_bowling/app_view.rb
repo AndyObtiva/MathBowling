@@ -28,15 +28,15 @@ module MathBowling
       else
         @game_type_container = shell {
           background CONFIG[:background]
-          layout GridLayout.new(1,true)
+          grid_layout 1, true
           label(:center) {
-            layout_data GridData.new(GSWT[:fill], GSWT[:fill], true, true)
+            layout_data :fill, :fill, true, true
             text "Math Bowling"
             font CONFIG[:title_font]
           }
           composite {
-            layout FillLayout.new(SWT::HORIZONTAL)
-            layout_data GridData.new(GSWT[:center], GSWT[:center], true, true)
+            fill_layout :horizontal
+            layout_data :center, :center, true, true
             @focused_widget = button {
               background CONFIG[:background]
               text "1 Player"
@@ -56,7 +56,7 @@ module MathBowling
             }
           }
           button {
-            layout_data GridData.new(GSWT[:center], GSWT[:center], true, true)
+            layout_data :center, :center, true, true
             text "Exit"
             font CONFIG[:font]
             on_widget_selected {

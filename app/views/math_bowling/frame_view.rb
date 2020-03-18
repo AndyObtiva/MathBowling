@@ -22,21 +22,21 @@ module MathBowling
 
     def render
       composite(:border) {
-        layout RowLayout.new(SWT::VERTICAL)
+        row_layout :vertical
         background @background
         composite {
-          layout RowLayout.new(SWT::HORIZONTAL)
+          row_layout :horizontal
           background @background
           label(:center) {
             text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[0]")
-            layout_data RowData.new(*SIZE_ROLL_SCORE)
+            layout_data *SIZE_ROLL_SCORE
             background @background
             foreground @foreground
             font @font
           }
           label(:center) {
             text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[1]")
-            layout_data RowData.new(*SIZE_ROLL_SCORE)
+            layout_data *SIZE_ROLL_SCORE
             background @background
             foreground @foreground
             font @font
@@ -44,7 +44,7 @@ module MathBowling
           if (@frame_index + 1) == 10
             label(:center) {
               text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[2]")
-              layout_data RowData.new(*SIZE_ROLL_SCORE)
+              layout_data *SIZE_ROLL_SCORE
               background @background
               foreground @foreground
               visible bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[2]")
@@ -53,11 +53,15 @@ module MathBowling
           end
         }
         composite {
-          layout RowLayout.new(SWT::HORIZONTAL).tap {|l| l.pack = false; l.justify = true}
+          row_layout {
+            type :horizontal
+            pack false
+            justify true
+          }
           background @background
           label(:center) {
             text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].running_score", computed_by: 10.times.map {|index| "players[#{@player_index}].score_sheet.frames[#{index}].rolls"})
-            layout_data RowData.new(*((@frame_index + 1 == 10) ? SIZE_RUNNING_SCORE_FINAL : SIZE_RUNNING_SCORE))
+            layout_data *((@frame_index + 1 == 10) ? SIZE_RUNNING_SCORE_FINAL : SIZE_RUNNING_SCORE)
             background @background
             foreground @foreground
             font @font

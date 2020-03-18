@@ -15,10 +15,10 @@ module MathBowling
 
     def render
       @content = composite {
-        layout FillLayout.new(SWT::VERTICAL)
+        fill_layout :vertical
         @game.player_count.times.map do |player_index|
           composite {
-            layout RowLayout.new(SWT::HORIZONTAL)
+            row_layout :horizontal
             ScoreSheet::COUNT_FRAME.times.map do |frame_index|
               MathBowling::FrameView.new(@game_container, @game, player_index, frame_index).render
             end
@@ -27,7 +27,7 @@ module MathBowling
             @background = player_index % 2 == 0 ? @red : @blue
             @foreground = rgb(255, 255, 0)
             composite(:border) {
-              layout RowLayout.new(SWT::HORIZONTAL)
+              row_layout :horizontal
               background @background
               label(:center) {
                 text bind(@game, "players[#{player_index}].score_sheet.total_score", computed_by: 10.times.map {|index| "players[#{player_index}].score_sheet.frames[#{index}].rolls"})
