@@ -1,8 +1,8 @@
-# Math Bowling
+# Math Bowling 0.2.0 Alpha
 
 ![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
 
-Math Bowling is an elementary level educational math game. 
+Math Bowling is an elementary level educational math game.
 
 Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](https://www.jruby.org/).
 
@@ -38,21 +38,23 @@ UC3: Exit Game
 1. [DONE] Start two player game
 1. [DONE] Bowl the player whose turn it is to bowl
 1. [DONE] Style with colors and fonts
-1. Layout content nicely
+1. [DONE] Layout content nicely
 1. [DONE] Play sound effects for bowling with different sounds for strike/spare, partial knock, and miss
-
-0.3.0 Alpha Release:
-
-1. Display static image when starting a game
-1. Display static image when bowling
-1. Temporarily display static image for getting a strike, a spare, a partial knock, or a miss.
-1. Show number of pins knocked out of total pins remaining after temporarily displaying static image for getting a strike, a spare, a partial knock, or a miss.
 
 0.9.0 Beta Release:
 
+1. Display a splash image when launching game
+1. [DONE] Display image for getting a correct, wrong, or close answer.
+1. Make buttons bigger
+
+0.9.1 Beta Release:
+
 1. Add question answering time limit
-1. Display video when bowling
-1. Replace temporary static image for getting a strike, a spare, a partial knock, or a miss with a video instead.
+
+0.9.2 Beta Release:
+
+1. Replace image for getting a correct, wrong, or close answer with a video instead.
+
 
 # License
 
