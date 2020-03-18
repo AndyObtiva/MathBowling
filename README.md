@@ -2,9 +2,9 @@
 
 ![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
 
-Bowling game that tests math skills. Built with Glimmer and Ruby (JRuby).
+Math Bowling is an elementary level educational math game. 
 
-This will be a single player game. In the future, it can become a multiplayer game.
+Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](https://www.jruby.org/).
 
 # Use Cases
 
