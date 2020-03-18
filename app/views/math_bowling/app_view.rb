@@ -10,6 +10,8 @@ module MathBowling
   class AppView
     include Glimmer
 
+    include_package 'java.lang'
+
     attr_reader :games
 
     def initialize
@@ -24,6 +26,8 @@ module MathBowling
 
     def render
       if @game_type_container
+        thread = GThread.new(@game_type_container)
+        thread.start
         @game_type_container.widget.setVisible(true)
       else
         @game_type_container = shell {

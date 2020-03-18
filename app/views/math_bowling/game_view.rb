@@ -1,12 +1,21 @@
 require 'sounder'
 
 require_relative 'score_board_view'
+require_relative 'gif_image'
 
 module MathBowling
   class GameView
+    FILE_PATH_IMAGE_CORRECT = "../../../../images/bowling-strike1.gif"
+    FILE_PATH_IMAGE_WRONG = "../../../../images/bowling-miss1.gif"
+    FILE_PATH_IMAGE_CLOSE = "../../../../images/bowling-spare1.gif"
+    FILE_PATH_SOUND_CORRECT = '../../../../sounds/strike.mp3'
+    FILE_PATH_SOUND_WRONG = '../../../../sounds/bowling.mp3'
+    FILE_PATH_SOUND_CLOSE = '../../../../sounds/spare.mp3'
+
     include Glimmer
 
-    attr_accessor :display, :game_view_visible
+
+    attr_accessor :display, :game_view_visible, :question_container
     attr_reader :game, :player_count
 
     def initialize(player_count, display)
@@ -18,16 +27,26 @@ module MathBowling
     end
 
     def register_sound_effects
-      answer_result_sound_observer = Observer.proc do |changed_value|
-        case changed_value
-        when 'CORRECT'
-          Sounder.play File.expand_path('../../../../sounds/strike.mp3', __FILE__)
-        when 'WRONG'
-          Sounder.play File.expand_path('../../../../sounds/bowling.mp3', __FILE__)
-        when 'CLOSE'
-          Sounder.play File.expand_path('../../../../sounds/spare.mp3', __FILE__)
+      answer_result_sound_observer = Observer.proc do |new_value|
+        if new_value
+          @question_images ||= {}
+          unless @question_images[new_value]
+            image_file_path = File.expand_path(self.class.send(:const_get, "FILE_PATH_IMAGE_#{new_value}"), __FILE__)
+            @question_images[new_value] = GifImage.new(@question_container, image_file_path)
+            Observer.proc {
+              @question_container.async_exec do
+                @question_container.widget.getChildren.each {|child| child.setVisible(true)}
+                @focused_widget.widget.setFocus
+              end
+            }.observe(@question_images[new_value], 'done')
+          end
+          @question_container.widget.getChildren.each {|child| child.setVisible(false)}
+          @question_images[new_value].render
+          @question_container.async_exec do
+            sound_file_path = File.expand_path(self.class.send(:const_get, "FILE_PATH_SOUND_#{new_value}"), __FILE__)
+            Sounder.play(sound_file_path) rescue nil
+          end
         end
-        sleep(2)
       end
       answer_result_sound_observer.observe(@game, :answer_result)
     end
@@ -60,7 +79,7 @@ module MathBowling
             }
             layout_data GridData.new(GSWT[:fill], GSWT[:fill], true, true)
             background @background
-            composite {
+            @question_container = composite {
               fill_layout :vertical
               background @background
               label(:center) {
@@ -100,7 +119,7 @@ module MathBowling
                 background @background
                 foreground @foreground
                 text "Your answer was: "
-                visible bind(@game, 'answer_result')
+                visible bind(self, 'question_image.done')
                 font @font
               }
               label(:center) {
