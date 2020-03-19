@@ -1,5 +1,6 @@
 require 'glimmer'
 
+# TODO contribute to Glimmer
 class GifImage
   include Glimmer
 
@@ -22,10 +23,13 @@ class GifImage
       }
     }
   end
+  def scaled_image_data(image_data)
+    image_data.scaledTo(@parent.widget.getSize.x, @parent.widget.getSize.y)
+  end
   def render
     @imageNumber = 0
     @image.dispose
-    @image = Image.new(@display, @loader.data[0])
+    @image = Image.new(@display, scaled_image_data(@loader.data[0]))
     @parent.async_exec {
       @parent.widget.redraw()
     }
@@ -51,7 +55,7 @@ class GifImage
               # Increase the variable holding the frame number
               @imageNumber = (@imageNumber+1)#%@loader.data.length
               # Draw the new data onto the @image
-              nextFrameData = @loader.data[@imageNumber]
+              nextFrameData = scaled_image_data(@loader.data[@imageNumber])
               frameImage = Image.new(@display, nextFrameData);
               @gc = org.eclipse.swt.graphics.GC.new(@image);
               @gc.drawImage(frameImage, nextFrameData.x, nextFrameData.y)

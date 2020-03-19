@@ -178,7 +178,7 @@ module MathBowling
 
     def render
       if @game_container_opened
-        @game.restart if @game.not_started?
+        @game.restart unless @game.not_started?
         @game_container.widget.setVisible(true)
         self.game_view_visible = true
       else

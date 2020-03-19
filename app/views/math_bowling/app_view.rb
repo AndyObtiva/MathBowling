@@ -26,8 +26,6 @@ module MathBowling
 
     def render
       if @game_type_container
-        thread = GThread.new(@game_type_container)
-        thread.start
         @game_type_container.widget.setVisible(true)
       else
         @game_type_container = shell {
