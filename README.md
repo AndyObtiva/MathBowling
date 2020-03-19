@@ -1,4 +1,4 @@
-# Math Bowling 0.2.0 Alpha
+# Math Bowling 0.9.0 Beta
 
 ![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
 
@@ -41,9 +41,9 @@ UC3: Exit Game
 1. [DONE] Layout content nicely
 1. [DONE] Play sound effects for bowling with different sounds for strike/spare, partial knock, and miss
 
-0.9.0 Beta Release:
+[DONE] 0.9.0 Beta Release:
 
-1. Display a splash image when launching game
+1. [DONE] Display a splash image when launching game
 1. [DONE] Display image for getting a correct, wrong, or close answer.
 1. [DONE] Make buttons bigger
 

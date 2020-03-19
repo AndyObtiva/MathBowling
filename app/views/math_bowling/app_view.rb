@@ -30,8 +30,18 @@ module MathBowling
         @game_type_container.widget.setVisible(true)
       else
         @game_type_container = shell {
-          background CONFIG[:background]
           grid_layout 1, true
+          on_paint_control {
+            # Doing on paint control to use calculated shell size
+            unless @game_type_container.widget.getBackgroundImage
+              image_data = ImageData.new(File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__))
+              image_data = image_data.scaledTo(@game_type_container.widget.getSize.x, @game_type_container.widget.getSize.y)
+              @splash_image = Image.new(@display, image_data)
+              add_contents(@game_type_container) {
+                background_image @splash_image
+              }
+            end
+          }
           label(:center) {
             layout_data :fill, :fill, true, true
             text "Math Bowling"
@@ -43,7 +53,7 @@ module MathBowling
             layout_data :center, :center, true, true
             background :color_transparent
             @initially_focused_widget = button {
-              background CONFIG[:background]
+              # background CONFIG[:background]
               text "1 Player"
               font CONFIG[:font]
               on_widget_selected {
@@ -68,11 +78,7 @@ module MathBowling
               exit(true)
             }
           }
-          on_paint_control {
-            @math_bowling_image.render unless @math_bowling_image.done
-          }
         }
-        @math_bowling_image = GifImage.new(@game_type_container, File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__), false)
         @game_type_container.open
       end
       @initially_focused_widget.widget.setFocus
