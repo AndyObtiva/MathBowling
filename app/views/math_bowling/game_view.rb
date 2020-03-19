@@ -36,7 +36,7 @@ module MathBowling
             Observer.proc {
               @question_container.async_exec do
                 @question_container.widget.getChildren.each {|child| child.setVisible(true)}
-                @focused_widget.widget.setFocus
+                @initially_focused_widget.widget.setFocus
               end
             }.observe(@question_images[new_value], 'done')
           end
@@ -94,7 +94,7 @@ module MathBowling
                 text bind(@game, "question")
                 font @font
               }
-              @focused_widget = text(:center, :border) {
+              @initially_focused_widget = text(:center, :border) {
                 text bind(@game, "answer")
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 font @font
@@ -167,12 +167,12 @@ module MathBowling
           if @game.over?
             @restart_button.widget.setFocus
           else
-            @focused_widget.widget.setFocus
+            @initially_focused_widget.widget.setFocus
           end
         end
       end.observe(@game, :roll_done)
       Observer.proc do |answer_result|
-        @focused_widget.widget.setFocus if answer_result.nil?
+        @initially_focused_widget.widget.setFocus if answer_result.nil?
       end.observe(@game, :answer_result)
     end
 
@@ -187,7 +187,7 @@ module MathBowling
         @game_container_opened = true
         @game_container.open
       end
-      @focused_widget.widget.setFocus
+      @initially_focused_widget.widget.setFocus
     end
   end
 end

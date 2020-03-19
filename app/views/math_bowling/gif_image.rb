@@ -9,9 +9,10 @@ class GifImage
 
   attr_accessor :done
 
-  def initialize(parent, image_path)
+  def initialize(parent, image_path, animated = true)
     self.done = false
     @parent = parent
+    @animated = animated
     @loader = ImageLoader.new
     resource = FileInputStream.new(image_path)
     @loader.load(resource)
@@ -42,13 +43,15 @@ class GifImage
             # Wait till the delay time has passed
           end
           if @imageNumber == @loader.data.length - 1
-            self.done = false
-            @image.dispose
-            @image = Image.new(@display, 1, 1);
-            @parent.async_exec {
-              @parent.widget.redraw()
-            }
-            @imageNumber = 0
+            if @animated
+              @image.dispose
+              @image = Image.new(@display, 1, 1);
+              @parent.async_exec {
+                @parent.widget.redraw()
+              }
+              @imageNumber = 0
+            end
+            self.done = true
             break
           else
             @parent.async_exec {
@@ -58,7 +61,7 @@ class GifImage
               nextFrameData = scaled_image_data(@loader.data[@imageNumber])
               frameImage = Image.new(@display, nextFrameData);
               @gc = org.eclipse.swt.graphics.GC.new(@image);
-              @gc.drawImage(frameImage, nextFrameData.x, nextFrameData.y)
+              @gc.drawImage(frameImage, nextFrameData.x, nextFrameData.y)              
               @parent.widget.redraw()
               frameImage.dispose()
               @gc.dispose

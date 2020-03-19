@@ -8,6 +8,7 @@ require_relative 'game_view'
 
 module MathBowling
   class AppView
+    FILE_PATH_IMAGE_MATH_BOWLING = "../../../../images/math-bowling.png"
     include Glimmer
 
     include_package 'java.lang'
@@ -35,11 +36,13 @@ module MathBowling
             layout_data :fill, :fill, true, true
             text "Math Bowling"
             font CONFIG[:title_font]
+            foreground CONFIG[:title_foreground]
           }
           composite {
             fill_layout :horizontal
             layout_data :center, :center, true, true
-            @focused_widget = button {
+            background :color_transparent
+            @initially_focused_widget = button {
               background CONFIG[:background]
               text "1 Player"
               font CONFIG[:font]
@@ -65,10 +68,14 @@ module MathBowling
               exit(true)
             }
           }
+          on_paint_control {
+            @math_bowling_image.render unless @math_bowling_image.done
+          }
         }
+        @math_bowling_image = GifImage.new(@game_type_container, File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__), false)
         @game_type_container.open
       end
-      @focused_widget.widget.setFocus
+      @initially_focused_widget.widget.setFocus
     end
   end
 end
