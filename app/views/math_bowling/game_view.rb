@@ -118,7 +118,7 @@ module MathBowling
               label(:center) {
                 background @background
                 foreground @foreground
-                text "Your answer was: "
+                text "The answer was: "
                 visible bind(self, 'question_image.done')
                 font @font
               }
