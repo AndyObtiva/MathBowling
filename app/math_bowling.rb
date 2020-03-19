@@ -4,7 +4,8 @@ require_relative 'views/math_bowling/app_view'
 module MathBowling
   DEFAULT = {
     font: {
-      name: "Abadi MT Condensed Extra Bold"
+      name: "Abadi MT Condensed Extra Bold",
+      height: 18
     }
   }
   CONFIG = {

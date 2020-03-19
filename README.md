@@ -45,11 +45,12 @@ UC3: Exit Game
 
 1. Display a splash image when launching game
 1. [DONE] Display image for getting a correct, wrong, or close answer.
-1. Make buttons bigger
+1. [DONE] Make buttons bigger
 
 0.9.1 Beta Release:
 
 1. Add question answering time limit
+1. Center windows
 
 0.9.2 Beta Release:
 
