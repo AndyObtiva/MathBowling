@@ -27,6 +27,7 @@ module MathBowling
 
     def render
       if @game_type_container
+        @initially_focused_widget.widget.setFocus
         @game_type_container.widget.setVisible(true)
       else
         @game_type_container = shell {
@@ -79,9 +80,9 @@ module MathBowling
             }
           }
         }
+        @initially_focused_widget.widget.setFocus
         @game_type_container.open
       end
-      @initially_focused_widget.widget.setFocus
     end
   end
 end
