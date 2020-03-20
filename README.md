@@ -49,8 +49,8 @@ UC3: Exit Game
 
 0.9.1 Beta 2 Release:
 
+1. [DONE] Center windows
 1. Add question answering time limit
-1. Center windows
 
 0.9.2 Beta 3 Release:
 
