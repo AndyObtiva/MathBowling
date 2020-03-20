@@ -16,7 +16,7 @@ module MathBowling
       @red = rgb(138, 31, 41)
       @blue = rgb(31, 26, 150)
       @background = player_index % 2 == 0 ? @red : @blue
-      @foreground = :color_white
+      @foreground = :white
       @font = CONFIG[:scoreboard_font].merge(height: 36)
     end
 

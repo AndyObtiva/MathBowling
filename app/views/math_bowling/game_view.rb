@@ -5,6 +5,7 @@ require_relative 'gif_image'
 
 module MathBowling
   class GameView
+    FILE_PATH_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
     FILE_PATH_IMAGE_CORRECT = "../../../../images/bowling-strike1.gif"
     FILE_PATH_IMAGE_WRONG = "../../../../images/bowling-miss1.gif"
     FILE_PATH_IMAGE_CLOSE = "../../../../images/bowling-spare1.gif"
@@ -99,9 +100,22 @@ module MathBowling
       @font = CONFIG[:font].merge(height: 36)
       @font_button = CONFIG[:font].merge(height: 28)
       @game_container = shell(:no_resize) {
-        @background = rgb(206, 177, 128)
-        @foreground = :color_black
+        @background = :transparent
+        @foreground = :black
         text "Math Bowling"
+
+        on_paint_control {
+          # Doing on paint control to use calculated shell size
+          unless @game_container.widget.getBackgroundImage
+            image_data = ImageData.new(File.expand_path(FILE_PATH_IMAGE_BACKGROUND, __FILE__))
+            image_data = image_data.scaledTo(@game_container.widget.getSize.x, @game_container.widget.getSize.y)
+            @background_image = Image.new(@display, image_data)
+            add_contents(@game_container) {
+              background_image @background_image
+            }
+          end
+        }
+
         composite {
           MathBowling::ScoreBoardView.new(@game_container, @game).render
           background @background
@@ -155,8 +169,8 @@ module MathBowling
                   height 42
                 }
                 font @font_button
-                background bind(self, :player_color, computed_by: ["game.current_player.index"])
-                foreground :color_yellow
+                background bind(self, :player_color, computed_by: "game.current_player.index")
+                foreground :yellow
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 on_widget_selected {
                   @game.roll

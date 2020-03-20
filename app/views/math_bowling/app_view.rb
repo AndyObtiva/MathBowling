@@ -57,7 +57,7 @@ module MathBowling
           composite {
             fill_layout :horizontal
             layout_data :center, :center, true, true
-            background :color_transparent
+            background :transparent
             @initially_focused_widget = button {
               text "1 Player"
               font CONFIG[:font]
