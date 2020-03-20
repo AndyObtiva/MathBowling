@@ -11,22 +11,52 @@ module MathBowling
     FILE_PATH_SOUND_CORRECT = '../../../../sounds/strike.mp3'
     FILE_PATH_SOUND_WRONG = '../../../../sounds/bowling.mp3'
     FILE_PATH_SOUND_CLOSE = '../../../../sounds/spare.mp3'
+    TIMER_DURATION = 20
 
     include Glimmer
 
 
-    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement
+    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement, :timer, :roll_button_text
     attr_reader :game, :player_count
 
     def initialize(player_count, display)
       @player_count = player_count
       @display = display
       @game = MathBowling::Game.new(player_count)
+      handle_answer_result_announcement
+      set_timer
+      handle_roll_button_text
+      register_sound_effects
+      build_game_container
+    end
+
+    def handle_answer_result_announcement
       Observer.proc {
         self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
       }.observe(@game, :answer_result)
-      register_sound_effects
-      build_game_container
+    end
+
+    def set_timer
+      timer_thread = Thread.new do
+        loop do
+          sleep(1)
+          @game.started? && @game_container && @game_container.async_exec do
+            self.timer = self.timer - 1 if self.timer && self.timer > 0
+            if self.timer == 0
+              @game.roll
+            end
+          end
+        end
+      end
+      Observer.proc {
+        self.timer = TIMER_DURATION
+      }.observe(@game, :question)
+    end
+
+    def handle_roll_button_text
+      Observer.proc {
+        self.roll_button_text = "Enter Answer (#{self.timer} seconds left)"
+      }.observe(self, :timer)
     end
 
     def register_sound_effects
@@ -40,6 +70,7 @@ module MathBowling
               @question_container.async_exec do
                 @question_container.widget.getChildren.each {|child| child.setVisible(true)}
                 @initially_focused_widget.widget.setFocus
+                self.timer = TIMER_DURATION
               end
             }.observe(@question_images[new_value], 'done')
           end
@@ -66,7 +97,7 @@ module MathBowling
 
     def build_game_container
       @font = CONFIG[:font].merge(height: 36)
-      @font_button = CONFIG[:font].merge(height: 30)
+      @font_button = CONFIG[:font].merge(height: 28)
       @game_container = shell(:no_resize) {
         @background = rgb(206, 177, 128)
         @foreground = :color_black
@@ -115,8 +146,11 @@ module MathBowling
                   @game.roll if key_event.keyCode == GSWT[:cr]
                 }
               }
+              on_paint_control {
+                @game.start if @game.not_started?
+              }
               button(:center) {
-                text "ROLL"
+                text bind(self, 'roll_button_text')
                 layout_data {
                   height 42
                 }
@@ -151,6 +185,7 @@ module MathBowling
               font CONFIG[:font]
               on_widget_selected {
                 @game_container.widget.setVisible(false)
+                @game.quit
                 self.game_view_visible = false
               }
             }

@@ -1,4 +1,4 @@
-# Math Bowling 0.9.0 Beta 1
+# Math Bowling 0.9.1 Beta 2
 
 ![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
 
@@ -6,27 +6,29 @@ Math Bowling is an elementary level educational math game.
 
 Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](https://www.jruby.org/).
 
+# Rules
+
+- Players take turns answering math questions until they fill a frame just like bowling
+- On a player's turn, a math question is presented that player must answer
+- A player has 20 seconds to answer each question
+- If a player does not answer on time, whatever was entered is taken as the answer. If nothing was entered, then the answer is assumed to be 0
+- If an answer is correct, the player gets the equivalent of knocking all remaining pins (strike for 10, spare for less than 10)
+- If an answer is within the number of remaining pins from the correct answer, then it is considered close. The player gets the equivalent of knocked pins for that answer (e.g. answering 3 to 2 + 2 gets 1 pin).
+- If an answer is farther than number of remaining pins from the correct answer, then 0 is awarded.
+- Players must fill all 10 frames just like bowling to finish the game.
+- The player with the higher score at the end wins.
+- Players are distinguished by position and color (player 1 is red and player 2 is blue)
+
 # Use Cases
 
-UC1: Start Game
-
-1. User chooses to start a new game
-1. System starts a new game with all frames empty, erasing previous game stats if any
-
-UC2: Bowl
-
-1. User initiates bowling action
-1. System asks a math question and shows a time limit
-1. User answers or misses question
-1. System scores frame based on user response to question
-1. System determines whether user can bowl again or game is over, displaying status accordingly (win or lose)
-
+UC1: Start 1 Player Game
+UC2: Start 2 Player Game
 UC3: Exit Game
+UC4: Answer Question
+UC5: Restart Game
+UC6: Change Game Type
 
-1. User chooses to exit game
-2. System exits
-
-# Stories / Release Plan
+# User Stories / Release Plan
 
 [DONE] 0.1.0 Alpha 1 Release:
 
@@ -47,10 +49,10 @@ UC3: Exit Game
 1. [DONE] Display image for getting a correct, wrong, or close answer.
 1. [DONE] Make buttons bigger
 
-0.9.1 Beta 2 Release:
+[DONE] 0.9.1 Beta 2 Release:
 
 1. [DONE] Center windows
-1. Add question answering time limit
+1. [DONE] Add question answering time limit
 
 0.9.2 Beta 3 Release:
 

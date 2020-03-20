@@ -21,11 +21,11 @@ module MathBowling
           composite {
             row_layout {
               type :horizontal
-              margin_left 1
-              margin_right 1
-              margin_top 1
-              margin_bottom 1
-              spacing 1
+              margin_left 3
+              margin_right 3
+              margin_top 3
+              margin_bottom 3
+              spacing 3
             }
             ScoreSheet::COUNT_FRAME.times.map do |frame_index|
               MathBowling::FrameView.new(@game_container, @game, player_index, frame_index).render
