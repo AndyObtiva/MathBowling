@@ -6,27 +6,29 @@ Math Bowling is an elementary level educational math game.
 
 Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](https://www.jruby.org/).
 
-# Rules
+# Game Rules
 
-- Players take turns answering math questions until they fill a frame just like bowling
-- On a player's turn, a math question is presented that player must answer
-- A player has 20 seconds to answer each question
+- On a player's turn, a math question must be answered to initiate a bowling roll
+- A player must math questions until filling a frame just like bowling.
+- Players must fill all 10 frames just like bowling to finish the game.
+- A player has 20 seconds to answer a question
 - If a player does not answer on time, whatever was entered is taken as the answer. If nothing was entered, then the answer is assumed to be 0
 - If an answer is correct, the player gets the equivalent of knocking all remaining pins (strike for 10, spare for less than 10)
-- If an answer is within the number of remaining pins from the correct answer, then it is considered close. The player gets the equivalent of knocked pins for that answer (e.g. answering 3 to 2 + 2 gets 1 pin).
-- If an answer is farther than number of remaining pins from the correct answer, then 0 is awarded.
-- Players must fill all 10 frames just like bowling to finish the game.
+- If an answer is within the number of remaining pins from the correct answer, then it is considered close. The player gets the equivalent of knocked pins for that answer (e.g. answering 3 or 5 to 2 + 2 gets 1 pin). This makes answering the next question more challenging just like in bowling
+- If an answer is farther from the correct answer than number of remaining pins, then 0 is awarded.
 - The player with the higher score at the end wins.
+- If both player have the same score at the end, it is a tie.
 - Players are distinguished by position and color (player 1 is red and player 2 is blue)
+- The game may be played with one player only, in which case it is always that player's turn on every bowling roll (question answered).
 
 # Use Cases
 
-UC1: Start 1 Player Game
-UC2: Start 2 Player Game
-UC3: Exit Game
-UC4: Answer Question
-UC5: Restart Game
-UC6: Change Game Type
+1. Start 1 Player Game
+1. Start 2 Player Game
+1. Exit Game
+1. Answer Question
+1. Restart Game
+1. Change Game Type
 
 # User Stories / Release Plan
 
