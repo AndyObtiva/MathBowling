@@ -14,7 +14,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 - A player has 20 seconds to answer a question
 - If a player does not answer on time, whatever was entered is taken as the answer. If nothing was entered, then the answer is assumed to be 0
 - If an answer is correct, the player gets the equivalent of knocking all remaining pins (strike for 10, spare for less than 10)
-- If an answer is within the number of remaining pins from the correct answer, then it is considered close. The player gets the equivalent of knocked pins for that answer (e.g. answering 3 or 5 to 2 + 2 gets 1 pin). This makes answering the next question more challenging just like in bowling
+- If an answer is within the number of remaining pins from the correct answer, then it is considered close. The player gets the equivalent of knocked pins for that answer (e.g. answering 3 or 5 to 2 + 2 gets all remaining pins minus 1). This makes answering the next question more challenging just like in bowling
 - If an answer is farther from the correct answer than number of remaining pins, then 0 is awarded.
 - The player with the higher score at the end wins.
 - If both player have the same score at the end, it is a tie.
