@@ -8,10 +8,19 @@ module MathBowling
       name: "Abadi MT Condensed Extra Bold",
       height: 20
     },
-    red: rgb(138, 31, 41),
-    blue: rgb(31, 26, 150),
+    # red: rgb(138, 31, 41),
+    # light_red: rgb(148, 95, 100),
+    red: rgb(128, 0, 0),
+    # blue: rgb(31, 26, 150),
+    # brown: rgb(186, 153, 72)
+    # brown: rgb(213, 199, 155),
+    charcoal: rgb(83	,74	,64),
   }
   CONFIG = {
+    colors: {
+      player1: DEFAULT[:red],
+      player2: DEFAULT[:charcoal],
+    },
     font: DEFAULT[:font],
     scoreboard_font: {
     },

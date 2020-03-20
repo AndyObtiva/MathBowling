@@ -5,6 +5,7 @@ module MathBowling
     SIZE_ROLL_SCORE = [50, 50]
     SIZE_RUNNING_SCORE = [100, 50]
     SIZE_RUNNING_SCORE_FINAL = [150, 50]
+
     include Glimmer
 
     def initialize(game_container, game, player_index, frame_index)
@@ -13,9 +14,7 @@ module MathBowling
       @display = @game_container.display
       @player_index = player_index
       @frame_index = frame_index
-      @red = rgb(138, 31, 41)
-      @blue = rgb(31, 26, 150)
-      @background = player_index % 2 == 0 ? @red : @blue
+      @background = player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       @foreground = :white
       @font = CONFIG[:scoreboard_font].merge(height: 36)
     end

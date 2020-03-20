@@ -16,7 +16,6 @@ module MathBowling
 
     include Glimmer
 
-
     attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement, :timer, :roll_button_text
     attr_reader :game, :player_count
 
@@ -87,12 +86,10 @@ module MathBowling
     end
 
     def player_color
-      @red ||= rgb(138, 31, 41)
-      @blue ||= rgb(31, 26, 150)
       if @game.current_player.nil?
-        @red
+        CONFIG[:colors][:player1]
       else
-        (@game.current_player.index % 2) == 0 ? @red : @blue
+        (@game.current_player.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       end
     end
 
@@ -117,7 +114,13 @@ module MathBowling
         }
 
         composite {
-          MathBowling::ScoreBoardView.new(@game_container, @game).render
+          composite {
+            fill_layout :vertical
+            background :transparent
+            @game.player_count.times.map do |player_index|
+              MathBowling::ScoreBoardView.new(@game_container, @game, player_index).render
+            end
+          }
           background @background
           composite {
             row_layout {
