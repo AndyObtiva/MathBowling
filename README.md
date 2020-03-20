@@ -1,4 +1,4 @@
-# Math Bowling 0.9.0 Beta
+# Math Bowling 0.9.0 Beta 1
 
 ![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
 
@@ -28,12 +28,12 @@ UC3: Exit Game
 
 # Stories / Release Plan
 
-[DONE] 0.1.0 Alpha Release:
+[DONE] 0.1.0 Alpha 1 Release:
 
 1. [DONE] Start game
 1. [DONE] Bowl with simple math question and fixed time limit
 
-[DONE] 0.2.0 Alpha Release:
+[DONE] 0.2.0 Alpha 2 Release:
 
 1. [DONE] Start two player game
 1. [DONE] Bowl the player whose turn it is to bowl
@@ -41,18 +41,18 @@ UC3: Exit Game
 1. [DONE] Layout content nicely
 1. [DONE] Play sound effects for bowling with different sounds for strike/spare, partial knock, and miss
 
-[DONE] 0.9.0 Beta Release:
+[DONE] 0.9.0 Beta 1 Release:
 
 1. [DONE] Display a splash image when launching game
 1. [DONE] Display image for getting a correct, wrong, or close answer.
 1. [DONE] Make buttons bigger
 
-0.9.1 Beta Release:
+0.9.1 Beta 2 Release:
 
 1. Add question answering time limit
 1. Center windows
 
-0.9.2 Beta Release:
+0.9.2 Beta 3 Release:
 
 1. Replace image for getting a correct, wrong, or close answer with a video instead.
 

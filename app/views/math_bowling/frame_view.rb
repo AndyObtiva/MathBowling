@@ -2,9 +2,9 @@ require 'glimmer'
 
 module MathBowling
   class FrameView
-    SIZE_ROLL_SCORE = [40, 40]
-    SIZE_RUNNING_SCORE = [80, 40]
-    SIZE_RUNNING_SCORE_FINAL = [120, 40]
+    SIZE_ROLL_SCORE = [50, 50]
+    SIZE_RUNNING_SCORE = [100, 50]
+    SIZE_RUNNING_SCORE_FINAL = [150, 50]
     include Glimmer
 
     def initialize(game_container, game, player_index, frame_index)
@@ -16,16 +16,30 @@ module MathBowling
       @red = rgb(138, 31, 41)
       @blue = rgb(31, 26, 150)
       @background = player_index % 2 == 0 ? @red : @blue
-      @foreground = rgb(255, 255, 255)
+      @foreground = :color_white
       @font = CONFIG[:scoreboard_font].merge(height: 36)
     end
 
     def render
-      composite(:border) {
-        row_layout :vertical
+      composite {
+        row_layout {
+          type :vertical
+          margin_left 0
+          margin_right 0
+          margin_top 0
+          margin_bottom 0
+          spacing 0
+        }
         background @background
         composite {
-          row_layout :horizontal
+          row_layout {
+            type :horizontal
+            margin_left 0
+            margin_right 0
+            margin_top 0
+            margin_bottom 0
+            spacing 0
+          }
           background @background
           label(:center) {
             text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[0]")
@@ -57,6 +71,11 @@ module MathBowling
             type :horizontal
             pack false
             justify true
+            margin_left 0
+            margin_right 0
+            margin_top 0
+            margin_bottom 0
+            spacing 0
           }
           background @background
           label(:center) {

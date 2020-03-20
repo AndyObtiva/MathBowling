@@ -8,7 +8,7 @@ require_relative 'game_view'
 
 module MathBowling
   class AppView
-    FILE_PATH_IMAGE_MATH_BOWLING = "../../../../images/math-bowling.png"
+    FILE_PATH_IMAGE_MATH_BOWLING = "../../../../images/math-bowling.gif"
     include Glimmer
 
     include_package 'java.lang'
@@ -30,8 +30,13 @@ module MathBowling
         @initially_focused_widget.widget.setFocus
         @game_type_container.widget.setVisible(true)
       else
-        @game_type_container = shell {
-          grid_layout 1, true
+        @game_type_container = shell(:no_resize) {
+          grid_layout {
+            num_columns 1
+            make_columns_equal_width true
+            margin_width 35
+            margin_height 35
+          }
           on_paint_control {
             # Doing on paint control to use calculated shell size
             unless @game_type_container.widget.getBackgroundImage
@@ -54,9 +59,9 @@ module MathBowling
             layout_data :center, :center, true, true
             background :color_transparent
             @initially_focused_widget = button {
-              # background CONFIG[:background]
               text "1 Player"
               font CONFIG[:font]
+              background CONFIG[:button_background]
               on_widget_selected {
                 @game_type_container.widget.setVisible(false)
                 @game_views[0].render
@@ -65,6 +70,7 @@ module MathBowling
             button {
               text "2 Players"
               font CONFIG[:font]
+              background CONFIG[:button_background]
               on_widget_selected {
                 @game_type_container.widget.setVisible(false)
                 @game_views[1].render
@@ -75,6 +81,7 @@ module MathBowling
             layout_data :center, :center, true, true
             text "Exit"
             font CONFIG[:font]
+            background CONFIG[:button_background]
             on_widget_selected {
               exit(true)
             }

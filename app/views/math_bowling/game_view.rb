@@ -15,13 +15,16 @@ module MathBowling
     include Glimmer
 
 
-    attr_accessor :display, :game_view_visible, :question_container
+    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement
     attr_reader :game, :player_count
 
     def initialize(player_count, display)
       @player_count = player_count
       @display = display
       @game = MathBowling::Game.new(player_count)
+      Observer.proc {
+        self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
+      }.observe(@game, :answer_result)
       register_sound_effects
       build_game_container
     end
@@ -64,8 +67,8 @@ module MathBowling
     def build_game_container
       @font = CONFIG[:font].merge(height: 36)
       @font_button = CONFIG[:font].merge(height: 30)
-      @game_container = shell {
-        @background = :color_white
+      @game_container = shell(:no_resize) {
+        @background = rgb(206, 177, 128)
         @foreground = :color_black
         text "Math Bowling"
         composite {
@@ -80,8 +83,18 @@ module MathBowling
             layout_data GridData.new(GSWT[:fill], GSWT[:fill], true, true)
             background @background
             @question_container = composite {
-              fill_layout :vertical
+              row_layout {
+                type :vertical
+                fill true
+                spacing 6
+              }
               background @background
+              label(:center) {
+                background @background
+                text bind(self, 'answer_result_announcement')
+                visible bind(self, 'question_image.done')
+                font @font.merge height: 22, style: :italic
+              }
               label(:center) {
                 background @background
                 foreground @foreground
@@ -103,10 +116,13 @@ module MathBowling
                 }
               }
               button(:center) {
-                text "Roll"
+                text "ROLL"
+                layout_data {
+                  height 42
+                }
                 font @font_button
                 background bind(self, :player_color, computed_by: ["game.current_player.index"])
-                foreground @background
+                foreground :color_yellow
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 on_widget_selected {
                   @game.roll
@@ -115,19 +131,6 @@ module MathBowling
                   @game.roll if key_event.keyCode == GSWT[:cr]
                 }
               }
-              label(:center) {
-                background @background
-                foreground @foreground
-                text "The answer was: "
-                visible bind(self, 'question_image.done')
-                font @font
-              }
-              label(:center) {
-                background @background
-                foreground @foreground
-                text bind(@game, 'answer_result')
-                font @font
-              }
             }
           }
           composite {
@@ -135,7 +138,7 @@ module MathBowling
             layout_data :center, :center, true, true
             background @background
             @restart_button = button {
-              background @background
+              background CONFIG[:button_background]
               text "Restart Game"
               font CONFIG[:font]
               on_widget_selected {
@@ -143,7 +146,7 @@ module MathBowling
               }
             }
             button {
-              background @background
+              background CONFIG[:button_background]
               text "Change Players"
               font CONFIG[:font]
               on_widget_selected {
@@ -152,7 +155,7 @@ module MathBowling
               }
             }
             button {
-              background @background
+              background CONFIG[:button_background]
               text "Exit"
               font CONFIG[:font]
               on_widget_selected {

@@ -7,7 +7,9 @@ module MathBowling
     font: {
       name: "Abadi MT Condensed Extra Bold",
       height: 20
-    }
+    },
+    red: rgb(138, 31, 41),
+    blue: rgb(31, 26, 150),
   }
   CONFIG = {
     font: DEFAULT[:font],
@@ -16,7 +18,8 @@ module MathBowling
     title_font: DEFAULT[:font].merge(
       height: 60,
     ),
-    title_foreground: rgb(138, 31, 41)
+    title_foreground: rgb(138, 31, 41),
+    button_background: rgb(245, 245, 220),
   }
   def self.launch
     MathBowling::AppView.new.render
