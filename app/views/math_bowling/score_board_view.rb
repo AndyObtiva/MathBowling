@@ -25,7 +25,8 @@ module MathBowling
           spacing 3
         }
         ScoreSheet::COUNT_FRAME.times.map do |frame_index|
-          MathBowling::FrameView.new(@game_container, @game, @player_index, frame_index).render
+          # MathBowling::FrameView.new(@game_container, @game, @player_index, frame_index).render
+          math_bowling__frame_view(game_container: @game_container, game: @game, player_index: @player_index, frame_index: frame_index)
         end
         @background = @player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
         @foreground = :yellow

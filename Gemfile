@@ -5,7 +5,7 @@ source "https://rubygems.org"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 # gem "rails"
-gem 'glimmer', '~> 0.4.3'
+gem 'glimmer', '~> 0.4.4'
 gem 'sounder'
 
 group :development, :test do

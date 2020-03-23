@@ -6,20 +6,18 @@ module MathBowling
     SIZE_RUNNING_SCORE = [100, 50]
     SIZE_RUNNING_SCORE_FINAL = [150, 50]
 
-    include Glimmer
+    include Glimmer::SWT::CustomWidget
 
-    def initialize(game_container, game, player_index, frame_index)
-      @game_container = game_container
-      @game = game
-      @display = @game_container.display
-      @player_index = player_index
-      @frame_index = frame_index
+    options :game_container, :game, :player_index, :frame_index
+
+    def display
+      game_container.display
+    end
+
+    def body
       @background = player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       @foreground = :white
       @font = CONFIG[:scoreboard_font].merge(height: 36)
-    end
-
-    def render
       composite {
         row_layout {
           type :vertical
@@ -41,26 +39,26 @@ module MathBowling
           }
           background @background
           label(:center) {
-            text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[0]")
+            text bind(game, "players[#{player_index}].score_sheet.frames[#{frame_index}].rolls[0]")
             layout_data *SIZE_ROLL_SCORE
             background @background
             foreground @foreground
             font @font
           }
           label(:center) {
-            text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[1]")
+            text bind(game, "players[#{player_index}].score_sheet.frames[#{frame_index}].rolls[1]")
             layout_data *SIZE_ROLL_SCORE
             background @background
             foreground @foreground
             font @font
           }
-          if (@frame_index + 1) == 10
+          if (frame_index + 1) == 10
             label(:center) {
-              text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[2]")
+              text bind(game, "players[#{player_index}].score_sheet.frames[#{frame_index}].rolls[2]")
               layout_data *SIZE_ROLL_SCORE
               background @background
               foreground @foreground
-              visible bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].rolls[2]")
+              visible bind(game, "players[#{player_index}].score_sheet.frames[#{frame_index}].rolls[2]")
               font @font
             }
           end
@@ -78,8 +76,8 @@ module MathBowling
           }
           background @background
           label(:center) {
-            text bind(@game, "players[#{@player_index}].score_sheet.frames[#{@frame_index}].running_score", computed_by: 10.times.map {|index| "players[#{@player_index}].score_sheet.frames[#{index}].rolls"})
-            layout_data *((@frame_index + 1 == 10) ? SIZE_RUNNING_SCORE_FINAL : SIZE_RUNNING_SCORE)
+            text bind(game, "players[#{player_index}].score_sheet.frames[#{frame_index}].running_score", computed_by: 10.times.map {|index| "players[#{player_index}].score_sheet.frames[#{index}].rolls"})
+            layout_data *((frame_index + 1 == 10) ? SIZE_RUNNING_SCORE_FINAL : SIZE_RUNNING_SCORE)
             background @background
             foreground @foreground
             font @font
