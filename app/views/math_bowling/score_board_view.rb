@@ -4,17 +4,11 @@ require_relative 'frame_view'
 
 module MathBowling
   class ScoreBoardView
-    include Glimmer
+    include Glimmer::SWT::CustomWidget
 
-    attr_reader :content
+    options :game_container, :game, :player_index
 
-    def initialize(game_container, game, player_index)
-      @game = game
-      @game_container = game_container
-      @player_index = player_index
-    end
-
-    def render
+    def body
       composite {
         row_layout {
           type :horizontal
@@ -25,10 +19,10 @@ module MathBowling
           spacing 3
         }
         ScoreSheet::COUNT_FRAME.times.map do |frame_index|
-          # MathBowling::FrameView.new(@game_container, @game, @player_index, frame_index).render
-          math_bowling__frame_view(game_container: @game_container, game: @game, player_index: @player_index, frame_index: frame_index)
+          # MathBowling::FrameView.new(game_container, game, player_index, frame_index).render
+          math_bowling__frame_view(game_container: game_container, game: game, player_index: player_index, frame_index: frame_index)
         end
-        @background = @player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
+        @background = player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
         @foreground = :yellow
         composite {
           row_layout {
@@ -41,7 +35,7 @@ module MathBowling
           }
           background @background
           label(:center) {
-            text bind(@game, "players[#{@player_index}].score_sheet.total_score", computed_by: 10.times.map {|index| "players[#{@player_index}].score_sheet.frames[#{index}].rolls"})
+            text bind(game, "players[#{player_index}].score_sheet.total_score", computed_by: 10.times.map {|index| "players[#{player_index}].score_sheet.frames[#{index}].rolls"})
             layout_data RowData.new(150, 100)
             background @background
             foreground @foreground

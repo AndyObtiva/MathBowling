@@ -118,7 +118,7 @@ module MathBowling
             fill_layout :vertical
             background :transparent
             @game.player_count.times.map do |player_index|
-              MathBowling::ScoreBoardView.new(@game_container, @game, player_index).render
+              math_bowling__score_board_view(game_container: @game_container, game: @game, player_index: player_index)
             end
           }
           background @background
