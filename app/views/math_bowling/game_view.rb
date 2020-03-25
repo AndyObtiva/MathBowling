@@ -1,22 +1,17 @@
-require 'sounder'
-
 require_relative 'score_board_view'
 require_relative 'gif_image'
 
 module MathBowling
   class GameView
-    FILE_PATH_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
-    FILE_PATH_IMAGE_CORRECT = "../../../../images/bowling-strike1.gif"
-    FILE_PATH_IMAGE_WRONG = "../../../../images/bowling-miss1.gif"
-    FILE_PATH_IMAGE_CLOSE = "../../../../images/bowling-spare1.gif"
-    FILE_PATH_SOUND_CORRECT = '../../../../sounds/strike.mp3'
-    FILE_PATH_SOUND_WRONG = '../../../../sounds/bowling.mp3'
-    FILE_PATH_SOUND_CLOSE = '../../../../sounds/spare.mp3'
+    FILE_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
+    FILE_VIDEO_CORRECT = "../../../../videos/bowling-correct.mp4"
+    FILE_VIDEO_WRONG = "../../../../videos/bowling-wrong.mp4"
+    FILE_VIDEO_CLOSE = "../../../../videos/bowling-close.mp4"
     TIMER_DURATION = 20
 
     include Glimmer
 
-    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement, :timer, :roll_button_text
+    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement, :timer, :roll_button_text, :browser_text
     attr_reader :game, :player_count
 
     def initialize(player_count, display)
@@ -26,7 +21,7 @@ module MathBowling
       handle_answer_result_announcement
       set_timer
       handle_roll_button_text
-      register_sound_effects
+      register_video_events
       build_game_container
     end
 
@@ -59,27 +54,68 @@ module MathBowling
       }.observe(self, :timer)
     end
 
-    def register_sound_effects
-      answer_result_sound_observer = Observer.proc do |new_value|
-        if new_value
-          @question_images ||= {}
-          unless @question_images[new_value]
-            image_file_path = File.expand_path(self.class.send(:const_get, "FILE_PATH_IMAGE_#{new_value}"), __FILE__)
-            @question_images[new_value] = GifImage.new(@question_container, image_file_path)
-            Observer.proc {
-              @question_container.async_exec do
-                @question_container.widget.getChildren.each {|child| child.setVisible(true)}
-                @initially_focused_widget.widget.setFocus
-                self.timer = TIMER_DURATION
+    def register_video_events
+      answer_result_sound_observer = Observer.proc do |new_answer_result|
+        if new_answer_result
+          video_file_constant_name = "FILE_VIDEO_#{new_answer_result}"
+          video_file = self.class.const_get(video_file_constant_name)
+          video_file = File.expand_path(video_file, __FILE__)
+          html = <<~HTML
+            <html>
+              <head>
+                <style>
+                  body {
+                    background: transparent
+                  }
+                </style>
+              </head>
+              <body>
+                <video id="bowling-video" width="100%" height="100%" autoplay>
+                  <source src="file://#{video_file}" type="video/mp4">
+                Your browser does not support the video tag.
+                </video>
+                <!-- <script>
+                  document.getElementById('bowling-video').play()
+                </script> -->
+              </body>
+            </html>
+          HTML
+          Thread.new {
+            @game_container.async_exec do
+              if @browser[new_answer_result].widget.getText.to_s.size > 0
+                @browser[new_answer_result].widget.evaluate("document.getElementById('bowling-video').play(); return 0;")
+              else
+                @browser[new_answer_result].widget.setText(html)
               end
-            }.observe(@question_images[new_value], 'done')
-          end
-          @question_container.widget.getChildren.each {|child| child.setVisible(false)}
-          @question_images[new_value].render
-          @question_container.async_exec do
-            sound_file_path = File.expand_path(self.class.send(:const_get, "FILE_PATH_SOUND_#{new_value}"), __FILE__)
-            Sounder.play(sound_file_path) rescue nil
-          end
+              @browser[new_answer_result].widget.getLayoutData.width = @question_container.widget.getSize.x
+              @browser[new_answer_result].widget.getLayoutData.height = @question_container.widget.getSize.y
+              @question_container.widget.getChildren.each do |child|
+                child.setVisible(false)
+                child.getLayoutData.exclude = true
+              end
+              @browser[new_answer_result].widget.getLayoutData.exclude = false
+              @browser[new_answer_result].widget.setVisible(true)
+              @question_container.widget.pack
+              # @question_container.widget.redraw
+            end
+            sleep(5)
+            @game_container.async_exec do
+              @question_container.widget.getChildren.each do |child|
+                child.setVisible(true)
+                child.getLayoutData.exclude = false
+              end
+              @browser.each do |key, result_browser|
+                result_browser.widget.getLayoutData.exclude = true
+                result_browser.widget.setVisible(false)
+                result_browser.widget.getLayoutData.width = 0
+                result_browser.widget.getLayoutData.height = 0
+              end
+              @question_container.widget.pack
+              # @question_container.widget.redraw
+              @initially_focused_widget.widget.setFocus
+              self.timer = TIMER_DURATION
+            end
+          }
         end
       end
       answer_result_sound_observer.observe(@game, :answer_result)
@@ -104,7 +140,7 @@ module MathBowling
         on_paint_control {
           # Doing on paint control to use calculated shell size
           unless @game_container.widget.getBackgroundImage
-            image_data = ImageData.new(File.expand_path(FILE_PATH_IMAGE_BACKGROUND, __FILE__))
+            image_data = ImageData.new(File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__))
             image_data = image_data.scaledTo(@game_container.widget.getSize.x, @game_container.widget.getSize.y)
             @background_image = Image.new(@display, image_data)
             add_contents(@game_container) {
@@ -137,28 +173,57 @@ module MathBowling
                 spacing 6
               }
               background @background
+              @browser ||= {}
+              @browser['CORRECT'] = browser {
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background :transparent
+                text bind(self, :browser_text)
+              }
+              @browser['WRONG'] = browser {
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background :transparent
+                text bind(self, :browser_text)
+              }
+              @browser['CLOSE'] = browser {
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background :transparent
+                text bind(self, :browser_text)
+              }
               label(:center) {
                 background @background
                 text bind(self, 'answer_result_announcement')
                 visible bind(self, 'question_image.done')
                 font @font.merge height: 22, style: :italic
+                layout_data { exclude false }
               }
               label(:center) {
                 background @background
                 foreground @foreground
                 text "What is the answer to this math question?"
                 font @font
+                layout_data { exclude false }
               }
               label(:center) {
                 background @background
                 foreground @foreground
                 text bind(@game, "question")
                 font @font
+                layout_data { exclude false }
               }
               @initially_focused_widget = text(:center, :border) {
                 text bind(@game, "answer")
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 font @font
+                layout_data { exclude false }
                 on_key_pressed {|key_event|
                   @game.roll if key_event.keyCode == GSWT[:cr]
                 }

@@ -36,7 +36,7 @@ module MathBowling
           background @background
           label(:center) {
             text bind(game, "players[#{player_index}].score_sheet.total_score", computed_by: 10.times.map {|index| "players[#{player_index}].score_sheet.frames[#{index}].rolls"})
-            layout_data RowData.new(150, 100)
+            layout_data 150, 100
             background @background
             foreground @foreground
             font CONFIG[:scoreboard_font].merge(height: 80)
