@@ -17,8 +17,8 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 - If an answer is within the number of remaining pins from the correct answer, then it is considered close. The player gets the equivalent of knocked pins for that answer (e.g. answering 3 or 5 to 2 + 2 gets all remaining pins minus 1). This makes answering the next question more challenging just like in bowling
 - If an answer is farther from the correct answer than number of remaining pins, then 0 is awarded.
 - The player with the higher score at the end wins.
-- If both player have the same score at the end, it is a tie.
-- Players are distinguished by position and color (player 1 is red and player 2 is blue)
+- If both players have the same score at the end, it is a tie.
+- Players are distinguished by position and color.
 - The game may be played with one player only, in which case it is always that player's turn on every bowling roll (question answered).
 
 # Use Cases
