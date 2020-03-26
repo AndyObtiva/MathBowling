@@ -65,12 +65,14 @@ module MathBowling
               <head>
                 <style>
                   body {
-                    background: transparent
+                    background: transparent;
+                    margin: 0;
+                    padding: 0;
                   }
                 </style>
               </head>
               <body>
-                <video id="bowling-video" width="100%" height="100%" autoplay>
+                <video id="bowling-video" width="344" height="100%" autoplay>
                   <source src="file://#{video_file}" type="video/mp4">
                 Your browser does not support the video tag.
                 </video>
@@ -83,11 +85,11 @@ module MathBowling
           Thread.new {
             @game_container.async_exec do
               if @browser[new_answer_result].widget.getText.to_s.size > 0
-                @browser[new_answer_result].widget.evaluate("document.getElementById('bowling-video').play(); return 0;")
+                @browser[new_answer_result].widget.execute("document.getElementById('bowling-video').play()")
               else
                 @browser[new_answer_result].widget.setText(html)
               end
-              @browser[new_answer_result].widget.getLayoutData.width = @question_container.widget.getSize.x
+              @browser[new_answer_result].widget.getLayoutData.width = 344#@question_container.widget.getSize.x
               @browser[new_answer_result].widget.getLayoutData.height = @question_container.widget.getSize.y
               @question_container.widget.getChildren.each do |child|
                 child.setVisible(false)
