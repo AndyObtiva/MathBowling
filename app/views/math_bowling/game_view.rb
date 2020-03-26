@@ -1,17 +1,20 @@
 require_relative 'score_board_view'
 require_relative 'gif_image'
+require_relative 'video'
 
 module MathBowling
   class GameView
     FILE_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
-    FILE_VIDEO_CORRECT = "../../../../videos/bowling-correct.mp4"
-    FILE_VIDEO_WRONG = "../../../../videos/bowling-wrong.mp4"
-    FILE_VIDEO_CLOSE = "../../../../videos/bowling-close.mp4"
+    FILE_VIDEOS = {
+      'CORRECT' => File.expand_path("../../../../videos/bowling-correct.mp4", __FILE__),
+      'WRONG' => File.expand_path("../../../../videos/bowling-wrong.mp4", __FILE__),
+      'CLOSE' => File.expand_path("../../../../videos/bowling-close.mp4", __FILE__),
+    }
     TIMER_DURATION = 20
 
     include Glimmer
 
-    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement, :timer, :roll_button_text, :browser_text
+    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement, :timer, :roll_button_text
     attr_reader :game, :player_count
 
     def initialize(player_count, display)
@@ -57,63 +60,33 @@ module MathBowling
     def register_video_events
       answer_result_sound_observer = Observer.proc do |new_answer_result|
         if new_answer_result
-          video_file_constant_name = "FILE_VIDEO_#{new_answer_result}"
-          video_file = self.class.const_get(video_file_constant_name)
-          video_file = File.expand_path(video_file, __FILE__)
-          html = <<~HTML
-            <html>
-              <head>
-                <style>
-                  body {
-                    background: transparent;
-                    margin: 0;
-                    padding: 0;
-                  }
-                </style>
-              </head>
-              <body>
-                <video id="bowling-video" width="344" height="100%" autoplay>
-                  <source src="file://#{video_file}" type="video/mp4">
-                Your browser does not support the video tag.
-                </video>
-                <!-- <script>
-                  document.getElementById('bowling-video').play()
-                </script> -->
-              </body>
-            </html>
-          HTML
           Thread.new {
             @game_container.async_exec do
-              if @browser[new_answer_result].widget.getText.to_s.size > 0
-                @browser[new_answer_result].widget.execute("document.getElementById('bowling-video').play()")
-              else
-                @browser[new_answer_result].widget.setText(html)
-              end
-              @browser[new_answer_result].widget.getLayoutData.width = 344#@question_container.widget.getSize.x
-              @browser[new_answer_result].widget.getLayoutData.height = @question_container.widget.getSize.y
+              @videos[new_answer_result].play
+              @videos[new_answer_result].widget.setLayoutData RowData.new
+              @videos[new_answer_result].widget.getLayoutData.width = 600 #344 #@question_container.widget.getSize.x
+              @videos[new_answer_result].widget.getLayoutData.height = @question_container.widget.getSize.y
               @question_container.widget.getChildren.each do |child|
-                child.setVisible(false)
                 child.getLayoutData.exclude = true
+                child.setVisible(false)
               end
-              @browser[new_answer_result].widget.getLayoutData.exclude = false
-              @browser[new_answer_result].widget.setVisible(true)
+              @videos[new_answer_result].widget.getLayoutData.exclude = false
+              @videos[new_answer_result].widget.setVisible(true)
               @question_container.widget.pack
-              # @question_container.widget.redraw
             end
             sleep(5)
             @game_container.async_exec do
               @question_container.widget.getChildren.each do |child|
                 child.setVisible(true)
-                child.getLayoutData.exclude = false
+                child.getLayoutData&.exclude = false
               end
-              @browser.each do |key, result_browser|
-                result_browser.widget.getLayoutData.exclude = true
-                result_browser.widget.setVisible(false)
-                result_browser.widget.getLayoutData.width = 0
-                result_browser.widget.getLayoutData.height = 0
+              @videos.values.each do |video|
+                video.widget.getLayoutData.exclude = true
+                # video.widget.getLayoutData.width = 0
+                # video.widget.getLayoutData.height = 0
+                video.widget.setVisible(false)
               end
               @question_container.widget.pack
-              # @question_container.widget.redraw
               @initially_focused_widget.widget.setFocus
               self.timer = TIMER_DURATION
             end
@@ -175,31 +148,16 @@ module MathBowling
                 spacing 6
               }
               background @background
-              @browser ||= {}
-              @browser['CORRECT'] = browser {
-                layout_data {
-                  exclude true
-                }
-                visible false
-                background :transparent
-                text bind(self, :browser_text)
-              }
-              @browser['WRONG'] = browser {
-                layout_data {
-                  exclude true
-                }
-                visible false
-                background :transparent
-                text bind(self, :browser_text)
-              }
-              @browser['CLOSE'] = browser {
-                layout_data {
-                  exclude true
-                }
-                visible false
-                background :transparent
-                text bind(self, :browser_text)
-              }
+              @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
+                videos.merge(
+                  answer_result => video(file: FILE_VIDEOS[answer_result]) {
+                    # layout_data {
+                    #   exclude true
+                    # }
+                    visible false
+                  }
+                )
+              end
               label(:center) {
                 background @background
                 text bind(self, 'answer_result_announcement')

@@ -9,6 +9,11 @@ module MathBowling
       '*' => 'X',
       '/' => '➗',
     }
+    ANSWER_RESULTS = [
+      'CORRECT',
+      'WRONG',
+      'CLOSE'
+    ]
     attr_reader :player_count
     attr_accessor :players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players, :roll_done
 
