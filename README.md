@@ -9,7 +9,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 # Game Rules
 
 - On a player's turn, a math question must be answered to initiate a bowling roll
-- A player must math questions until filling a frame just like bowling.
+- A player must answer math questions until filling a frame just like bowling.
 - Players must fill all 10 frames just like bowling to finish the game.
 - A player has 20 seconds to answer a question
 - If a player does not answer on time, whatever was entered is taken as the answer. If nothing was entered, then the answer is assumed to be 0
