@@ -8,11 +8,6 @@ class Video
 
   def body
     browser {
-      layout_data {
-        exclude true
-        width 0
-        height 0
-      }
       text <<~HTML
         <html>
           <head>

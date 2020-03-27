@@ -151,15 +151,17 @@ module MathBowling
               @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
                 videos.merge(
                   answer_result => video(file: FILE_VIDEOS[answer_result]) {
-                    # layout_data {
-                    #   exclude true
-                    # }
+                    layout_data {
+                      exclude true
+                      width 0
+                      height 0
+                    }
                     visible false
                   }
                 )
               end
               label(:center) {
-                background @background
+                background (@game.player_count == 1 ? :yellow : @background) # TODO figure this out
                 text bind(self, 'answer_result_announcement')
                 visible bind(self, 'question_image.done')
                 font @font.merge height: 22, style: :italic
