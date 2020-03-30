@@ -14,7 +14,9 @@ module MathBowling
 
     include Glimmer
 
-    attr_accessor :display, :game_view_visible, :question_container, :answer_result_announcement, :timer, :roll_button_text
+    attr_accessor :display, :game_view_visible, :question_container,
+                  :answer_result_announcement, :answer_result_announcement_background,
+                  :timer, :roll_button_text
     attr_reader :game, :player_count
 
     def initialize(player_count, display)
@@ -31,6 +33,14 @@ module MathBowling
     def handle_answer_result_announcement
       Observer.proc {
         self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
+        self.answer_result_announcement_background = case @game.answer_result
+        when 'CORRECT'
+          :green
+        when 'WRONG'
+          :red
+        when 'CLOSE'
+          :yellow
+        end
       }.observe(@game, :answer_result)
     end
 
@@ -161,7 +171,7 @@ module MathBowling
                 )
               end
               label(:center) {
-                background (@game.player_count == 1 ? :yellow : @background) # TODO figure this out
+                background bind(self, 'answer_result_announcement_background')
                 text bind(self, 'answer_result_announcement')
                 visible bind(self, 'question_image.done')
                 font @font.merge height: 22, style: :italic
