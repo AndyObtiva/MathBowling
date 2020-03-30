@@ -1,6 +1,6 @@
 require_relative 'score_board_view'
 require_relative 'gif_image'
-require_relative 'video'
+# require_relative 'video'
 
 module MathBowling
   class GameView
@@ -150,7 +150,7 @@ module MathBowling
               background @background
               @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
                 videos.merge(
-                  answer_result => video(file: FILE_VIDEOS[answer_result]) {
+                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -150) {
                     layout_data {
                       exclude true
                       width 0
