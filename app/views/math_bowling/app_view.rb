@@ -17,7 +17,7 @@ module MathBowling
 
     def initialize
       @display = display.display
-      @game_views = (1..2).to_a.map {|n| MathBowling::GameView.new(n, @display) }
+      @game_views = (1..4).to_a.map {|n| MathBowling::GameView.new(n, @display) }
       @game_views.each do |game_view|
         Observer.proc do |game_view_visible|
           render unless game_view_visible
@@ -58,24 +58,18 @@ module MathBowling
             fill_layout :horizontal
             layout_data :center, :center, true, true
             background :transparent
-            @initially_focused_widget = button {
-              text "1 Player"
-              font CONFIG[:font]
-              background CONFIG[:button_background]
-              on_widget_selected {
-                @game_type_container.widget.setVisible(false)
-                @game_views[0].render
+            @buttons = 4.times.map do |n|
+              button {
+                text "#{n+1} Player#{('s' unless n == 0)}"
+                font CONFIG[:font]
+                background CONFIG[:button_background]
+                on_widget_selected {
+                  @game_type_container.widget.setVisible(false)
+                  @game_views[n].render
+                }
               }
-            }
-            button {
-              text "2 Players"
-              font CONFIG[:font]
-              background CONFIG[:button_background]
-              on_widget_selected {
-                @game_type_container.widget.setVisible(false)
-                @game_views[1].render
-              }
-            }
+            end
+            @initially_focused_widget = @buttons.first
           }
           button {
             layout_data :center, :center, true, true

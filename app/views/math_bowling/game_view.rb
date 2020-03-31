@@ -63,7 +63,7 @@ module MathBowling
 
     def handle_roll_button_text
       Observer.proc {
-        self.roll_button_text = "Enter Answer (#{self.timer} seconds left)"
+        self.roll_button_text = "Player #{self.game.current_player.index + 1} Enter Answer (#{self.timer} seconds left)"
       }.observe(self, :timer)
     end
 
@@ -235,7 +235,7 @@ module MathBowling
             }
             button {
               background CONFIG[:button_background]
-              text "Change Players"
+              text "Change Player Count"
               font CONFIG[:font]
               on_widget_selected {
                 @game_container.widget.setVisible(false)

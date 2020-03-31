@@ -1,4 +1,4 @@
-# Math Bowling 0.9.1 Beta 2
+# Math Bowling 0.9.2 Beta 3
 
 ![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
 
@@ -56,10 +56,10 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Center windows
 1. [DONE] Add question answering time limit
 
-0.9.2 Beta 3 Release:
+[DONE] 0.9.2 Beta 3 Release:
 
 1. [DONE] Replace image for getting a correct, wrong, or close answer with a video instead.
-1. Support up to 4 players
+1. [DONE] Support up to 4 players
 
 # License
 
