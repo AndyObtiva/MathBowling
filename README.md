@@ -25,10 +25,12 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 1. Start 1 Player Game
 1. Start 2 Player Game
+1. Start 3 Player Game
+1. Start 4 Player Game
 1. Exit Game
 1. Answer Question
 1. Restart Game
-1. Change Game Type
+1. Change Player Count
 
 # User Stories / Release Plan
 
