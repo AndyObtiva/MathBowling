@@ -5,9 +5,9 @@ module MathBowling
     QUESTION_OPERATIONS = %w[+ - * /]
     TRANSLATION = {
       '+' => '+',
-      '-' => '-',
-      '*' => 'X',
-      '/' => '➗',
+      '-' => '−',
+      '*' => '×',
+      '/' => '÷',
     }
     ANSWER_RESULTS = [
       'CORRECT',
