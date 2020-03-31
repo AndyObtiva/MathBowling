@@ -8,5 +8,9 @@ module MathBowling
       self.score_sheet = MathBowling::ScoreSheet.new
       self.index = index
     end
+
+    def number
+      index + 1
+    end
   end
 end

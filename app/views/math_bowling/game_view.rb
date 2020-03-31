@@ -63,7 +63,11 @@ module MathBowling
 
     def handle_roll_button_text
       Observer.proc {
-        self.roll_button_text = "Player #{self.game.current_player.index + 1} Enter Answer (#{self.timer} seconds left)"
+        roll_text = "Enter Answer (#{self.timer} seconds left)"
+        if @game.player_count > 0
+          roll_text = "Player #{self.game&.current_player&.number} #{roll_text}"
+        end
+        self.roll_button_text = roll_text
       }.observe(self, :timer)
     end
 
