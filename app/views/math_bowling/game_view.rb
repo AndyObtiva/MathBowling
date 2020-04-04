@@ -90,7 +90,7 @@ module MathBowling
               background @background
               @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
                 videos.merge(
-                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -150) {
+                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -150, offset_x: -80) {
                     layout_data {
                       exclude true
                       width 0
