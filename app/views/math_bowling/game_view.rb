@@ -1,6 +1,4 @@
 require_relative 'score_board_view'
-require_relative 'gif_image'
-# require_relative 'video'
 
 module MathBowling
   class GameView
@@ -12,138 +10,65 @@ module MathBowling
     }
     TIMER_DURATION = 20
 
-    include Glimmer
+    include Glimmer::SWT::CustomShell
 
-    attr_accessor :display, :game_view_visible, :question_container,
+    include_package 'org.eclipse.swt'
+    include_package 'org.eclipse.swt.widgets'
+    include_package 'org.eclipse.swt.layout'
+    include_package 'org.eclipse.swt.graphics'
+    include_package 'org.eclipse.swt.browser'
+    include_package 'org.eclipse.swt.custom'
+
+    attr_accessor :question_container,
                   :answer_result_announcement, :answer_result_announcement_background,
                   :timer, :roll_button_text
-    attr_reader :game, :player_count
+    attr_reader :game
 
-    def initialize(player_count, display)
-      @player_count = player_count
-      @display = display
+    options :player_count, :display
+
+    before_body do
       @game = MathBowling::Game.new(player_count)
+    end
+
+    after_body do
       handle_answer_result_announcement
       set_timer
       handle_roll_button_text
       register_video_events
-      build_game_container
     end
 
-    def handle_answer_result_announcement
-      Observer.proc {
-        self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
-        self.answer_result_announcement_background = case @game.answer_result
-        when 'CORRECT'
-          :green
-        when 'WRONG'
-          :red
-        when 'CLOSE'
-          :yellow
-        end
-      }.observe(@game, :answer_result)
-    end
-
-    def set_timer
-      timer_thread = Thread.new do
-        loop do
-          sleep(1)
-          @game.started? && @game_container && @game_container.async_exec do
-            self.timer = self.timer - 1 if self.timer && self.timer > 0
-            if self.timer == 0
-              @game.roll
-            end
-          end
-        end
-      end
-      Observer.proc {
-        self.timer = TIMER_DURATION
-      }.observe(@game, :question)
-    end
-
-    def handle_roll_button_text
-      Observer.proc {
-        roll_text = "Enter Answer (#{self.timer} seconds left)"
-        if @game.player_count > 0
-          roll_text = "Player #{self.game&.current_player&.number} #{roll_text}"
-        end
-        self.roll_button_text = roll_text
-      }.observe(self, :timer)
-    end
-
-    def register_video_events
-      answer_result_sound_observer = Observer.proc do |new_answer_result|
-        if new_answer_result
-          Thread.new {
-            @game_container.async_exec do
-              @videos[new_answer_result].play
-              @videos[new_answer_result].widget.setLayoutData RowData.new
-              @videos[new_answer_result].widget.getLayoutData.width = 600 #344 #@question_container.widget.getSize.x
-              @videos[new_answer_result].widget.getLayoutData.height = @question_container.widget.getSize.y
-              @question_container.widget.getChildren.each do |child|
-                child.getLayoutData.exclude = true
-                child.setVisible(false)
-              end
-              @videos[new_answer_result].widget.getLayoutData.exclude = false
-              @videos[new_answer_result].widget.setVisible(true)
-              @question_container.widget.pack
-            end
-            sleep(5)
-            @game_container.async_exec do
-              @question_container.widget.getChildren.each do |child|
-                child.setVisible(true)
-                child.getLayoutData&.exclude = false
-              end
-              @videos.values.each do |video|
-                video.widget.getLayoutData.exclude = true
-                # video.widget.getLayoutData.width = 0
-                # video.widget.getLayoutData.height = 0
-                video.widget.setVisible(false)
-              end
-              @question_container.widget.pack
-              @initially_focused_widget.widget.setFocus
-              self.timer = TIMER_DURATION
-            end
-          }
-        end
-      end
-      answer_result_sound_observer.observe(@game, :answer_result)
-    end
-
-    def player_color
-      if @game.current_player.nil?
-        CONFIG[:colors][:player1]
-      else
-        (@game.current_player.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
-      end
-    end
-
-    def build_game_container
+    def body
       @font = CONFIG[:font].merge(height: 36)
       @font_button = CONFIG[:font].merge(height: 28)
-      @game_container = shell(:no_resize) {
+      Observer.proc do |roll_done|
+        if roll_done
+          if @game.over?
+            @restart_button.widget.setFocus
+          else
+            @initially_focused_widget.widget.setFocus
+          end
+        end
+      end.observe(@game, :roll_done)
+      Observer.proc do |answer_result|
+        @initially_focused_widget.widget.setFocus if answer_result.nil?
+      end.observe(@game, :answer_result)
+      shell(:no_resize) {
         @background = :transparent
         @foreground = :black
         text "Math Bowling"
-
-        on_paint_control {
-          # Doing on paint control to use calculated shell size
-          unless @game_container.widget.getBackgroundImage
-            image_data = ImageData.new(File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__))
-            image_data = image_data.scaledTo(@game_container.widget.getSize.x, @game_container.widget.getSize.y)
-            @background_image = Image.new(@display, image_data)
-            add_contents(@game_container) {
-              background_image @background_image
-            }
-          end
+        background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
+        on_event_show {
+          @game.start
         }
-
+        on_event_hide {
+          @game.quit
+        }
         composite {
           composite {
             fill_layout :vertical
             background :transparent
             @game.player_count.times.map do |player_index|
-              math_bowling__score_board_view(game_container: @game_container, game: @game, player_index: player_index)
+              math_bowling__score_board_view(game_container: body_root, game: @game, player_index: player_index)
             end
           }
           background @background
@@ -177,7 +102,7 @@ module MathBowling
               label(:center) {
                 background bind(self, 'answer_result_announcement_background')
                 text bind(self, 'answer_result_announcement')
-                visible bind(self, 'question_image.done')
+                visible bind(self, 'game.answer_result')
                 font @font.merge height: 22, style: :italic
                 layout_data { exclude false }
               }
@@ -242,9 +167,7 @@ module MathBowling
               text "Change Player Count"
               font CONFIG[:font]
               on_widget_selected {
-                @game_container.widget.setVisible(false)
-                @game.quit
-                self.game_view_visible = false
+                hide
               }
             }
             button {
@@ -258,32 +181,95 @@ module MathBowling
           }
         }
       }
-      Observer.proc do |roll_done|
-        if roll_done
-          if @game.over?
-            @restart_button.widget.setFocus
-          else
-            @initially_focused_widget.widget.setFocus
-          end
-        end
-      end.observe(@game, :roll_done)
-      Observer.proc do |answer_result|
-        @initially_focused_widget.widget.setFocus if answer_result.nil?
-      end.observe(@game, :answer_result)
     end
 
-    def render
-      if @game_container_opened
-        @game.restart unless @game.not_started?
-        @game_container.widget.setVisible(true)
-        self.game_view_visible = true
-      else
-        @game.start
-        self.game_view_visible = true
-        @game_container_opened = true
-        @game_container.open
-      end
-      @initially_focused_widget.widget.setFocus
+    def handle_answer_result_announcement
+      Observer.proc {
+        self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
+        self.answer_result_announcement_background = case @game.answer_result
+        when 'CORRECT'
+          :green
+        when 'WRONG'
+          :red
+        when 'CLOSE'
+          :yellow
+        end
+      }.observe(@game, :answer_result)
     end
+
+    def set_timer
+      timer_thread = Thread.new do
+        loop do
+          sleep(1)
+          @game.started? && body_root && body_root.async_exec do
+            self.timer = self.timer - 1 if self.timer && self.timer > 0
+            if self.timer == 0
+              @game.roll
+            end
+          end
+        end
+      end
+      Observer.proc {
+        self.timer = TIMER_DURATION
+      }.observe(@game, :question)
+    end
+
+    def handle_roll_button_text
+      Observer.proc {
+        roll_text = "Enter Answer (#{self.timer} seconds left)"
+        if @game.player_count > 0
+          roll_text = "Player #{self.game&.current_player&.number} #{roll_text}"
+        end
+        self.roll_button_text = roll_text
+      }.observe(self, :timer)
+    end
+
+    def register_video_events
+      answer_result_sound_observer = Observer.proc do |new_answer_result|
+        if new_answer_result
+          Thread.new {
+            body_root.async_exec do
+              @videos[new_answer_result].play
+              @videos[new_answer_result].widget.setLayoutData RowData.new
+              @videos[new_answer_result].widget.getLayoutData.width = 600 #344 #@question_container.widget.getSize.x
+              @videos[new_answer_result].widget.getLayoutData.height = @question_container.widget.getSize.y
+              @question_container.widget.getChildren.each do |child|
+                child.getLayoutData.exclude = true
+                child.setVisible(false)
+              end
+              @videos[new_answer_result].widget.getLayoutData.exclude = false
+              @videos[new_answer_result].widget.setVisible(true)
+              @question_container.widget.pack
+            end
+            sleep(5) # fix issue with setting answer result announcement when quitting during video
+            body_root.async_exec do
+              @question_container.widget.getChildren.each do |child|
+                child.setVisible(true)
+                child.getLayoutData&.exclude = false
+              end
+              @videos.values.each do |video|
+                video.widget.getLayoutData.exclude = true
+                # video.widget.getLayoutData.width = 0
+                # video.widget.getLayoutData.height = 0
+                video.widget.setVisible(false)
+              end
+              @question_container.widget.pack
+              @initially_focused_widget.widget.setFocus
+              self.timer = TIMER_DURATION
+            end
+          }
+        end
+      end
+      answer_result_sound_observer.observe(@game, :answer_result)
+    end
+
+    def player_color
+      if @game.current_player.nil?
+        CONFIG[:colors][:player1]
+      else
+        (@game.current_player.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
+      end
+    end
+
   end
 end

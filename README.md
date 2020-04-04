@@ -63,6 +63,12 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Replace image for getting a correct, wrong, or close answer with a video instead.
 1. [DONE] Support up to 4 players
 
+1.0.0 Final Release:
+
+1. Package for Mac
+1. Package for Windows
+1. Package for Linux
+
 # License
 
 Copyright (c) 2019-2020 Andy Maleh. See LICENSE.txt for further details.

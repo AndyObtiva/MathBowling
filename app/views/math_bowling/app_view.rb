@@ -17,18 +17,18 @@ module MathBowling
 
     def initialize
       @display = display.display
-      @game_views = (1..4).to_a.map {|n| MathBowling::GameView.new(n, @display) }
+      @game_views = (1..4).to_a.map {|n| math_bowling__game_view(player_count: n, display: @display) }
       @game_views.each do |game_view|
-        Observer.proc do |game_view_visible|
-          render unless game_view_visible
-        end.observe(game_view, 'game_view_visible')
+        game_view.on_event_hide do
+          render
+        end
       end
     end
 
     def render
       if @game_type_container
         @initially_focused_widget.widget.setFocus
-        @game_type_container.widget.setVisible(true)
+        @game_type_container.show
       else
         @game_type_container = shell(:no_resize) {
           grid_layout {
@@ -37,17 +37,7 @@ module MathBowling
             margin_width 35
             margin_height 35
           }
-          on_paint_control {
-            # Doing on paint control to use calculated shell size
-            unless @game_type_container.widget.getBackgroundImage
-              image_data = ImageData.new(File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__))
-              image_data = image_data.scaledTo(@game_type_container.widget.getSize.x, @game_type_container.widget.getSize.y)
-              @splash_image = Image.new(@display, image_data)
-              add_contents(@game_type_container) {
-                background_image @splash_image
-              }
-            end
-          }
+          background_image File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__)
           label(:center) {
             layout_data :fill, :fill, true, true
             text "Math Bowling"
@@ -64,8 +54,8 @@ module MathBowling
                 font CONFIG[:font]
                 background CONFIG[:button_background]
                 on_widget_selected {
-                  @game_type_container.widget.setVisible(false)
-                  @game_views[n].render
+                  @game_type_container.hide
+                  @game_views[n].show
                 }
               }
             end
@@ -82,7 +72,7 @@ module MathBowling
           }
         }
         @initially_focused_widget.widget.setFocus
-        @game_type_container.open
+        @game_type_container.show
       end
     end
   end

@@ -40,11 +40,12 @@ module MathBowling
           teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
         end until teh_answer.to_i == teh_answer && teh_answer >= 0
       end
-      self.question = teh_question
       self.answer = ''
+      self.question = teh_question
     end
 
     def roll
+      return if question.nil?
       self.roll_done = false
       return if self.current_player.score_sheet.current_frame.nil?
       pins_remaining = self.current_player.score_sheet.current_frame.pins_remaining
@@ -81,6 +82,8 @@ module MathBowling
     def quit
       self.players = nil
       self.current_player = nil
+      self.question = nil
+      self.answer = ''
     end
 
     def switch_player
@@ -118,6 +121,7 @@ module MathBowling
     end
 
     def calculate_answer
+      return if question.nil?
       first_number, operator, last_number = question.split(' ')
       operator = TRANSLATION.invert[operator]
       eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
