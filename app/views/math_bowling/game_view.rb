@@ -59,6 +59,7 @@ module MathBowling
         background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
         on_event_show {
           @game.start
+          @initially_focused_widget&.widget.setFocus
         }
         on_event_hide {
           @game.quit
@@ -121,6 +122,7 @@ module MathBowling
                 layout_data { exclude false }
               }
               @initially_focused_widget = text(:center, :border) {
+                focus true
                 text bind(@game, "answer")
                 enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 font @font
