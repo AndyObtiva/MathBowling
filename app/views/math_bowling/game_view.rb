@@ -166,7 +166,7 @@ module MathBowling
             }
             button {
               background CONFIG[:button_background]
-              text "Change Player Count"
+              text "Quit Game"
               font CONFIG[:font]
               on_widget_selected {
                 hide

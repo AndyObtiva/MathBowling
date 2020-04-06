@@ -65,6 +65,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 1.0.0 Final Release:
 
+1. Menu Options
 1. Package for Mac
 1. Package for Windows
 1. Package for Linux

@@ -1,6 +1,5 @@
 require 'glimmer'
 require 'puts_debuggerer'
-require 'sounder'
 
 # Glimmer.logger.level = Logger::DEBUG
 
