@@ -15,8 +15,7 @@ module MathBowling
     attr_reader :games
 
     def initialize
-      @display = display.display
-      @game_views = (1..4).to_a.map {|n| math_bowling__game_view(player_count: n, display: @display) }
+      @game_views = (1..4).to_a.map {|n| math_bowling__game_view(player_count: n) }
       @game_views.each do |game_view|
         game_view.on_event_hide do
           render
@@ -26,7 +25,7 @@ module MathBowling
 
     def render
       if @game_type_container
-        @initially_focused_widget.widget.setFocus
+        @initially_focused_widget.swt_widget.setFocus
         @game_type_container.show
       else
         @game_type_container = shell(:no_resize) {
@@ -70,7 +69,7 @@ module MathBowling
             }
           }
         }
-        @initially_focused_widget.widget.setFocus
+        @initially_focused_widget.swt_widget.setFocus
         @game_type_container.show
       end
     end

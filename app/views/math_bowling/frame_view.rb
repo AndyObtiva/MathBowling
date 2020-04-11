@@ -6,7 +6,7 @@ module MathBowling
     SIZE_RUNNING_SCORE = [100, 50]
     SIZE_RUNNING_SCORE_FINAL = [150, 50]
 
-    include Glimmer::SWT::CustomWidget
+    include Glimmer::UI::CustomWidget
 
     options :game_container, :game, :player_index, :frame_index
 
@@ -14,7 +14,7 @@ module MathBowling
       game_container.display
     end
 
-    def body
+    body {
       @background = player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       @foreground = :white
       @font = CONFIG[:scoreboard_font].merge(height: 36)
@@ -84,6 +84,6 @@ module MathBowling
           }
         }
       }
-    end
+    }
   end
 end

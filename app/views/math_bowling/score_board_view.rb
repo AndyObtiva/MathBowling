@@ -4,11 +4,11 @@ require_relative 'frame_view'
 
 module MathBowling
   class ScoreBoardView
-    include Glimmer::SWT::CustomWidget
+    include Glimmer::UI::CustomWidget
 
     options :game_container, :game, :player_index
 
-    def body
+    body {
       @background = player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       composite {
         row_layout {
@@ -62,6 +62,6 @@ module MathBowling
           }
         }
       }
-    end
+    }
   end
 end

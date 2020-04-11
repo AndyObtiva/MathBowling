@@ -25,14 +25,14 @@ class GifImage
     }
   end
   def scaled_image_data(image_data)
-    image_data.scaledTo(@parent.widget.getSize.x, @parent.widget.getSize.y)
+    image_data.scaledTo(@parent.swt_widget.getSize.x, @parent.swt_widget.getSize.y)
   end
   def render
     @imageNumber = 0
     @image.dispose
     @image = Image.new(@display, scaled_image_data(@loader.data[0]))
     @parent.async_exec {
-      @parent.widget.redraw()
+      @parent.swt_widget.redraw()
     }
     java.lang.Thread.new(
       GRunnable.new {
@@ -47,7 +47,7 @@ class GifImage
               @image.dispose
               @image = Image.new(@display, 1, 1);
               @parent.async_exec {
-                @parent.widget.redraw()
+                @parent.swt_widget.redraw()
               }
               @imageNumber = 0
             end
@@ -62,7 +62,7 @@ class GifImage
               frameImage = Image.new(@display, nextFrameData);
               @gc = org.eclipse.swt.graphics.GC.new(@image);
               @gc.drawImage(frameImage, nextFrameData.x, nextFrameData.y)              
-              @parent.widget.redraw()
+              @parent.swt_widget.redraw()
               frameImage.dispose()
               @gc.dispose
             }
