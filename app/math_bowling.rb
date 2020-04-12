@@ -1,3 +1,5 @@
+require 'glimmer'
+
 require_relative 'models/math_bowling/game'
 require_relative 'views/math_bowling/app_view'
 
@@ -6,7 +8,8 @@ module MathBowling
   DEFAULT = {
     font: {
       name: "Abadi MT Condensed Extra Bold",
-      height: 20
+      height: 20,
+      # style: :bold
     },
     # red: rgb(138, 31, 41),
     # light_red: rgb(148, 95, 100),

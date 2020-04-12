@@ -1,6 +1,3 @@
-require 'glimmer'
-require 'puts_debuggerer'
-
 # Glimmer.logger.level = Logger::DEBUG
 
 require_relative 'game_view'

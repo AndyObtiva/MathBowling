@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'glimmer/launcher'
+require Glimmer::Launcher.swt_jar_file
+require_relative '../app/math_bowling.rb'
