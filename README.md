@@ -58,7 +58,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Center windows
 1. [DONE] Add question answering time limit
 
-[DONE] 0.9.2 Beta 3 Release:
+[DONE] 0.9.2 Beta 3 Release ([download](https://srv-file12.gofile.io/download/x8rV9d/MathBowling-1.0.dmg)):
 
 1. [DONE] Replace image for getting a correct, wrong, or close answer with a video instead.
 1. [DONE] Support up to 4 players
