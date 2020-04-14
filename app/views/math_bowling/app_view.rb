@@ -12,12 +12,11 @@ module MathBowling
     attr_reader :games
 
     def initialize
-      @game_views = (1..4).to_a.map {|n| math_bowling__game_view(player_count: n) }
-      @game_views.each do |game_view|
-        game_view.on_event_hide do
+      @game_view = math_bowling__game_view {
+        on_event_hide {
           render
-        end
-      end
+        }
+      }
     end
 
     def render
@@ -50,7 +49,7 @@ module MathBowling
                 background CONFIG[:button_background]
                 on_widget_selected {
                   @game_type_container.hide
-                  @game_views[n].show
+                  @game_view.show(player_count: n+1)
                 }
               }
             end

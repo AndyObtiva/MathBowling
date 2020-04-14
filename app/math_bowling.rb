@@ -1,4 +1,5 @@
 require 'glimmer'
+require 'puts_debuggerer'
 
 require_relative 'models/math_bowling/game'
 require_relative 'views/math_bowling/app_view'

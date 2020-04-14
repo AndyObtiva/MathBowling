@@ -58,17 +58,22 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Center windows
 1. [DONE] Add question answering time limit
 
-[DONE] 0.9.2 Beta 3 Release ([download](https://srv-file12.gofile.io/download/x8rV9d/MathBowling-1.0.dmg)):
+[DONE] 0.9.2 Beta 3 Release ([download](https://1drv.ms/u/s!As1vHoYfypJ0gZcDaUq46wxUD1eSoA?e=2ccsHF)):
 
 1. [DONE] Replace image for getting a correct, wrong, or close answer with a video instead.
 1. [DONE] Support up to 4 players
+1. [DONE] Package for MacOS
+
+[DONE] 0.9.3 Beta 4 Release ([download](https://1drv.ms/u/s!As1vHoYfypJ0gZcFMAWE48EyhyjNEQ?e=auf1lT)):
+
+1. [DONE] Speed up startup time
 
 1.0.0 Final Release:
 
-1. Menu Options
 1. End of Game Winner Announcement
+1. Input Validation (positive integers only)
+1. Menu Options
 1. Highlight current player question with player color
-1. Package for MacOS
 
 1.1.0 Release:
 

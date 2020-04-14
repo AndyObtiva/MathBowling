@@ -2,6 +2,8 @@ require_relative 'score_board_view'
 
 module MathBowling
   class GameView
+    include Glimmer::UI::CustomShell
+
     FILE_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
     FILE_VIDEOS = {
       'CORRECT' => File.expand_path("../../../../videos/bowling-correct.mp4", __FILE__),
@@ -10,17 +12,13 @@ module MathBowling
     }
     TIMER_DURATION = 20
 
-    include Glimmer::UI::CustomShell
-
     attr_accessor :question_container,
                   :answer_result_announcement, :answer_result_announcement_background,
                   :timer, :roll_button_text
-    attr_reader :game
-
-    options :player_count
+    attr_reader :game, :player_count
 
     before_body {
-      @game = MathBowling::Game.new(player_count)
+      @game = MathBowling::Game.new
     }
 
     after_body {
@@ -59,11 +57,17 @@ module MathBowling
         }
         composite {
           composite {
-            fill_layout :vertical
+            grid_layout 1, false
             background :transparent
-            @game.player_count.times.map do |player_index|
-              math_bowling__score_board_view(game_container: body_root, game: @game, player_index: player_index)
-            end
+            Game::PLAYER_COUNT_MAX.times.map { |player_index|
+              math_bowling__score_board_view(game: @game, player_index: player_index) {
+                layout_data {
+                  horizontal_alignment :fill
+                  grab_excess_horizontal_space true
+                  exclude bind(@game, :player_count) { |player_count| player_index >= player_count.to_i }
+                }
+              }
+            }
           }
           background @background
           composite {
@@ -178,6 +182,11 @@ module MathBowling
       }
     }
 
+    def player_count=(value)
+      @game.player_count = value
+      @player_count = value
+    end
+
     def handle_answer_result_announcement
       observe(@game, :answer_result) do
         self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
@@ -212,7 +221,7 @@ module MathBowling
     def handle_roll_button_text
       observe(self, :timer) do
         roll_text = "Enter Answer (#{self.timer} seconds left)"
-        if @game.player_count > 0
+        if player_count.to_i > 0 # TODO check if this is truly needed
           roll_text = "Player #{self.game&.current_player&.number} #{roll_text}"
         end
         self.roll_button_text = roll_text
@@ -263,6 +272,11 @@ module MathBowling
       else
         (@game.current_player.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       end
+    end
+
+    def show(player_count: 1)
+      self.player_count = player_count
+      super()
     end
 
   end

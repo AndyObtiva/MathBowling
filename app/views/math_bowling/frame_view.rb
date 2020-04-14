@@ -8,11 +8,7 @@ module MathBowling
 
     include Glimmer::UI::CustomWidget
 
-    options :game_container, :game, :player_index, :frame_index
-
-    def display
-      game_container.display
-    end
+    options :game, :player_index, :frame_index
 
     body {
       @background = player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]

@@ -5,12 +5,16 @@ module MathBowling
     attr_accessor :score_sheet, :index
 
     def initialize(index)
-      self.score_sheet = MathBowling::ScoreSheet.new
       self.index = index
+      reset
     end
 
     def number
       index + 1
+    end
+
+    def reset
+      self.score_sheet = MathBowling::ScoreSheet.new
     end
   end
 end

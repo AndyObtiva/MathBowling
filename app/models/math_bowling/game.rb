@@ -14,16 +14,27 @@ module MathBowling
       'WRONG',
       'CLOSE'
     ]
+    PLAYER_COUNT_MAX = 4
     attr_reader :player_count
-    attr_accessor :players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players, :roll_done
+    # players refers to current players in game. all players refers to all potential players (4 max)
+    attr_accessor :players, :current_players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players, :roll_done, :single_player
 
-    def initialize(player_count = 1)
-      self.player_count = player_count
+    def initialize
+      self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
+      self.single_player = false
+    end
+
+    def player_count=(p_count)
+      @player_count = p_count
+      if @player_count == 1
+        self.single_player = true
+      end
     end
 
     def start
-      self.players = player_count.times.map { |player_index| MathBowling::Player.new(player_index) }
-      self.current_player = players.first
+      self.players.each(&:reset)
+      self.current_players = players[0..player_count]
+      self.current_player = current_players.first
       self.generate_question
       self.answer_result = nil
     end
@@ -80,14 +91,14 @@ module MathBowling
     end
 
     def quit
-      self.players = nil
+      self.current_players = nil
       self.current_player = nil
       self.question = nil
       self.answer = ''
     end
 
     def switch_player
-      self.current_player = players[(players.index(current_player) + 1) % players.count]
+      self.current_player = current_players[(current_players.index(current_player) + 1) % player_count]
     end
 
     def player_count=(value)
@@ -117,7 +128,7 @@ module MathBowling
 
     # TODO TDD
     def over?
-      started? && players.map {|player| player.score_sheet.game_over?}.reduce(:&)
+      started? && current_players.map {|player| player.score_sheet.game_over?}.reduce(:&)
     end
 
     def calculate_answer
