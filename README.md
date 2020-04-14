@@ -64,7 +64,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Support up to 4 players
 1. [DONE] Package for MacOS
 
-[DONE] 0.9.3 Beta 4 Release ([download](https://1drv.ms/u/s!As1vHoYfypJ0gZcFMAWE48EyhyjNEQ?e=auf1lT)):
+[DONE] 0.9.3 Beta 4 Release ([download](https://1drv.ms/u/s!As1vHoYfypJ0gZcGiiaAgr2ywcNisw?e=z1dBIm)):
 
 1. [DONE] Speed up startup time
 
