@@ -50,6 +50,7 @@ module MathBowling
         background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
         on_event_show {
           @game.start
+          show_question
           @initially_focused_widget&.swt_widget.setFocus
         }
         on_event_hide {
@@ -58,7 +59,7 @@ module MathBowling
         composite {
           composite {
             grid_layout 1, false
-            background :transparent
+            background @background
             Game::PLAYER_COUNT_MAX.times.map { |player_index|
               math_bowling__score_board_view(game: @game, player_index: player_index) {
                 layout_data {
@@ -85,6 +86,44 @@ module MathBowling
                 spacing 6
               }
               background @background
+              @game_over_announcement_container = composite {
+                grid_layout(1, false) {
+                  margin_width 0
+                  margin_height 15
+                  vertical_spacing 0
+                }
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background @background
+                label(:center) {
+                  background bind(self, :winner_color, computed_by: "game.current_player.index")
+                  foreground :white
+                  text 'Game Over'
+                  font @font.merge(height: 110)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 690
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
+                label(:center) {
+                  background bind(self, :winner_color, computed_by: "game.current_player.index")
+                  foreground :yellow
+                  text bind(@game, 'status', computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"}) {|s| "Winner Score: #{@game.winner_total_score}" }
+                  font CONFIG[:scoreboard_font].merge(height: 80)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 690
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
+              }
               @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
                 videos.merge(
                   answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -150, offset_x: -80) {
@@ -94,6 +133,9 @@ module MathBowling
                       height 0
                     }
                     visible false
+                    on_mouse_up {
+                      show_question
+                    }
                   }
                 )
               end
@@ -104,19 +146,42 @@ module MathBowling
                 font @font.merge height: 22, style: :italic
                 layout_data { exclude false }
               }
-              label(:center) {
+              composite {
                 background @background
-                foreground @foreground
-                text "What is the answer to this math question?"
-                font @font
-                layout_data { exclude false }
-              }
-              label(:center) {
-                background @background
-                foreground @foreground
-                text bind(@game, "question")
-                font @font
-                layout_data { exclude false }
+                grid_layout(1, false) {
+                  margin_width 0
+                  margin_height 15
+                  vertical_spacing 0
+                }
+                layout_data {
+                  exclude false
+                }
+                label(:center) {
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  foreground :white
+                  text "What is the answer to this math question?"
+                  font @font
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
+                label(:center) {
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  foreground :yellow
+                  text bind(@game, "question")
+                  font @font
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
               }
               @initially_focused_widget = text(:center, :border) {
                 focus true
@@ -159,6 +224,7 @@ module MathBowling
               font CONFIG[:font]
               on_widget_selected {
                 @game.restart
+                show_question
               }
             }
             button {
@@ -177,6 +243,16 @@ module MathBowling
                 exit(true)
               }
             }
+            if ENV['DEMO'].to_s.downcase == 'true'
+              button {
+                background CONFIG[:button_background]
+                text "Demo"
+                font CONFIG[:font]
+                on_widget_selected {
+                  @game.demo
+                }
+              }
+            end
           }
         }
       }
@@ -213,7 +289,7 @@ module MathBowling
           end
         end
       end
-      observe(@game, :question) do
+      observe(@game, :question) do |new_question|
         self.timer = TIMER_DURATION
       end
     end
@@ -231,38 +307,66 @@ module MathBowling
     def register_video_events
       observe(@game, :answer_result) do |new_answer_result|
         if new_answer_result
-          Thread.new {
+          Thread.new do
+            video_event_time = @video_event_time = Time.now.to_f
+
             body_root.async_exec do
-              @videos[new_answer_result].play
-              @videos[new_answer_result].swt_widget.setLayoutData RowData.new
-              @videos[new_answer_result].swt_widget.getLayoutData.width = 600 #344 #@question_container.swt_widget.getSize.x
-              @videos[new_answer_result].swt_widget.getLayoutData.height = @question_container.swt_widget.getSize.y
-              @question_container.swt_widget.getChildren.each do |child|
-                child.getLayoutData.exclude = true
-                child.setVisible(false)
-              end
-              @videos[new_answer_result].swt_widget.getLayoutData.exclude = false
-              @videos[new_answer_result].swt_widget.setVisible(true)
-              @question_container.swt_widget.pack
+              show_video
             end
+
             sleep(5) # fix issue with setting answer result announcement when quitting during video
-            body_root.async_exec do
-              @question_container.swt_widget.getChildren.each do |child|
-                child.setVisible(true)
-                child.getLayoutData&.exclude = false
+
+            if video_event_time == @video_event_time
+              body_root.async_exec do
+                show_question
               end
-              @videos.values.each do |video|
-                video.swt_widget.getLayoutData.exclude = true
-                # video.swt_widget.getLayoutData.width = 0
-                # video.swt_widget.getLayoutData.height = 0
-                video.swt_widget.setVisible(false)
-              end
-              @question_container.swt_widget.pack
-              @initially_focused_widget.swt_widget.setFocus
-              self.timer = TIMER_DURATION
             end
-          }
+          end
         end
+      end
+    end
+
+    def show_video
+      new_answer_result = @game.answer_result
+      @videos[new_answer_result].play
+      @videos[new_answer_result].swt_widget.setLayoutData RowData.new
+      @videos[new_answer_result].swt_widget.getLayoutData.width = 600 #344 #@question_container.swt_widget.getSize.x
+      @videos[new_answer_result].swt_widget.getLayoutData.height = @question_container.swt_widget.getSize.y
+      @question_container.swt_widget.getChildren.each do |child|
+        child.getLayoutData.exclude = true
+        child.setVisible(false)
+      end
+      @videos[new_answer_result].swt_widget.getLayoutData.exclude = false
+      @videos[new_answer_result].swt_widget.setVisible(true)
+      @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
+      @game_over_announcement_container.swt_widget.setVisible(false)
+      @question_container.swt_widget.pack
+    end
+
+    def show_question
+      @video_event_time = nil
+      new_answer_result = @game.answer_result
+      @videos[new_answer_result]&.reload
+      if @game.in_progress?
+        @question_container.swt_widget.getChildren.each do |child|
+          child.setVisible(true)
+          child.getLayoutData&.exclude = false
+        end
+      end
+      @game_over_announcement_container.swt_widget.setVisible(false)
+      @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
+      @videos.values.each do |video|
+        video.swt_widget.getLayoutData.exclude = true
+        video.swt_widget.setVisible(false)
+      end
+      if @game.not_in_progress?
+        @game_over_announcement_container.swt_widget.setVisible(true)
+        @game_over_announcement_container.swt_widget.getLayoutData&.exclude = false
+      end
+      @question_container.swt_widget.pack
+      if @game.in_progress?
+        @initially_focused_widget.swt_widget.setFocus
+        self.timer = TIMER_DURATION
       end
     end
 
@@ -272,6 +376,10 @@ module MathBowling
       else
         (@game.current_player.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       end
+    end
+
+    def winner_color
+      (@game.winner.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
     end
 
     def show(player_count: 1)

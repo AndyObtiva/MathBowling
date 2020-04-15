@@ -15,20 +15,15 @@ module MathBowling
       'CLOSE'
     ]
     PLAYER_COUNT_MAX = 4
-    attr_reader :player_count
     # players refers to current players in game. all players refers to all potential players (4 max)
-    attr_accessor :players, :current_players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players, :roll_done, :single_player
+    attr_accessor :player_count, :players, :current_players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players, :roll_done
 
     def initialize
       self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
-      self.single_player = false
     end
 
-    def player_count=(p_count)
-      @player_count = p_count
-      if @player_count == 1
-        self.single_player = true
-      end
+    def single_player?
+      player_count == 1
     end
 
     def start
@@ -81,12 +76,18 @@ module MathBowling
       self.roll_done = true
     end
 
-    def play
-      restart
-      self.current_player.score_sheet.frames.each {|frame| 3.times {frame.roll}}
+    def demo
+      # restart
+      # self.current_player.score_sheet.frames.each {|frame| 3.times {frame.roll}}
+      9.times do
+        2.times {self.current_player.score_sheet.current_frame&.roll}
+        self.current_player.score_sheet.switch_to_next_frame
+        self.switch_player
+      end
     end
 
     def restart
+      quit
       start
     end
 
@@ -129,6 +130,35 @@ module MathBowling
     # TODO TDD
     def over?
       started? && current_players.map {|player| player.score_sheet.game_over?}.reduce(:&)
+    end
+
+    def winner_total_score
+      total_scores = players.to_a.map(&:score_sheet).map(&:total_score)
+      total_scores.max
+    end
+
+    def winners
+      if single_player?
+        [players.first]
+      else
+        players.to_a.select {|p| p.score_sheet.total_score == winner_total_score}
+      end
+    end
+
+    def winner
+      winners.first
+    end
+
+    def status
+      if single_player?
+        'WIN'
+      else
+        if winners.size == players.to_a.size
+          'DRAW'
+        else
+          'WIN'
+        end
+      end
     end
 
     def calculate_answer

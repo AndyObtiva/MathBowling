@@ -21,8 +21,9 @@ module MathBowling
         }
         composite {
           layout_data {
-            exclude bind(game, :single_player)
+            exclude bind(game, :single_player?, computed_by: :player_count)
           }
+          visible bind(game, :single_player?, computed_by: :player_count, on_read: :!)
           row_layout {
             type :horizontal
             margin_left 0
@@ -36,7 +37,9 @@ module MathBowling
             text bind(game, "players[#{player_index}].number")
             layout_data 100, 100
             background @background
-            foreground :white
+            foreground bind(game, "current_player.index") {|n|
+              (game.in_progress? && n == player_index) || (game.not_in_progress? && game.winners.map(&:index).include?(player_index)) ? :yellow : :white
+            }
             font CONFIG[:scoreboard_font].merge(height: 80)
           }
         }
