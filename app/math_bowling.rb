@@ -6,6 +6,7 @@ require_relative 'views/math_bowling/app_view'
 
 module MathBowling
   extend Glimmer
+
   DEFAULT = {
     font: {
       name: "Abadi MT Condensed Extra Bold",
@@ -20,6 +21,7 @@ module MathBowling
     # brown: rgb(213, 199, 155),
     charcoal: rgb(54	,69	,79),
   }
+
   CONFIG = {
     colors: {
       player1: DEFAULT[:red],
@@ -34,6 +36,7 @@ module MathBowling
     title_foreground: rgb(138, 31, 41),
     button_background: rgb(245, 245, 220),
   }
+
   def self.launch
     MathBowling::AppView.new.render
   end
