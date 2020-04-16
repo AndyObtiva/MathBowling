@@ -28,7 +28,7 @@ module MathBowling
 
     def start
       self.players.each(&:reset)
-      self.current_players = players[0..player_count]
+      self.current_players = players[0...player_count]
       self.current_player = current_players.first
       self.generate_question
       self.answer_result = nil
@@ -51,7 +51,7 @@ module MathBowling
     end
 
     def roll
-      return if question.nil?
+      return if question.nil? || question.empty?
       self.roll_done = false
       return if self.current_player.score_sheet.current_frame.nil?
       pins_remaining = self.current_player.score_sheet.current_frame.pins_remaining
@@ -77,13 +77,7 @@ module MathBowling
     end
 
     def demo
-      # restart
-      # self.current_player.score_sheet.frames.each {|frame| 3.times {frame.roll}}
-      9.times do
-        2.times {self.current_player.score_sheet.current_frame&.roll}
-        self.current_player.score_sheet.switch_to_next_frame
-        self.switch_player
-      end
+      roll until over?
     end
 
     def restart
@@ -129,7 +123,8 @@ module MathBowling
 
     # TODO TDD
     def over?
-      started? && current_players.map {|player| player.score_sheet.game_over?}.reduce(:&)
+      started? and
+        current_players.map {|player| player.score_sheet.game_over?}.reduce(:&)
     end
 
     def winner_total_score

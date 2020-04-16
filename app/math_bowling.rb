@@ -18,7 +18,7 @@ module MathBowling
     # blue: rgb(31, 26, 150),
     # brown: rgb(186, 153, 72)
     # brown: rgb(213, 199, 155),
-    charcoal: rgb(83	,74	,64),
+    charcoal: rgb(54	,69	,79),
   }
   CONFIG = {
     colors: {

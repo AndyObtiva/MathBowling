@@ -19,7 +19,7 @@ module MathBowling
       self.current_frame = @frames.first
     end
     def switch_to_next_frame
-      self.current_frame = frames[(frames.index(current_frame) + 1)]
+      self.current_frame = frames[(frames.index(current_frame) + 1)] if current_frame
     end
     def total_score
       frames.map(&:score).map(&:to_i).sum

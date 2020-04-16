@@ -10,7 +10,7 @@ module MathBowling
       'WRONG' => File.expand_path("../../../../videos/bowling-wrong.mp4", __FILE__),
       'CLOSE' => File.expand_path("../../../../videos/bowling-close.mp4", __FILE__),
     }
-    TIMER_DURATION = 20
+    TIMER_DURATION = 30
 
     attr_accessor :question_container,
                   :answer_result_announcement, :answer_result_announcement_background,
@@ -105,7 +105,7 @@ module MathBowling
                   layout_data {
                     horizontal_alignment :fill
                     vertical_alignment :center
-                    minimum_width 690
+                    minimum_width 630
                     minimum_height 100
                     grab_excess_horizontal_space true
                   }
@@ -113,12 +113,12 @@ module MathBowling
                 label(:center) {
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :yellow
-                  text bind(@game, 'status', computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"}) {|s| "Winner Score: #{@game.winner_total_score}" }
+                  text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "Winner Score: #{@game.winner_total_score}" }
                   font CONFIG[:scoreboard_font].merge(height: 80)
                   layout_data {
                     horizontal_alignment :fill
                     vertical_alignment :center
-                    minimum_width 690
+                    minimum_width 630
                     minimum_height 100
                     grab_excess_horizontal_space true
                   }
@@ -189,8 +189,8 @@ module MathBowling
               @initially_focused_widget = text(:center, :border) {
                 focus true
                 text bind(@game, "answer")
-                enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
                 font @font
+                enabled bind(self, "game.in_progress?", computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"])
                 layout_data { exclude false }
                 on_key_pressed {|key_event|
                   @game.roll if key_event.keyCode == swt(:cr)
@@ -207,7 +207,7 @@ module MathBowling
                 font @font_button
                 background bind(self, :player_color, computed_by: "game.current_player.index")
                 foreground :yellow
-                enabled bind(@game, :in_progress?, computed_by: 10.times.map {|index| "current_player.score_sheet.frames[#{index}].rolls"})
+                enabled bind(self, "game.in_progress?", computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"])
                 on_widget_selected {
                   @game.roll
                 }
@@ -250,6 +250,7 @@ module MathBowling
               button {
                 background CONFIG[:button_background]
                 text "Demo"
+                enabled bind(self, "game.in_progress?", computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"])
                 font CONFIG[:font]
                 on_widget_selected {
                   @game.demo
@@ -309,9 +310,7 @@ module MathBowling
 
     def register_video_events
       observe(@game, :answer_result) do |new_answer_result|
-        if new_answer_result
-          show_video
-        end
+        show_video if new_answer_result
       end
     end
 
