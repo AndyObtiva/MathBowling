@@ -136,6 +136,9 @@ module MathBowling
                     on_mouse_up {
                       show_question
                     }
+                    on_video_ended {
+                      show_question
+                    }
                   }
                 )
               end
@@ -307,21 +310,7 @@ module MathBowling
     def register_video_events
       observe(@game, :answer_result) do |new_answer_result|
         if new_answer_result
-          Thread.new do
-            video_event_time = @video_event_time = Time.now.to_f
-
-            body_root.async_exec do
-              show_video
-            end
-
-            sleep(5) # fix issue with setting answer result announcement when quitting during video
-
-            if video_event_time == @video_event_time
-              body_root.async_exec do
-                show_question
-              end
-            end
-          end
+          show_video
         end
       end
     end
