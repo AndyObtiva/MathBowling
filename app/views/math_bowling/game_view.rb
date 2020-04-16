@@ -54,6 +54,7 @@ module MathBowling
           @initially_focused_widget&.swt_widget.setFocus
         }
         on_event_hide {
+          show_question
           @game.quit
         }
         composite {
@@ -136,7 +137,7 @@ module MathBowling
                     on_mouse_up {
                       show_question
                     }
-                    on_video_ended {
+                    on_ended {
                       show_question
                     }
                   }
