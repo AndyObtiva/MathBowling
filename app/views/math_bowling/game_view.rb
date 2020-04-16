@@ -134,7 +134,7 @@ module MathBowling
                       height 0
                     }
                     visible false
-                    on_mouse_up {
+                    on_mouse_down {
                       show_question
                     }
                     on_ended {
@@ -187,7 +187,7 @@ module MathBowling
                   }
                 }
               }
-              @initially_focused_widget = text(:center, :border) {
+              @initially_focused_widget = @answer_text = text(:center, :border) {
                 focus true
                 text bind(@game, "answer")
                 font @font
@@ -195,6 +195,10 @@ module MathBowling
                 layout_data { exclude false }
                 on_key_pressed {|key_event|
                   @game.roll if key_event.keyCode == swt(:cr)
+                }
+                on_verify_text {|verify_event|
+                  final_text = "#{@answer_text.swt_widget.getText}#{verify_event.text}"
+                  verify_event.doit = false unless final_text.match(/^[0-9]{0,3}$/)
                 }
               }
               on_paint_control {
