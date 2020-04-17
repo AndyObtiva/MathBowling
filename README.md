@@ -74,7 +74,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Highlight current player question with player color
 1. [DONE] End of Game Winner Announcement
 1. [DONE] Input Validation (positive integers only and limited to 3 digits)
-1. Menu Options
+1. [DONE] Menu Options
 1. Icon/Background for MacOS Package
 
 1.1.0 Release:

@@ -11,81 +11,12 @@ module MathBowling
 
     attr_reader :games
 
-    def initialize
-      Display.setAppName('Math Bowling')
-      Display.setAppVersion('1.0')
-    end
-
-    def build_game_view
-      @game_view = math_bowling__game_view {
-        @action_menu = menu(:drop_down) {
-          menu_item(:push) {
-            text "&Restart"
-            on_widget_selected {
-              @game_view.game.restart
-              @game_view.show_question
-            }
-          }
-          menu_item(:push) {
-            text "&Quit"
-            on_widget_selected {
-              @game_view.hide
-            }
-          }
-          if ENV['DEMO'].to_s.downcase == 'true'
-            menu_item(:push) {
-              text "&Demo"
-              on_widget_selected {
-                @game_view.game.demo
-              }
-            }
-          end
-        }
-        menu_bar build_menu_bar {
-          menu_item(:cascade) {
-            text '&Action'
-            menu @action_menu.swt_widget
-          }
-        }.swt_widget
-        on_event_hide {
-          render
-        }
-      }
-    end
-
-    def build_menu_bar(&more)
-      @game_menu = menu(:drop_down) {
-        4.times.map { |n|
-          menu_item(:push) {
-            text "&#{n+1} Player#{('s' unless n == 0)}"
-            on_widget_selected {
-              @game_type_container.hide
-              @game_view.show(player_count: n+1)
-            }
-          }
-        }
-        menu_item(:push) {
-          text "E&xit"
-          on_widget_selected {
-            exit(true)
-          }
-        }
-      }
-      menu(:bar) {
-        default_item menu_item(:cascade) {
-          text '&Game'
-          menu @game_menu.swt_widget
-        }.swt_widget
-        more&.call
-      }
-    end
-
     def render
       if @game_type_container
         @initially_focused_widget.swt_widget.setFocus
         @game_type_container.show
       else
-        @game_type_container = shell(:no_resize) {
+        @game_type_container = shell(:no_resize, app_name: 'Math Bowling', app_version: '1.0') {
           grid_layout {
             num_columns 1
             make_columns_equal_width true
@@ -94,7 +25,7 @@ module MathBowling
           }
           background_image File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__)
           text "Math Bowling"
-          menu_bar build_menu_bar.swt_widget
+          build_menu_bar
           build_game_view
           label(:center) {
             layout_data :fill, :fill, true, true
@@ -132,6 +63,64 @@ module MathBowling
         @initially_focused_widget.swt_widget.setFocus
         @game_type_container.show
       end
+    end
+
+    def build_game_view
+      @game_view = math_bowling__game_view {
+        build_menu_bar {
+          menu {
+            text '&Action'
+            menu_item {
+              text "&Restart"
+              on_widget_selected {
+                @game_view.game.restart
+                @game_view.show_question
+              }
+            }
+            menu_item {
+              text "&Quit"
+              on_widget_selected {
+                @game_view.hide
+              }
+            }
+            if ENV['DEMO'].to_s.downcase == 'true'
+              menu_item {
+                text "&Demo"
+                on_widget_selected {
+                  @game_view.game.demo
+                }
+              }
+            end
+          }
+        }
+        on_event_hide {
+          render
+        }
+      }
+    end
+
+    def build_menu_bar(&more)
+      menu_bar {
+        menu {
+          text '&Game'
+          4.times.map { |n|
+            menu_item {
+              text "&#{n+1} Player#{('s' unless n == 0)}"
+              on_widget_selected {
+                @game_type_container.hide
+                @game_view.show(player_count: n+1)
+              }
+            }
+          }
+          menu_item {
+            text "E&xit"
+            on_widget_selected {
+              exit(true)
+            }
+          }
+        }
+        more&.call
+      }
     end
   end
 end
