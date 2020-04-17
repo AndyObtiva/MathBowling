@@ -68,7 +68,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 1. [DONE] Speed up startup time
 
-1.0.0 Final Release:
+1.0.0 Final Release (interim [download](https://1drv.ms/u/s!As1vHoYfypJ0gZdZAypNR4rxTb6UDA?e=H6rocb)):
 
 1. [DONE] Adjust Time To Answer from 20 to 30 seconds
 1. [DONE] Highlight current player question with player color
