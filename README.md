@@ -6,7 +6,7 @@ Math Bowling is an elementary level educational math game.
 
 Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](https://www.jruby.org/).
 
-[Click here to download Version 1.0.0 for the Mac](https://1drv.ms/u/s!As1vHoYfypJ0gZdaqMUrHcasLvYd2A?e=m2Lcxe)
+[Click here to download interim version 1.0.0 for the Mac](https://1drv.ms/u/s!As1vHoYfypJ0gZdaqMUrHcasLvYd2A?e=m2Lcxe)
 
 # Game Rules
 
@@ -70,7 +70,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 1. [DONE] Speed up startup time
 
-[DONE] 1.0.0 Release ([download](https://1drv.ms/u/s!As1vHoYfypJ0gZdaqMUrHcasLvYd2A?e=m2Lcxe)):
+1.0.0 Release (interim [download](https://1drv.ms/u/s!As1vHoYfypJ0gZdaqMUrHcasLvYd2A?e=m2Lcxe)):
 
 1. [DONE] Adjust Time To Answer from 20 to 30 seconds
 1. [DONE] Highlight current player question with player color

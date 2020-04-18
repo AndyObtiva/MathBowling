@@ -274,14 +274,19 @@ module MathBowling
 
     def handle_answer_result_announcement
       observe(@game, :answer_result) do
-        self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
-        self.answer_result_announcement_background = case @game.answer_result
-        when 'CORRECT'
-          :green
-        when 'WRONG'
-          :red
-        when 'CLOSE'
-          :yellow
+        if @game.answer_result
+          self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
+          self.answer_result_announcement_background = case @game.answer_result
+          when 'CORRECT'
+            :green
+          when 'WRONG'
+            :red
+          when 'CLOSE'
+            :yellow
+          end
+        else
+          self.answer_result_announcement = nil
+          self.answer_result_announcement_background = :transparent
         end
       end
     end
