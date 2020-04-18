@@ -49,7 +49,7 @@ module MathBowling
         text "Math Bowling"
         background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
         on_event_show {
-          @game.start
+          @game.start if @game.not_started?
           show_question
           @initially_focused_widget&.swt_widget.setFocus
         }
@@ -87,6 +87,9 @@ module MathBowling
                 spacing 6
               }
               background @background
+              on_key_pressed {|key_event|
+                show_question
+              }
               @game_over_announcement_container = composite {
                 grid_layout(1, false) {
                   margin_width 0
@@ -127,7 +130,7 @@ module MathBowling
               }
               @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
                 videos.merge(
-                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -150, offset_x: -80) {
+                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -150, offset_x: -80) { |video|
                     layout_data {
                       exclude true
                       width 0
@@ -139,6 +142,17 @@ module MathBowling
                     }
                     on_ended {
                       show_question
+                    }
+                    on_playing {
+                      video_playing_time = @video_playing_time = Time.now
+                      Thread.new {
+                        sleep(5)
+                        if video_playing_time == @video_playing_time
+                          async_exec {
+                            show_question
+                          }
+                        end
+                      }
                     }
                   }
                 )
@@ -200,9 +214,6 @@ module MathBowling
                   final_text = "#{@answer_text.swt_widget.getText}#{verify_event.text}"
                   verify_event.doit = false unless final_text.match(/^[0-9]{0,3}$/)
                 }
-              }
-              on_paint_control {
-                @game.start if @game.not_started?
               }
               button(:center) {
                 text bind(self, 'roll_button_text')
@@ -342,9 +353,8 @@ module MathBowling
     end
 
     def show_question
-      @video_event_time = nil
-      new_answer_result = @game.answer_result
-      @videos[new_answer_result]&.reload
+      @video_playing_time = nil
+      @videos.values.each(&:reload) #stops playing all videos
       if @game.in_progress?
         @question_container.swt_widget.getChildren.each do |child|
           child.setVisible(true)
