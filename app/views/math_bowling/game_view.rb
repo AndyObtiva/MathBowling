@@ -19,16 +19,6 @@ class MathBowling
 
     before_body {
       @game = MathBowling::Game.new
-    }
-
-    after_body {
-      handle_answer_result_announcement
-      set_timer
-      handle_roll_button_text
-      register_video_events
-    }
-
-    body {
       @font = CONFIG[:font].merge(height: 36)
       @font_button = CONFIG[:font].merge(height: 28)
       observe(@game, :roll_done) do |roll_done|
@@ -43,6 +33,16 @@ class MathBowling
       observe(@game, :answer_result) do |answer_result|
         @initially_focused_widget.swt_widget.setFocus if answer_result.nil?
       end
+    }
+
+    after_body {
+      handle_answer_result_announcement
+      set_timer
+      handle_roll_button_text
+      register_video_events
+    }
+
+    body {
       shell(:no_resize) {
         @background = :transparent
         @foreground = :black
