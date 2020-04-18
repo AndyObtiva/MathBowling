@@ -1,10 +1,12 @@
-# Math Bowling 0.9.2 Beta 3
+# Math Bowling 1.0.0
 
 ![Math Bowling Screenshot](https://raw.githubusercontent.com/AndyObtiva/MathBowling/master/images/Math-Bowling-Screenshot.png)
 
 Math Bowling is an elementary level educational math game.
 
 Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](https://www.jruby.org/).
+
+[Click here to download Version 1.0.0 for the Mac](https://1drv.ms/u/s!As1vHoYfypJ0gZdaqMUrHcasLvYd2A?e=m2Lcxe)
 
 # Game Rules
 
@@ -68,14 +70,14 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 1. [DONE] Speed up startup time
 
-1.0.0 Final Release (interim [download](https://1drv.ms/u/s!As1vHoYfypJ0gZdZAypNR4rxTb6UDA?e=H6rocb)):
+[DONE] 1.0.0 Release ([download](https://1drv.ms/u/s!As1vHoYfypJ0gZdaqMUrHcasLvYd2A?e=m2Lcxe)):
 
 1. [DONE] Adjust Time To Answer from 20 to 30 seconds
 1. [DONE] Highlight current player question with player color
 1. [DONE] End of Game Winner Announcement
 1. [DONE] Input Validation (positive integers only and limited to 3 digits)
 1. [DONE] Menu Options
-1. Icon/Background for MacOS Package
+1. [DONE] Icon/Background for MacOS Package
 
 1.1.0 Release:
 
