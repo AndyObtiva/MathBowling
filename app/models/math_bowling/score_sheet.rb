@@ -1,6 +1,6 @@
 require_relative 'frame'
 
-module MathBowling
+class MathBowling
   class ScoreSheet
     COUNT_FRAME = 10
     attr_accessor :frames, :current_frame

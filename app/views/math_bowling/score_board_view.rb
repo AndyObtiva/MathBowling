@@ -2,7 +2,7 @@ require 'glimmer'
 
 require_relative 'frame_view'
 
-module MathBowling
+class MathBowling
   class ScoreBoardView
     include Glimmer::UI::CustomWidget
 

@@ -1,5 +1,5 @@
 # TODO TDD
-module MathBowling
+class MathBowling
   MAX_PIN_COUNT = 10
   # TODO handle case for last frame giving a 3rd roll when scoring a spare/strike
   class Frame

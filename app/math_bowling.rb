@@ -4,21 +4,15 @@ require 'puts_debuggerer'
 require_relative 'models/math_bowling/game'
 require_relative 'views/math_bowling/app_view'
 
-module MathBowling
-  extend Glimmer
+class MathBowling
+  include Glimmer
 
   DEFAULT = {
     font: {
       name: "Abadi MT Condensed Extra Bold",
       height: 20,
-      # style: :bold
     },
-    # red: rgb(138, 31, 41),
-    # light_red: rgb(148, 95, 100),
     red: rgb(128, 0, 0),
-    # blue: rgb(31, 26, 150),
-    # brown: rgb(186, 153, 72)
-    # brown: rgb(213, 199, 155),
     charcoal: rgb(54	,69	,79),
   }
 
@@ -37,9 +31,9 @@ module MathBowling
     button_background: rgb(245, 245, 220),
   }
 
-  def self.launch
-    MathBowling::AppView.new.render
+  def launch
+    math_bowling__app_view.open
   end
 end
 
-MathBowling.launch
+MathBowling.new.launch

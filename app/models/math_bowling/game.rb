@@ -1,6 +1,6 @@
 require_relative 'player'
 
-module MathBowling
+class MathBowling
   class Game
     QUESTION_OPERATIONS = %w[+ - * /]
     TRANSLATION = {

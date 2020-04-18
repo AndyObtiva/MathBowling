@@ -1,6 +1,6 @@
 require 'glimmer'
 
-module MathBowling
+class MathBowling
   class FrameView
     SIZE_ROLL_SCORE = [50, 50]
     SIZE_RUNNING_SCORE = [100, 50]

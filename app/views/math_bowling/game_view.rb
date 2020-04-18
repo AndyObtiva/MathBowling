@@ -1,6 +1,6 @@
 require_relative 'score_board_view'
 
-module MathBowling
+class MathBowling
   class GameView
     include Glimmer::UI::CustomShell
 

@@ -1,6 +1,6 @@
 require_relative 'score_sheet'
 
-module MathBowling
+class MathBowling
   class Player
     attr_accessor :score_sheet, :index
 
