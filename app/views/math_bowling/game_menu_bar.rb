@@ -13,21 +13,21 @@ class MathBowling
           menu_item {
             text "&Restart"
             on_widget_selected {
-              @game_view.game.restart
-              @game_view.show_question
+              game_view.game.restart
+              game_view.show_question
             }
           }
           menu_item {
             text "&Quit"
             on_widget_selected {
-              @game_view.hide
+              game_view.hide
             }
           }
           if ENV['DEMO'].to_s.downcase == 'true'
             menu_item {
               text "&Demo"
               on_widget_selected {
-                @game_view.game.demo
+                game_view.game.demo
               }
             }
           end

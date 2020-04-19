@@ -1,3 +1,5 @@
+require_relative 'game_rules_dialog'
+
 class MathBowling
   class AppMenuBar
     include Glimmer::UI::CustomWidget
@@ -13,10 +15,12 @@ class MathBowling
               text "&#{n+1} Player#{('s' unless n == 0)}"
               on_widget_selected {
                 app_view.hide
+                game_view.hide
                 game_view.show(player_count: n+1)
               }
             }
           }
+          menu_item(:separator)
           menu_item {
             text "E&xit"
             on_widget_selected {
@@ -25,6 +29,15 @@ class MathBowling
           }
         }
         content&.call
+        menu {
+          text '&Help'
+          menu_item {
+            text "Game &Rules"
+            on_widget_selected {
+              math_bowling__game_rules_dialog.open
+            }
+          }
+        }
       }
     }
   end

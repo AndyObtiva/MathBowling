@@ -23,13 +23,20 @@ class MathBowling
         on_event_show {
           @initially_focused_widget.swt_widget.setFocus
         }
-        @game_view = math_bowling__game_view {
-          math_bowling__game_menu_bar(app_view: body_root, game_view: @game_view)
+        on_about {
+          display_about_dialog
+        }
+        on_preferences {
+          # No need for preferences. Just display about dialog.
+          display_about_dialog
+        }
+        @game_view = math_bowling__game_view { |game_view|
+          math_bowling__game_menu_bar(app_view: self, game_view: game_view)
           on_event_hide {
             body_root.show
           }
         }
-        math_bowling__app_menu_bar(app_view: body_root, game_view: @game_view)
+        math_bowling__app_menu_bar(app_view: self, game_view: @game_view)
         label(:center) {
           layout_data :fill, :fill, true, true
           text "Math Bowling"
@@ -64,5 +71,14 @@ class MathBowling
         }
       }
     }
+
+    def display_about_dialog
+      message_box = MessageBox.new(swt_widget)
+      message_box.setText("About")
+      message = "Math Bowling 1.0.0\n"
+      message += File.read(File.expand_path(File.join('..', '..', '..', '..', 'LICENSE.txt'), __FILE__))
+      message_box.setMessage(message)
+      message_box.open
+    end
   end
 end
