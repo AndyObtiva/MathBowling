@@ -79,19 +79,24 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Menu Options
 1. [DONE] Icon/Background for MacOS Package
 
-1.1.0 Release:
+2.0.0 Release:
+
+1. Fix odd layout issues on some older Macs
+1. Fix issue with game font not showing up on some older Macs
+1. Fix video scrollbar issue on some older Macs
+1. Multiple difficulties (Easy, Medium, Hard) with more difficult questions and shorter answer time
+1. Players can choose unique player color to distinguish themselves
+1. Players may enter name
+1. Spare shot video
+1. Multiple videos for each scoring type
+
+2.1.0 Release:
 
 1. Package for Windows
 
-1.2.0 Release:
+2.2.0 Release:
 
 1. Package for Linux
-
-2.0.0 Release:
-
-1. Multiple difficulties
-1. Players can choose unique player color to distinguish themselves
-1. Players may enter name
 
 # License
 
