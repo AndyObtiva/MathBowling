@@ -62,7 +62,7 @@ class MathBowling
             grid_layout 1, false
             background @background
             Game::PLAYER_COUNT_MAX.times.map { |player_index|
-              math_bowling__score_board_view(game: @game, player_index: player_index) {
+              score_board_view(game: @game, player_index: player_index) {
                 layout_data {
                   horizontal_alignment :fill
                   grab_excess_horizontal_space true

@@ -51,3 +51,4 @@ Gemfile.lock
 .DS_Store
 dist
 packages
+.gladiator

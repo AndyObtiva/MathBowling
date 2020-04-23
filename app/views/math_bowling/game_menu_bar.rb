@@ -7,7 +7,7 @@ class MathBowling
     options :app_view, :game_view
 
     body {
-      math_bowling__app_menu_bar(app_view: app_view, game_view: game_view) {
+      app_menu_bar(app_view: app_view, game_view: game_view) {
         menu {
           text '&Action'
           menu_item {

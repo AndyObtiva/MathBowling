@@ -44,7 +44,7 @@ class MathBowling
           }
         }
         ScoreSheet::COUNT_FRAME.times.map do |frame_index|
-          math_bowling__frame_view(game: game, player_index: player_index, frame_index: frame_index)
+          frame_view(game: game, player_index: player_index, frame_index: frame_index)
         end
         composite {
           row_layout {

@@ -34,7 +34,7 @@ class MathBowling
           menu_item {
             text "Game &Rules"
             on_widget_selected {
-              math_bowling__game_rules_dialog.open
+              game_rules_dialog.open
             }
           }
         }

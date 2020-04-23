@@ -30,13 +30,13 @@ class MathBowling
           # No need for preferences. Just display about dialog.
           display_about_dialog
         }
-        @game_view = math_bowling__game_view { |game_view|
-          math_bowling__game_menu_bar(app_view: self, game_view: game_view)
+        @game_view = game_view { |game_view|
+          game_menu_bar(app_view: self, game_view: game_view)
           on_event_hide {
             body_root.show
           }
         }
-        math_bowling__app_menu_bar(app_view: self, game_view: @game_view)
+        app_menu_bar(app_view: self, game_view: @game_view)
         label(:center) {
           layout_data :fill, :fill, true, true
           text "Math Bowling"

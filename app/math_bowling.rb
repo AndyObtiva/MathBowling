@@ -32,7 +32,7 @@ class MathBowling
   }
 
   def launch
-    math_bowling__app_view.open
+    app_view.open
   end
 end
 
