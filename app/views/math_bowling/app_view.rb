@@ -3,7 +3,6 @@
 require_relative 'game_view'
 require_relative 'app_menu_bar'
 require_relative 'game_menu_bar'
-require 'os'
 
 class MathBowling
   class AppView
@@ -24,15 +23,13 @@ class MathBowling
         on_event_show {
           @initially_focused_widget.swt_widget.setFocus
         }
-	if OS.mac?
-          on_about {
-            display_about_dialog
-          }
-          on_preferences {
-            # No need for preferences. Just display about dialog.
-            display_about_dialog
-          }
-	end
+        on_about {
+          display_about_dialog
+        }
+        on_preferences {
+          # No need for preferences. Just display about dialog.
+          display_about_dialog
+        }
         @game_view = game_view { |game_view|
           game_menu_bar(app_view: self, game_view: game_view)
           on_event_hide {
