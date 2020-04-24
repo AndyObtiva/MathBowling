@@ -79,6 +79,10 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Menu Options
 1. [DONE] Icon/Background for MacOS Package
 
+[DONE] 1.0.1 Release;
+1. [DONE] Fix issue with game font not showing up on some older Macs
+1. [DONE] Fix video scrollbar issue on some older Macs
+
 2.0.0 Release:
 
 1. Fix odd layout issues on some older Macs
@@ -93,6 +97,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 2.1.0 Release:
 
+1. Implement correct layout on Windows
 1. Package for Windows
 
 2.2.0 Release:
