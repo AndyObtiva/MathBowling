@@ -7,9 +7,11 @@ require_relative 'views/math_bowling/app_view'
 class MathBowling
   include Glimmer
 
+  display.swt_display.loadFont(File.expand_path('../../fonts/AbadiMTCondensedExtraBold.ttf', __FILE__))
+
   DEFAULT = {
     font: {
-      name: "Abadi MT Condensed Extra Bold",
+      name: 'Abadi MT Condensed Extra Bold',
       height: 20,
     },
     red: rgb(128, 0, 0),
