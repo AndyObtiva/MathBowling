@@ -11,14 +11,14 @@ class MathBowling
         menu {
           text '&Action'
           menu_item {
-            text "&Restart"
+            text "&Restart Game"
             on_widget_selected {
               game_view.game.restart
               game_view.show_question
             }
           }
           menu_item {
-            text "&Quit"
+            text "&Back To Main Menu"
             on_widget_selected {
               game_view.hide
             }

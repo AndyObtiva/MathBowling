@@ -9,17 +9,25 @@ class MathBowling
       '*' => '×',
       '/' => '÷',
     }
+    POSSIBLE_FIRST_NUMBERS = {
+      '-' => (1..10).reduce({}) {|hash, a| hash.merge(a => (1..10).map {|b| a + b }) },
+      '/' => (1..10).reduce({}) {|hash, a| hash.merge(a => (1..10).map {|b| a * b }) },
+    }
     ANSWER_RESULTS = [
       'CORRECT',
       'WRONG',
       'CLOSE'
     ]
     PLAYER_COUNT_MAX = 4
+    DIFFICULT_QUESTION_EVERY = 5
+
     # players refers to current players in game. all players refers to all potential players (4 max)
-    attr_accessor :player_count, :players, :current_players, :current_player, :question, :answer, :answer_result, :is_one_player, :is_two_players, :roll_done
+    attr_accessor :player_count, :players, :current_players, :current_player, :question, :answer, :answer_result, 
+                  :is_one_player, :is_two_players, :roll_done, :correct_answer, :remaining_pins, :fallen_pins
 
     def initialize
       self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
+      @question_index = -2
     end
 
     def single_player?
@@ -38,13 +46,20 @@ class MathBowling
       if current_player.score_sheet.current_frame.nil?
         teh_question = ''
       else
-        begin
-          first_number = (rand*10).to_i + 1
-          operator = QUESTION_OPERATIONS[(rand*4).to_i]
-          last_number = (rand*10).to_i + 1
+        begin          
+          first_number = @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*10).to_i + 1 : (rand*6).to_i + 5
+          operator = @question_index%DIFFICULT_QUESTION_EVERY != 0 ? QUESTION_OPERATIONS[(rand*4).to_i] : '*'
+          if ['-', '/'].include?(operator)            
+            last_number = first_number
+            first_number = POSSIBLE_FIRST_NUMBERS[operator][last_number][(rand*10).to_i]
+          else
+            last_number = @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*10).to_i + 1 : (rand*6).to_i + 5
+          end
           teh_question = "#{first_number} #{TRANSLATION[operator]} #{last_number}"
           teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
-        end until teh_answer.to_i == teh_answer && teh_answer >= 0
+          positive_integer_answer = (teh_answer.to_i == teh_answer) && (teh_answer >= 0)
+          @question_index += 1 if positive_integer_answer
+        end until positive_integer_answer
       end
       self.answer = ''
       self.question = teh_question
@@ -54,17 +69,18 @@ class MathBowling
       return if question.nil? || question.empty?
       self.roll_done = false
       return if self.current_player.score_sheet.current_frame.nil?
-      pins_remaining = self.current_player.score_sheet.current_frame.pins_remaining
-      fallen_pins = pins_remaining - (self.answer.to_i - calculate_answer).to_i.abs
-      fallen_pins = [fallen_pins, 0].max
-      if fallen_pins == pins_remaining
+      @remaining_pins = self.current_player.score_sheet.current_frame.remaining_pins
+      @correct_answer = calculate_answer
+      @fallen_pins = @remaining_pins - (self.answer.to_i - @correct_answer).to_i.abs
+      @fallen_pins = [fallen_pins, 0].max
+      if @fallen_pins == @remaining_pins
         self.answer_result = 'CORRECT'
-      elsif fallen_pins == 0
+      elsif @fallen_pins == 0
         self.answer_result = 'WRONG'
       else
         self.answer_result = 'CLOSE'
       end
-      self.current_player.score_sheet.current_frame.roll(fallen_pins)
+      self.current_player.score_sheet.current_frame.roll(@fallen_pins)
       self.generate_question
       if self.current_player.score_sheet.current_frame.done?
         self.current_player.score_sheet.switch_to_next_frame

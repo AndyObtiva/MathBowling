@@ -129,10 +129,10 @@ class MathBowling
     end
 
     def random_roll_fallen_pins
-      (rand*(1 + pins_remaining)).to_i
+      (rand*(1 + remaining_pins)).to_i
     end
 
-    def pins_remaining
+    def remaining_pins
       if last? && (spare? || (strike? && rolls[1].nil?) || double_strike?)
         MAX_PIN_COUNT
       elsif last? && strike? && !double_strike? && !rolls[1].nil?

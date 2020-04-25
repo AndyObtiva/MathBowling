@@ -49,7 +49,7 @@ class MathBowling
           background :transparent
           @buttons = 4.times.map { |n|
             button {
-              text "#{n+1} Player#{('s' unless n == 0)}"
+              text "&#{n+1} Player#{('s' unless n == 0)}"
               font CONFIG[:font]
               background CONFIG[:button_background]
               on_widget_selected {
@@ -62,7 +62,7 @@ class MathBowling
         }
         button {
           layout_data :center, :center, true, true
-          text "Exit"
+          text "Quit"
           font CONFIG[:font]
           background CONFIG[:button_background]
           on_widget_selected {
@@ -75,7 +75,7 @@ class MathBowling
     def display_about_dialog
       message_box = MessageBox.new(swt_widget)
       message_box.setText("About")
-      message = "Math Bowling 1.0.0\n"
+      message = "Math Bowling #{VERSION}\n"
       message += File.read(File.expand_path(File.join('..', '..', '..', '..', 'LICENSE.txt'), __FILE__))
       message_box.setMessage(message)
       message_box.open

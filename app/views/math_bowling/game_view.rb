@@ -14,7 +14,7 @@ class MathBowling
 
     attr_accessor :question_container,
                   :answer_result_announcement, :answer_result_announcement_background,
-                  :timer, :roll_button_text
+                  :timer, :roll_button_text, :video_playing_time
     attr_reader :game, :player_count
 
     before_body {
@@ -73,14 +73,27 @@ class MathBowling
           }
           background @background
           composite {
-            row_layout {
-              type :horizontal
-              pack false
-              justify true
-            }
+            grid_layout 1, false
             layout_data(:fill, :fill, true, true)
             background @background
+            label(:center) {
+              background bind(self, 'answer_result_announcement_background')
+              text bind(self, 'answer_result_announcement')
+              visible bind(@game, 'answer_result')
+              font @font.merge height: 22, style: :italic
+              layout_data {
+                horizontal_alignment :center
+                vertical_alignment :center
+                width_hint 630
+                grab_excess_horizontal_space false
+              }
+            }
             @question_container = composite {
+              layout_data {
+                horizontal_alignment :center
+                vertical_alignment :center
+                grab_excess_horizontal_space true
+              }
               row_layout {
                 type :vertical
                 fill true
@@ -144,10 +157,10 @@ class MathBowling
                       show_question
                     }
                     on_playing {
-                      video_playing_time = @video_playing_time = Time.now
+                      video_playing_time = self.video_playing_time = Time.now
                       Thread.new {
                         sleep(5)
-                        if video_playing_time == @video_playing_time
+                        if video_playing_time == self.video_playing_time
                           async_exec {
                             show_question
                           }
@@ -157,14 +170,7 @@ class MathBowling
                   }
                 )
               end
-              label(:center) {
-                background bind(self, 'answer_result_announcement_background')
-                text bind(self, 'answer_result_announcement')
-                visible bind(self, 'game.answer_result')
-                font @font.merge height: 22, style: :italic
-                layout_data { exclude false }
-              }
-              composite {
+              @math_question_container = composite {
                 background @background
                 grid_layout(1, false) {
                   margin_width 0
@@ -239,7 +245,7 @@ class MathBowling
             background @background
             @restart_button = button {
               background CONFIG[:button_background]
-              text "Restart Game"
+              text "&Restart Game"
               font CONFIG[:font]
               on_widget_selected {
                 @game.restart
@@ -248,7 +254,7 @@ class MathBowling
             }
             button {
               background CONFIG[:button_background]
-              text "Quit Game"
+              text "&Back To Main Menu"
               font CONFIG[:font]
               on_widget_selected {
                 hide
@@ -256,7 +262,7 @@ class MathBowling
             }
             button {
               background CONFIG[:button_background]
-              text "Exit"
+              text "&Quit"
               font CONFIG[:font]
               on_widget_selected {
                 exit(true)
@@ -265,7 +271,7 @@ class MathBowling
             if ENV['DEMO'].to_s.downcase == 'true'
               button {
                 background CONFIG[:button_background]
-                text "Demo"
+                text "&Demo"
                 enabled bind(self, "game.in_progress?", computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"])
                 font CONFIG[:font]
                 on_widget_selected {
@@ -286,7 +292,11 @@ class MathBowling
     def handle_answer_result_announcement
       observe(@game, :answer_result) do
         if @game.answer_result
-          self.answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
+          new_answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} is #{@game.answer_result}!"
+          if @game.answer_result != 'CORRECT'
+            new_answer_result_announcement += " Correct answer is #{@game.correct_answer.to_i}."
+          end
+          self.answer_result_announcement = new_answer_result_announcement
           self.answer_result_announcement_background = case @game.answer_result
           when 'CORRECT'
             :green
@@ -300,13 +310,26 @@ class MathBowling
           self.answer_result_announcement_background = :transparent
         end
       end
+      observe(self, 'video_playing_time') do
+        if video_playing_time.nil? && @game.answer_result
+          new_answer_result_announcement = ""
+          if @game.answer_result != 'WRONG'
+            new_answer_result_announcement += "Good job! "
+          end
+          new_answer_result_announcement += "#{@game.fallen_pins} out of #{@game.remaining_pins} pins were knocked!"
+          answer_and_correct_answer = [@game.answer.to_i, @game.correct_answer.to_i]
+          fallen_pins_calculation = " Calculation: #{@game.remaining_pins} - (#{answer_and_correct_answer.max} - #{answer_and_correct_answer.min})"
+          new_answer_result_announcement += fallen_pins_calculation
+          self.answer_result_announcement = new_answer_result_announcement
+        end
+      end
     end
 
     def set_timer
       timer_thread = Thread.new do
         loop do
           sleep(1)
-          @game.started? && body_root && body_root.async_exec do
+          @game.started? && body_root && async_exec do
             self.timer = self.timer - 1 if self.timer && self.timer > 0
             if self.timer == 0
               @game.roll
@@ -339,7 +362,7 @@ class MathBowling
       new_answer_result = @game.answer_result
       @videos[new_answer_result].play
       @videos[new_answer_result].swt_widget.setLayoutData RowData.new
-      @videos[new_answer_result].swt_widget.getLayoutData.width = 600 #344 #@question_container.swt_widget.getSize.x
+      @videos[new_answer_result].swt_widget.getLayoutData.width = @math_question_container.swt_widget.getSize.x
       @videos[new_answer_result].swt_widget.getLayoutData.height = @question_container.swt_widget.getSize.y
       @question_container.swt_widget.getChildren.each do |child|
         child.getLayoutData.exclude = true
@@ -353,8 +376,11 @@ class MathBowling
     end
 
     def show_question
-      @video_playing_time = nil
-      @videos.values.each(&:reload) #stops playing all videos
+      self.video_playing_time = nil
+      @videos.values.each do |video|
+        video.pause
+        video.position = 0
+      end
       if @game.in_progress?
         @question_container.swt_widget.getChildren.each do |child|
           child.setVisible(true)

@@ -9,6 +9,8 @@ class MathBowling
 
   display.swt_display.loadFont(File.expand_path('../../fonts/AbadiMTCondensedExtraBold.ttf', __FILE__))
 
+  VERSION = File.read(File.expand_path('../../VERSION',__FILE__))
+
   DEFAULT = {
     font: {
       name: 'Abadi MT Condensed Extra Bold',

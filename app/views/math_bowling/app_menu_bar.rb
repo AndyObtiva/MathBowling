@@ -22,7 +22,7 @@ class MathBowling
           }
           menu_item(:separator)
           menu_item {
-            text "E&xit"
+            text "&Quit"
             on_widget_selected {
               exit(true)
             }
