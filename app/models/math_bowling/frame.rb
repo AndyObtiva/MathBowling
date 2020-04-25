@@ -3,12 +3,13 @@ class MathBowling
   MAX_PIN_COUNT = 10
   # TODO handle case for last frame giving a 3rd roll when scoring a spare/strike
   class Frame
-    attr_accessor :rolls
+    attr_accessor :rolls, :remaining_pins
     attr_accessor :previous_frame, :next_frame
 
     def initialize(number)
       @number = number
       @rolls = [nil, nil]
+      @remaining_pins = 10
       if last?
         @rolls << nil
       end
@@ -126,13 +127,14 @@ class MathBowling
         self.rolls[2] = 'X' if rolls[2] == MAX_PIN_COUNT
         self.rolls[2] = '/' if !double_strike? && (indexed_roll_score(1) + indexed_roll_score(2)) == MAX_PIN_COUNT
       end
+      self.remaining_pins = calculate_remaining_pins
     end
 
     def random_roll_fallen_pins
       (rand*(1 + remaining_pins)).to_i
     end
 
-    def remaining_pins
+    def calculate_remaining_pins
       if last? && (spare? || (strike? && rolls[1].nil?) || double_strike?)
         MAX_PIN_COUNT
       elsif last? && strike? && !double_strike? && !rolls[1].nil?

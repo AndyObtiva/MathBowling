@@ -143,7 +143,7 @@ class MathBowling
               }
               @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
                 videos.merge(
-                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -150, offset_x: -80) { |video|
+                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -120, offset_x: -80) { |video|
                     layout_data {
                       exclude true
                       width 0
@@ -170,15 +170,19 @@ class MathBowling
                   }
                 )
               end
+              label(:center) {
+                background color(:white)
+                text bind(@game, 'current_player.score_sheet.current_frame.remaining_pins') {|pins| "#{pins} PIN#{'S' if pins != 1} LEFT"}
+                font @font.merge height: 36
+                layout_data { exclude false }
+              }
               @math_question_container = composite {
                 background @background
+                layout_data { exclude false }
                 grid_layout(1, false) {
                   margin_width 0
-                  margin_height 15
+#                   margin_height 15
                   vertical_spacing 0
-                }
-                layout_data {
-                  exclude false
                 }
                 label(:center) {
                   background bind(self, :player_color, computed_by: "game.current_player.index")
@@ -292,6 +296,7 @@ class MathBowling
     def handle_answer_result_announcement
       observe(@game, :answer_result) do
         if @game.answer_result
+          @last_answer = @game.answer
           new_answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} is #{@game.answer_result}!"
           if @game.answer_result != 'CORRECT'
             new_answer_result_announcement += " Correct answer is #{@game.correct_answer.to_i}."
@@ -313,13 +318,15 @@ class MathBowling
       observe(self, 'video_playing_time') do
         if video_playing_time.nil? && @game.answer_result
           new_answer_result_announcement = ""
-          if @game.answer_result != 'WRONG'
-            new_answer_result_announcement += "Good job! "
+          if @game.answer_result == 'CLOSE'
+            new_answer_result_announcement += "Nice try! "
+          elsif @game.answer_result == 'CORRECT'
+            new_answer_result_announcement += "Great job! "
           end
-          new_answer_result_announcement += "#{@game.fallen_pins} out of #{@game.remaining_pins} pins were knocked!"
-          answer_and_correct_answer = [@game.answer.to_i, @game.correct_answer.to_i]
-          fallen_pins_calculation = " Calculation: #{@game.remaining_pins} - (#{answer_and_correct_answer.max} - #{answer_and_correct_answer.min})"
-          new_answer_result_announcement += fallen_pins_calculation
+          new_answer_result_announcement += "#{@game.fallen_pins == @game.remaining_pins ? "The" : "#{@game.fallen_pins} of the"} #{@game.remaining_pins}#{' remaining' if @game.remaining_pins < 10} pin#{'s' if @game.remaining_pins != 1} #{@game.fallen_pins != 1 ? 'were' : 'was'} knocked down!"
+          answer_and_correct_answer = [@last_answer.to_i, @game.correct_answer.to_i]
+#           fallen_pins_calculation = " Calculation: #{@game.remaining_pins} - (#{answer_and_correct_answer.max} - #{answer_and_correct_answer.min})"
+#           new_answer_result_announcement += fallen_pins_calculation
           self.answer_result_announcement = new_answer_result_announcement
         end
       end
