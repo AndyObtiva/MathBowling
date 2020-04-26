@@ -84,6 +84,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Fix video scrollbar issue on some older Macs
 1. [DONE] Improve wording of buttons and answer result announcements
 1. [DONE] Improve difficulty of questions
+1. Improve clarity of switching player turns
 1. Spare shot video
 1. Multiple videos for each scoring type
 

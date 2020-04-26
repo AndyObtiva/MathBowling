@@ -60,7 +60,9 @@ class MathBowling
             text bind(game, "players[#{player_index}].score_sheet.total_score", computed_by: 10.times.map {|index| "players[#{player_index}].score_sheet.frames[#{index}].rolls"})
             layout_data 150, 100
             background @background
-            foreground :yellow
+            foreground bind(game, "current_player.index") {|n|
+              (game.in_progress? && n == player_index) || (game.not_in_progress? && game.winners.map(&:index).include?(player_index)) ? :yellow : :white
+            }
             font CONFIG[:scoreboard_font].merge(height: 80)
           }
         }

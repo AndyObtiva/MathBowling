@@ -171,7 +171,8 @@ class MathBowling
                 )
               end
               label(:center) {
-                background color(:white)
+                background color(:black)
+                foreground color(:yellow)
                 text bind(@game, 'current_player.score_sheet.current_frame.remaining_pins') {|pins| "#{pins} PIN#{'S' if pins != 1} LEFT"}
                 font @font.merge height: 36
                 layout_data { exclude false }
