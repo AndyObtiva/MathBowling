@@ -2,12 +2,15 @@ require 'glimmer'
 require 'puts_debuggerer'
 
 require_relative 'models/math_bowling/game'
+require_relative 'models/math_bowling/video_repository'
 require_relative 'views/math_bowling/app_view'
 
 class MathBowling
   include Glimmer
 
   display.swt_display.loadFont(File.expand_path('../../fonts/AbadiMTCondensedExtraBold.ttf', __FILE__))
+
+  APP_ROOT = File.expand_path(File.join('..', '..'), __FILE__)
 
   VERSION = File.read(File.expand_path('../../VERSION',__FILE__))
 

@@ -5,11 +5,6 @@ class MathBowling
     include Glimmer::UI::CustomShell
 
     FILE_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
-    FILE_VIDEOS = {
-      'CORRECT' => File.expand_path("../../../../videos/bowling-correct.mp4", __FILE__),
-      'WRONG' => File.expand_path("../../../../videos/bowling-wrong.mp4", __FILE__),
-      'CLOSE' => File.expand_path("../../../../videos/bowling-close.mp4", __FILE__),
-    }
     TIMER_DURATION = 30
 
     attr_accessor :question_container,
@@ -21,6 +16,7 @@ class MathBowling
       @game = MathBowling::Game.new
       @font = CONFIG[:font].merge(height: 36)
       @font_button = CONFIG[:font].merge(height: 28)
+      @answer_result_announcement = "\n" # to take correct multi-line size
       observe(@game, :roll_done) do |roll_done|
         if roll_done
           if @game.over?
@@ -76,18 +72,6 @@ class MathBowling
             grid_layout 1, false
             layout_data(:fill, :fill, true, true)
             background @background
-            label(:center) {
-              background bind(self, 'answer_result_announcement_background')
-              text bind(self, 'answer_result_announcement')
-              visible bind(@game, 'answer_result')
-              font @font.merge height: 22, style: :italic
-              layout_data {
-                horizontal_alignment :center
-                vertical_alignment :center
-                width_hint 630
-                grab_excess_horizontal_space false
-              }
-            }
             @question_container = composite {
               layout_data {
                 horizontal_alignment :center
@@ -141,9 +125,10 @@ class MathBowling
                   }
                 }
               }
-              @videos = MathBowling::Game::ANSWER_RESULTS.reduce({}) do |videos, answer_result|
-                videos.merge(
-                  answer_result => video(file: FILE_VIDEOS[answer_result], autoplay: false, controls: false, fit_to_height: false, offset_y: -120, offset_x: -80) { |video|
+              # Intentionally pre-initializing video widgets for all videos to avoid initial loading time upon playing a video (trading memory for speed)
+              @videos_by_answer_result_and_pin_state = VideoRepository.index_by_answer_result_and_pin_state do |answer_result, pin_state|
+                VideoRepository.video_paths_by_answer_result_and_pin_state[answer_result][pin_state].map do |video_path|
+                  video(file: video_path, autoplay: false, controls: false, fit_to_height: false, offset_y: -50, offset_x: -80) { |video|
                     layout_data {
                       exclude true
                       width 0
@@ -167,12 +152,18 @@ class MathBowling
                         end
                       }
                     }
-                  }
-                )
+                  }                  
+                end
               end
               label(:center) {
-                background color(:black)
-                foreground color(:yellow)
+                background bind(self, 'answer_result_announcement_background')
+                text bind(self, 'answer_result_announcement')
+                visible bind(@game, 'answer_result')
+                font @font.merge height: 22, style: :italic
+                layout_data { exclude false }
+              }
+              label(:center) {
+                background CONFIG[:button_background]
                 text bind(@game, 'current_player.score_sheet.current_frame.remaining_pins') {|pins| "#{pins} PIN#{'S' if pins != 1} LEFT"}
                 font @font.merge height: 36
                 layout_data { exclude false }
@@ -297,11 +288,21 @@ class MathBowling
     def handle_answer_result_announcement
       observe(@game, :answer_result) do
         if @game.answer_result
-          @last_answer = @game.answer
+          @last_answer = @game.answer          
           new_answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} is #{@game.answer_result}!"
           if @game.answer_result != 'CORRECT'
             new_answer_result_announcement += " Correct answer is #{@game.correct_answer.to_i}."
           end
+          new_answer_result_announcement += "\n"
+          if @game.answer_result == 'CLOSE'
+            new_answer_result_announcement += "Nice try! "
+          elsif @game.answer_result == 'CORRECT'
+            new_answer_result_announcement += "Great job! "
+          end
+          new_answer_result_announcement += "#{@game.fallen_pins == @game.remaining_pins ? "All" : "#{@game.fallen_pins} of"} #{@game.remaining_pins}#{' remaining' if @game.remaining_pins < 10} pin#{'s' if @game.remaining_pins != 1} #{@game.fallen_pins != 1 ? 'were' : 'was'} knocked down!"
+#           answer_and_correct_answer = [@last_answer.to_i, @game.correct_answer.to_i]
+#           fallen_pins_calculation = " Calculation: #{@game.remaining_pins} - (#{answer_and_correct_answer.max} - #{answer_and_correct_answer.min})"
+#           new_answer_result_announcement += fallen_pins_calculation
           self.answer_result_announcement = new_answer_result_announcement
           self.answer_result_announcement_background = case @game.answer_result
           when 'CORRECT'
@@ -312,23 +313,8 @@ class MathBowling
             :yellow
           end
         else
-          self.answer_result_announcement = nil
+          self.answer_result_announcement = "\n" # to take correct multi-line size
           self.answer_result_announcement_background = :transparent
-        end
-      end
-      observe(self, 'video_playing_time') do
-        if video_playing_time.nil? && @game.answer_result
-          new_answer_result_announcement = ""
-          if @game.answer_result == 'CLOSE'
-            new_answer_result_announcement += "Nice try! "
-          elsif @game.answer_result == 'CORRECT'
-            new_answer_result_announcement += "Great job! "
-          end
-          new_answer_result_announcement += "#{@game.fallen_pins == @game.remaining_pins ? "The" : "#{@game.fallen_pins} of the"} #{@game.remaining_pins}#{' remaining' if @game.remaining_pins < 10} pin#{'s' if @game.remaining_pins != 1} #{@game.fallen_pins != 1 ? 'were' : 'was'} knocked down!"
-          answer_and_correct_answer = [@last_answer.to_i, @game.correct_answer.to_i]
-#           fallen_pins_calculation = " Calculation: #{@game.remaining_pins} - (#{answer_and_correct_answer.max} - #{answer_and_correct_answer.min})"
-#           new_answer_result_announcement += fallen_pins_calculation
-          self.answer_result_announcement = new_answer_result_announcement
         end
       end
     end
@@ -368,24 +354,31 @@ class MathBowling
 
     def show_video
       new_answer_result = @game.answer_result
-      @videos[new_answer_result].play
-      @videos[new_answer_result].swt_widget.setLayoutData RowData.new
-      @videos[new_answer_result].swt_widget.getLayoutData.width = @math_question_container.swt_widget.getSize.x
-      @videos[new_answer_result].swt_widget.getLayoutData.height = @question_container.swt_widget.getSize.y
+      new_pin_state = @game.remaining_pins == 10 ? 'full' : 'partial'
+      videos = @videos_by_answer_result_and_pin_state[new_answer_result][new_pin_state]
+      @video = videos[(rand*videos.size).to_i]
+      @video.play
+      @video.swt_widget.setLayoutData RowData.new
+      @video.swt_widget.getLayoutData.width = @question_container.swt_widget.getSize.x
+      @video.swt_widget.getLayoutData.height = @question_container.swt_widget.getSize.y
       @question_container.swt_widget.getChildren.each do |child|
         child.getLayoutData.exclude = true
         child.setVisible(false)
       end
-      @videos[new_answer_result].swt_widget.getLayoutData.exclude = false
-      @videos[new_answer_result].swt_widget.setVisible(true)
+      @video.swt_widget.getLayoutData.exclude = false
+      @video.swt_widget.setVisible(true)
       @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
       @game_over_announcement_container.swt_widget.setVisible(false)
       @question_container.swt_widget.pack
     end
 
+    def all_videos
+      @all_videos ||= @videos_by_answer_result_and_pin_state.values.map(&:values).flatten
+    end
+
     def show_question
       self.video_playing_time = nil
-      @videos.values.each do |video|
+      all_videos.each do |video|
         video.pause
         video.position = 0
       end
@@ -397,9 +390,9 @@ class MathBowling
       end
       @game_over_announcement_container.swt_widget.setVisible(false)
       @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
-      @videos.values.each do |video|
-        video.swt_widget.getLayoutData.exclude = true
-        video.swt_widget.setVisible(false)
+      all_videos.each do |video|
+        video.swt_widget&.getLayoutData&.exclude = true
+        video.swt_widget&.setVisible(false)
       end
       if @game.not_in_progress?
         @game_over_announcement_container.swt_widget.setVisible(true)

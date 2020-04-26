@@ -28,6 +28,7 @@ class MathBowling
     def initialize
       self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
       @question_index = -2
+      @remaining_pins = 10
     end
 
     def single_player?
@@ -35,6 +36,7 @@ class MathBowling
     end
 
     def start
+      self.remaining_pins = 10
       self.players.each(&:reset)
       self.current_players = players[0...player_count]
       self.current_player = current_players.first
