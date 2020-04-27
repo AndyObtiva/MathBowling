@@ -2,7 +2,7 @@
 
 ![Math Bowling Screenshot](images/Math-Bowling-Screenshot.png)
 
-<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 1.1.0 for Mac](https://1drv.ms/u/s!As1vHoYfypJ0gZdfbiYwgFNCDXurZQ?e=xwvqKl)</span>
+<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 1.1.0 for Mac](https://www.dropbox.com/s/d8n1jrhb915r3f1/Math%20Bowling-1.1.0.dmg?dl=0)</span>
 
 Math Bowling is an elementary level educational math game.
 
@@ -79,7 +79,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Menu Options
 1. [DONE] Icon/Background for MacOS Package
 
-[DONE] 1.1.0 Release ([download](https://1drv.ms/u/s!As1vHoYfypJ0gZdfbiYwgFNCDXurZQ?e=xwvqKl)):
+[DONE] 1.1.0 Release ([download](https://www.dropbox.com/s/d8n1jrhb915r3f1/Math%20Bowling-1.1.0.dmg?dl=0)):
 1. [DONE] Fix issue with game font not showing up on some older Macs
 1. [DONE] Fix video scrollbar issue on some older Macs
 1. [DONE] Improve wording of buttons and answer result announcements
