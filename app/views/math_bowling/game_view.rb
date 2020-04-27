@@ -85,7 +85,7 @@ class MathBowling
               }
               background @background
               on_key_pressed {|key_event|
-                show_next_player
+                show_next_player unless @showing_next_player
               }
               @next_player_announcement_container = composite {
                 grid_layout(1, false) {
@@ -417,6 +417,7 @@ class MathBowling
 
     def show_next_player
       if (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
+        @showing_next_player = true
         @question_container.swt_widget.getChildren.each do |child|
           child.getLayoutData.exclude = true
           child.setVisible(false)
@@ -425,7 +426,7 @@ class MathBowling
         @next_player_announcement_container.swt_widget.setVisible(true)
         @question_container.swt_widget.pack
         Thread.new do
-          sleep(2)
+          sleep(1)
           async_exec do
             show_question
           end
@@ -436,6 +437,7 @@ class MathBowling
     end
 
     def show_question
+      @showing_next_player = false
       self.video_playing_time = nil
       all_videos.each do |video|
         video.pause
