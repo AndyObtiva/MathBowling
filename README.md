@@ -91,9 +91,6 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 2.0.0 Release:
 
 1. Fix odd layout issues on some older Macs
-1. [DONE] Fix issue with game font not showing up on some older Macs
-1. Fix video scrollbar issue on some older Macs
-1. Fix clarity for which player's turn it is
 1. Multiple difficulties (Easy, Medium, Hard) with more difficult questions and shorter answer time
 1. Players can choose unique player color to distinguish themselves
 1. Players may enter name
