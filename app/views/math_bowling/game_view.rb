@@ -85,7 +85,46 @@ class MathBowling
               }
               background @background
               on_key_pressed {|key_event|
-                show_question
+                show_next_player
+              }
+              @next_player_announcement_container = composite {
+                grid_layout(1, false) {
+                  margin_width 0
+                  margin_height 15
+                  margin_bottom 30
+                  vertical_spacing 0
+                }
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background @background
+                label(:center) {
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  foreground :white
+                  text 'Next Player'
+                  font @font.merge(height: 110)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
+                label(:center) {
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  foreground :yellow
+                  text "Get Ready!"
+                  font CONFIG[:scoreboard_font].merge(height: 80)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :top
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
               }
               @game_over_announcement_container = composite {
                 grid_layout(1, false) {
@@ -136,10 +175,10 @@ class MathBowling
                     }
                     visible false
                     on_mouse_down {
-                      show_question
+                      show_next_player
                     }
                     on_ended {
-                      show_question
+                      show_next_player
                     }
                     on_playing {
                       video_playing_time = self.video_playing_time = Time.now
@@ -147,7 +186,7 @@ class MathBowling
                         sleep(5)
                         if video_playing_time == self.video_playing_time
                           async_exec {
-                            show_question
+                            show_next_player
                           }
                         end
                       }
@@ -376,6 +415,26 @@ class MathBowling
       @all_videos ||= @videos_by_answer_result_and_pin_state.values.map(&:values).flatten
     end
 
+    def show_next_player
+      if (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
+        @question_container.swt_widget.getChildren.each do |child|
+          child.getLayoutData.exclude = true
+          child.setVisible(false)
+        end
+        @next_player_announcement_container.swt_widget.getLayoutData.exclude = false
+        @next_player_announcement_container.swt_widget.setVisible(true)
+        @question_container.swt_widget.pack
+        Thread.new do
+          sleep(2)
+          async_exec do
+            show_question
+          end
+        end
+      else
+        show_question
+      end
+    end
+
     def show_question
       self.video_playing_time = nil
       all_videos.each do |video|
@@ -386,8 +445,10 @@ class MathBowling
         @question_container.swt_widget.getChildren.each do |child|
           child.setVisible(true)
           child.getLayoutData&.exclude = false
-        end
+        end        
       end
+      @next_player_announcement_container.swt_widget.setVisible(false)
+      @next_player_announcement_container.swt_widget.getLayoutData&.exclude = true
       @game_over_announcement_container.swt_widget.setVisible(false)
       @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
       all_videos.each do |video|

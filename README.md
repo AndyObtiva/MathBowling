@@ -86,7 +86,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Improve difficulty of questions
 1. [DONE] Spare shot video
 1. [DONE] Multiple videos for each scoring type
-1. Improve clarity of switching player turns
+1. [DONE] Improve clarity of switching player turns
 
 2.0.0 Release:
 

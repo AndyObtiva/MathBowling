@@ -23,12 +23,14 @@ class MathBowling
 
     # players refers to current players in game. all players refers to all potential players (4 max)
     attr_accessor :player_count, :players, :current_players, :current_player, :question, :answer, :answer_result, 
-                  :is_one_player, :is_two_players, :roll_done, :correct_answer, :remaining_pins, :fallen_pins
+                  :is_one_player, :is_two_players, :roll_done, :correct_answer, :remaining_pins, :fallen_pins,
+                  :last_player_index
 
     def initialize
       self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
       @question_index = -2
       @remaining_pins = 10
+      @last_player_index = 0
     end
 
     def single_player?
@@ -36,6 +38,7 @@ class MathBowling
     end
 
     def start
+      self.last_player_index = 0
       self.remaining_pins = 10
       self.players.each(&:reset)
       self.current_players = players[0...player_count]
@@ -68,6 +71,7 @@ class MathBowling
     end
 
     def roll
+      self.last_player_index = current_player.index
       return if question.nil? || question.empty?
       self.roll_done = false
       return if self.current_player.score_sheet.current_frame.nil?
