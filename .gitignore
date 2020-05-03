@@ -48,7 +48,13 @@ Gemfile.lock
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+# Mac
 .DS_Store
+
+# Gladiator (Glimmer Editor)
+.gladiator
+
+# Glimmer
 dist
 packages
-.gladiator

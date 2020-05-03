@@ -1,4 +1,5 @@
 require 'glimmer'
+require 'glimmer-cw-video'
 require 'puts_debuggerer'
 
 require_relative 'models/math_bowling/game'
