@@ -84,7 +84,8 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Fix layout issue when switching player count game type after game over
 1. [DONE] Improve math problem display by adding '= ?' and removing verbose question
 1. [DONE] Improve answer result announcement by announcing Strikes, Double Strikes, Triple Strikes, and Spares explicitly (not just with symbols)
-1. Improve next player announcement by keeping it until player hits enter or presses continue button
+1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
+1. Fix initial focus on answer text field issue
 1. Fix odd player #1 box layout issue on some older Macs
 1. Multiple math problem difficulties (Easy / Medium / Hard)
 1. Players must enter name just like in bowling software

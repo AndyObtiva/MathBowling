@@ -47,6 +47,7 @@ class MathBowling
         on_event_show {
           @game.start if @game.not_started?
           show_question
+          body_root.pack
           @initially_focused_widget&.swt_widget.setFocus
         }
         on_event_hide {
@@ -86,45 +87,6 @@ class MathBowling
               background @background
               on_key_pressed {|key_event|
                 show_next_player unless @showing_next_player
-              }
-              @next_player_announcement_container = composite {
-                grid_layout(1, false) {
-                  margin_width 0
-                  margin_height 15
-                  margin_bottom 30
-                  vertical_spacing 0
-                }
-                layout_data {
-                  exclude true
-                }
-                visible false
-                background @background
-                label(:center) {
-                  background bind(self, :player_color, computed_by: "game.current_player.index")
-                  foreground :white
-                  text 'Next Player'
-                  font @font.merge(height: 110)
-                  layout_data {
-                    horizontal_alignment :fill
-                    vertical_alignment :center
-                    minimum_width 630
-                    minimum_height 100
-                    grab_excess_horizontal_space true
-                  }
-                }
-                label(:center) {
-                  background bind(self, :player_color, computed_by: "game.current_player.index")
-                  foreground :yellow
-                  text "Get Ready!"
-                  font CONFIG[:scoreboard_font].merge(height: 80)
-                  layout_data {
-                    horizontal_alignment :fill
-                    vertical_alignment :top
-                    minimum_width 630
-                    minimum_height 100
-                    grab_excess_horizontal_space true
-                  }
-                }
               }
               # Intentionally pre-initializing video widgets for all videos to avoid initial loading time upon playing a video (trading memory for speed)
               @videos_by_answer_result_and_pin_state = VideoRepository.index_by_answer_result_and_pin_state do |answer_result, pin_state|
@@ -219,6 +181,48 @@ class MathBowling
                 }
                 on_key_pressed {|key_event|
                   @game.roll if key_event.keyCode == swt(:cr)
+                }
+              }
+              @next_player_announcement_container = composite {
+                grid_layout(1, false) {
+                  margin_width 0
+                  margin_height 0
+                  vertical_spacing 10
+                }
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background @background
+                label(:center) {
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  foreground :white
+                  text 'NEXT PLAYER'
+                  font @font.merge(height: 80)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
+                @continue_button = button(:center) {
+                  layout_data {
+                    horizontal_alignment :fill
+                    grab_excess_horizontal_space true
+                    height_hint 42
+                  }
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  foreground :yellow
+                  text bind(@game, 'current_player.index') { |i| "Player #{i+1} Continue" }
+                  font @font_button
+                  on_widget_selected {
+                    show_question
+                  }
+                  on_key_pressed {|key_event|
+                    show_question if key_event.keyCode == swt(:cr)
+                  }
                 }
               }
               @game_over_announcement_container = composite {
@@ -420,7 +424,7 @@ class MathBowling
       @video.swt_widget.setVisible(true)
       @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
       @game_over_announcement_container.swt_widget.setVisible(false)
-      body_root.pack
+      @question_container.swt_widget.pack
     end
 
     def all_videos
@@ -428,21 +432,19 @@ class MathBowling
     end
 
     def show_next_player
-      if (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
+      if @game.in_progress? && (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
+        self.timer = 86400 # stop timer temporarily by setting to a very high value
         @showing_next_player = true
         @question_container.swt_widget.getChildren.each do |child|
           child.getLayoutData.exclude = true
           child.setVisible(false)
         end
+        @answer_result_announcement_label.swt_widget.setVisible(true)
+        @answer_result_announcement_label.swt_widget.getLayoutData&.exclude = false
         @next_player_announcement_container.swt_widget.getLayoutData.exclude = false
         @next_player_announcement_container.swt_widget.setVisible(true)
-        body_root.pack
-        Thread.new do
-          sleep(1)
-          async_exec do
-            show_question
-          end
-        end
+        @question_container.swt_widget.pack
+        @continue_button.swt_widget.setFocus
       else
         show_question
       end
@@ -475,7 +477,7 @@ class MathBowling
         @game_over_announcement_container.swt_widget.setVisible(true)
         @game_over_announcement_container.swt_widget.getLayoutData&.exclude = false
       end
-      body_root.pack
+      @question_container.swt_widget.pack
       if @game.in_progress?
         @initially_focused_widget.swt_widget.setFocus
         self.timer = TIMER_DURATION
