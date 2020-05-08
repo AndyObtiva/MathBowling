@@ -79,6 +79,7 @@ class MathBowling
       @correct_answer = calculate_answer
       @fallen_pins = @remaining_pins - (self.answer.to_i - @correct_answer).to_i.abs
       @fallen_pins = [fallen_pins, 0].max
+      self.current_player.score_sheet.current_frame.roll(@fallen_pins)
       if @fallen_pins == @remaining_pins
         self.answer_result = 'CORRECT'
       elsif @fallen_pins == 0
@@ -86,7 +87,7 @@ class MathBowling
       else
         self.answer_result = 'CLOSE'
       end
-      self.current_player.score_sheet.current_frame.roll(@fallen_pins)
+
       self.generate_question
       if self.current_player.score_sheet.current_frame.done?
         self.current_player.score_sheet.switch_to_next_frame
@@ -123,27 +124,22 @@ class MathBowling
       @player_count = value
     end
 
-    # TODO TDD
     def not_started?
       !current_player
     end
 
-    # TODO TDD
     def started?
       !not_started?
     end
 
-    # TODO TDD
     def in_progress?
       started? && !current_player.score_sheet.game_over?
     end
 
-    # TODO TDD
     def not_in_progress?
       !in_progress?
     end
 
-    # TODO TDD
     def over?
       started? and
         current_players.map {|player| player.score_sheet.game_over?}.reduce(:&)

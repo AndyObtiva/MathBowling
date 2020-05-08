@@ -167,7 +167,7 @@ class MathBowling
               # Intentionally pre-initializing video widgets for all videos to avoid initial loading time upon playing a video (trading memory for speed)
               @videos_by_answer_result_and_pin_state = VideoRepository.index_by_answer_result_and_pin_state do |answer_result, pin_state|
                 VideoRepository.video_paths_by_answer_result_and_pin_state[answer_result][pin_state].map do |video_path|
-                  video(file: video_path, autoplay: false, controls: false, fit_to_height: false, offset_y: -50, offset_x: -80) { |video|
+                  video(file: video_path, autoplay: false, controls: false, fit_to_height: false, offset_x: -80, offset_y: -100) { |video|
                     layout_data {
                       exclude true
                       width 0
@@ -214,19 +214,6 @@ class MathBowling
                   margin_width 0
 #                   margin_height 15
                   vertical_spacing 0
-                }
-                label(:center) {
-                  background bind(self, :player_color, computed_by: "game.current_player.index")
-                  foreground :white
-                  text "What is the answer to this math problem?"
-                  font @font
-                  layout_data {
-                    horizontal_alignment :fill
-                    vertical_alignment :center
-                    minimum_width 630
-                    minimum_height 100
-                    grab_excess_horizontal_space true
-                  }
                 }
                 label(:center) {
                   background bind(self, :player_color, computed_by: "game.current_player.index")
@@ -327,21 +314,36 @@ class MathBowling
     def handle_answer_result_announcement
       observe(@game, :answer_result) do
         if @game.answer_result
-          @last_answer = @game.answer          
-          new_answer_result_announcement = "The answer #{@game.answer.to_i} to #{@game.question} is #{@game.answer_result}!"
-          if @game.answer_result != 'CORRECT'
-            new_answer_result_announcement += " Correct answer is #{@game.correct_answer.to_i}."
-          end
-          new_answer_result_announcement += "\n"
+          @last_answer = @game.answer
+          new_answer_result_announcement = ''
+
           if @game.answer_result == 'CLOSE'
             new_answer_result_announcement += "Nice try! "
           elsif @game.answer_result == 'CORRECT'
-            new_answer_result_announcement += "Great job! "
+            if @game.current_player.score_sheet.current_frame.triple_strike?
+              new_answer_result_announcement += "Triple Strike! "
+            elsif @game.current_player.score_sheet.current_frame.double_strike?
+              new_answer_result_announcement += "Double Strike! "
+            elsif @game.current_player.score_sheet.current_frame.strike?
+              new_answer_result_announcement += "Strike! "
+            elsif @game.current_player.score_sheet.current_frame.spare?
+              new_answer_result_announcement += "Spare! "
+            else
+              new_answer_result_announcement += "Great job! "
+            end
           end
           new_answer_result_announcement += "#{@game.fallen_pins == @game.remaining_pins ? "All" : "#{@game.fallen_pins} of"} #{@game.remaining_pins}#{' remaining' if @game.remaining_pins < 10} pin#{'s' if @game.remaining_pins != 1} #{@game.fallen_pins != 1 ? 'were' : 'was'} knocked down!"
 #           answer_and_correct_answer = [@last_answer.to_i, @game.correct_answer.to_i]
 #           fallen_pins_calculation = " Calculation: #{@game.remaining_pins} - (#{answer_and_correct_answer.max} - #{answer_and_correct_answer.min})"
 #           new_answer_result_announcement += fallen_pins_calculation
+
+          new_answer_result_announcement += "\n"
+
+          new_answer_result_announcement += "The answer #{@game.answer.to_i} to #{@game.question} is #{@game.answer_result}!"
+          if @game.answer_result != 'CORRECT'
+            new_answer_result_announcement += " Correct answer is #{@game.correct_answer.to_i}."
+          end
+
           self.answer_result_announcement = new_answer_result_announcement
           self.answer_result_announcement_background = case @game.answer_result
           when 'CORRECT'
@@ -378,7 +380,7 @@ class MathBowling
     def handle_roll_button_text
       observe(self, :timer) do
         roll_text = "Enter Answer (#{self.timer} seconds left)"
-        if player_count.to_i > 0 # TODO check if this is truly needed
+        if player_count.to_i > 1
           roll_text = "Player #{self.game&.current_player&.number} #{roll_text}"
         end
         self.roll_button_text = roll_text

@@ -15,7 +15,6 @@ class MathBowling
       end
     end
 
-    # TODO account for previous frame strikes/spares in calculating score
     def score
       if unplayed?
         nil
