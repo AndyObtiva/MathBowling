@@ -501,8 +501,9 @@ class MathBowling
       (@game.winner.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
     end
 
-    def show(player_count: 1)
+    def show(player_count: 1, difficulty: :easy)
       self.player_count = player_count
+      @game.difficulty = difficulty
       super()
     end
 
