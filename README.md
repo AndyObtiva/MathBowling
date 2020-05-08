@@ -80,9 +80,9 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 2.0.0 Release:
 
+1. [DONE] Improve math problem display by adding an equal sign and a question mark at the end
 1. Fix odd layout issues on some older Macs
 1. Improve answer result announcement by announcing Strikes and Spares explicitly (not just with symbols)
-1. Improve math problem display by adding an equal sign and a question mark at the end
 1. Multiple math problem difficulties (Easy / Medium / Hard)
 1. Players must enter name just like in bowling software
 

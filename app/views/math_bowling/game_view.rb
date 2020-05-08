@@ -231,7 +231,7 @@ class MathBowling
                 label(:center) {
                   background bind(self, :player_color, computed_by: "game.current_player.index")
                   foreground :yellow
-                  text bind(@game, "question")
+                  text bind(@game, "question") {|question| "#{question} = ?" }
                   font @font
                   layout_data {
                     horizontal_alignment :fill
