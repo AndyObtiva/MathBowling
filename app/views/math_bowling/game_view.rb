@@ -126,44 +126,6 @@ class MathBowling
                   }
                 }
               }
-              @game_over_announcement_container = composite {
-                grid_layout(1, false) {
-                  margin_width 0
-                  margin_height 15
-                  vertical_spacing 0
-                }
-                layout_data {
-                  exclude true
-                }
-                visible false
-                background @background
-                label(:center) {
-                  background bind(self, :winner_color, computed_by: "game.current_player.index")
-                  foreground :white
-                  text 'Game Over'
-                  font @font.merge(height: 110)
-                  layout_data {
-                    horizontal_alignment :fill
-                    vertical_alignment :center
-                    minimum_width 630
-                    minimum_height 100
-                    grab_excess_horizontal_space true
-                  }
-                }
-                label(:center) {
-                  background bind(self, :winner_color, computed_by: "game.current_player.index")
-                  foreground :yellow
-                  text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "Winner Score: #{@game.winner_total_score}" }
-                  font CONFIG[:scoreboard_font].merge(height: 80)
-                  layout_data {
-                    horizontal_alignment :fill
-                    vertical_alignment :center
-                    minimum_width 630
-                    minimum_height 100
-                    grab_excess_horizontal_space true
-                  }
-                }
-              }
               # Intentionally pre-initializing video widgets for all videos to avoid initial loading time upon playing a video (trading memory for speed)
               @videos_by_answer_result_and_pin_state = VideoRepository.index_by_answer_result_and_pin_state do |answer_result, pin_state|
                 VideoRepository.video_paths_by_answer_result_and_pin_state[answer_result][pin_state].map do |video_path|
@@ -194,7 +156,7 @@ class MathBowling
                   }                  
                 end
               end
-              label(:center) {
+              @answer_result_announcement_label = label(:center) {
                 background bind(self, 'answer_result_announcement_background')
                 text bind(self, 'answer_result_announcement')
                 visible bind(@game, 'answer_result')
@@ -257,6 +219,44 @@ class MathBowling
                 }
                 on_key_pressed {|key_event|
                   @game.roll if key_event.keyCode == swt(:cr)
+                }
+              }
+              @game_over_announcement_container = composite {
+                grid_layout(1, false) {
+                  margin_width 0
+                  margin_height 0
+                  vertical_spacing 0
+                }
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background @background
+                label(:center) {
+                  background bind(self, :winner_color, computed_by: "game.current_player.index")
+                  foreground :white
+                  text 'GAME OVER'
+                  font @font.merge(height: 80)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
+                label(:center) {
+                  background bind(self, :winner_color, computed_by: "game.current_player.index")
+                  foreground :yellow
+                  text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "Winner Score: #{@game.winner_total_score}" }
+                  font CONFIG[:scoreboard_font].merge(height: 80)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
                 }
               }
             }
@@ -332,16 +332,26 @@ class MathBowling
               new_answer_result_announcement += "Great job! "
             end
           end
-          new_answer_result_announcement += "#{@game.fallen_pins == @game.remaining_pins ? "All" : "#{@game.fallen_pins} of"} #{@game.remaining_pins}#{' remaining' if @game.remaining_pins < 10} pin#{'s' if @game.remaining_pins != 1} #{@game.fallen_pins != 1 ? 'were' : 'was'} knocked down!"
+          remaining_pin_prefix = nil
+          if @game.fallen_pins == @game.remaining_pins
+            if @game.fallen_pins == 1
+              remaining_pin_prefix = 'The'
+            else
+              remaining_pin_prefix = 'All'
+            end
+          else
+            remaining_pin_prefix = "#{@game.fallen_pins} of"
+          end
+          new_answer_result_announcement += "#{remaining_pin_prefix} #{@game.remaining_pins}#{' remaining' if @game.remaining_pins < 10} pin#{'s' if @game.remaining_pins != 1} #{@game.fallen_pins != 1 ? 'were' : 'was'} knocked down!"
 #           answer_and_correct_answer = [@last_answer.to_i, @game.correct_answer.to_i]
 #           fallen_pins_calculation = " Calculation: #{@game.remaining_pins} - (#{answer_and_correct_answer.max} - #{answer_and_correct_answer.min})"
 #           new_answer_result_announcement += fallen_pins_calculation
 
           new_answer_result_announcement += "\n"
 
-          new_answer_result_announcement += "The answer #{@game.answer.to_i} to #{@game.question} is #{@game.answer_result}!"
+          new_answer_result_announcement += "The answer #{@game.answer.to_i} to #{@game.question} was #{@game.answer_result}!"
           if @game.answer_result != 'CORRECT'
-            new_answer_result_announcement += " Correct answer is #{@game.correct_answer.to_i}."
+            new_answer_result_announcement += " The correct answer is #{@game.correct_answer.to_i}."
           end
 
           self.answer_result_announcement = new_answer_result_announcement
@@ -410,7 +420,7 @@ class MathBowling
       @video.swt_widget.setVisible(true)
       @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
       @game_over_announcement_container.swt_widget.setVisible(false)
-      @question_container.swt_widget.pack
+      body_root.pack
     end
 
     def all_videos
@@ -426,7 +436,7 @@ class MathBowling
         end
         @next_player_announcement_container.swt_widget.getLayoutData.exclude = false
         @next_player_announcement_container.swt_widget.setVisible(true)
-        @question_container.swt_widget.pack
+        body_root.pack
         Thread.new do
           sleep(1)
           async_exec do
@@ -451,6 +461,8 @@ class MathBowling
           child.getLayoutData&.exclude = false
         end        
       end
+      @answer_result_announcement_label.swt_widget.setVisible(true)
+      @answer_result_announcement_label.swt_widget.getLayoutData&.exclude = false
       @next_player_announcement_container.swt_widget.setVisible(false)
       @next_player_announcement_container.swt_widget.getLayoutData&.exclude = true
       @game_over_announcement_container.swt_widget.setVisible(false)
@@ -463,7 +475,7 @@ class MathBowling
         @game_over_announcement_container.swt_widget.setVisible(true)
         @game_over_announcement_container.swt_widget.getLayoutData&.exclude = false
       end
-      @question_container.swt_widget.pack
+      body_root.pack
       if @game.in_progress?
         @initially_focused_widget.swt_widget.setFocus
         self.timer = TIMER_DURATION
