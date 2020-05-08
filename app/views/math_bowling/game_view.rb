@@ -48,7 +48,13 @@ class MathBowling
           @game.start if @game.not_started?
           show_question
           body_root.pack
-          @initially_focused_widget&.swt_widget.setFocus
+          Thread.new do
+            sleep(0.25)
+            async_exec do
+              body_root.swt_widget.setActive
+              @initially_focused_widget&.swt_widget.setFocus
+            end
+          end
         }
         on_event_hide {
           show_question
