@@ -20,14 +20,8 @@ class MathBowling
         }
         background_image File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__)
         text "Math Bowling"
-        on_event_show {
-          Thread.new do
-            sleep(0.25)
-            async_exec do
-              body_root.swt_widget.setActive
-              @initially_focused_widget&.swt_widget.setFocus
-            end
-          end
+        on_shell_activated {
+          @initially_focused_widget.swt_widget.setFocus
         }
         on_about {
           display_about_dialog
