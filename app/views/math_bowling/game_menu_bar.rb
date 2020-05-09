@@ -26,7 +26,7 @@ class MathBowling
           }
           menu_item {
             text "Change &Names"
-            enabled bind(game_view.game, :player_count) {|pc| pc.to_i > 1}
+            enabled bind(game_view, :can_change_names)
             on_widget_selected {
               game_view.game.game_current_player = game_view.game.current_player
               game_view.game.current_player = game_view.game.players.first

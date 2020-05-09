@@ -8,9 +8,9 @@ class MathBowling
     TIMER_DURATION = 30
     TIMER_DURATION_DISABLED = 86400 # stop timer temporarily by setting to a very high value
 
-    attr_accessor :question_container,
+    attr_accessor :question_container, :can_change_names,
                   :answer_result_announcement, :answer_result_announcement_background,
-                  :timer, :roll_button_text, :video_playing_time
+                  :timer, :roll_button_text, :video_playing_time, :showing_next_player
     attr_reader :game, :player_count
 
     before_body {
@@ -36,6 +36,7 @@ class MathBowling
       handle_answer_result_announcement
       set_timer
       handle_roll_button_text
+      register_can_change_names
       register_video_events
     }
 
@@ -105,10 +106,10 @@ class MathBowling
                     }
                     visible false
                     on_mouse_down {
-                      show_next_player
+                      show_next_player if @video_playing_time && !@showing_next_player
                     }
                     on_ended {
-                      show_next_player
+                      show_next_player if @video_playing_time && !@showing_next_player
                     }
                     on_playing {
                       video_playing_time = self.video_playing_time = Time.now
@@ -116,7 +117,7 @@ class MathBowling
                         sleep(5)
                         if video_playing_time == self.video_playing_time
                           async_exec {
-                            show_next_player
+                            show_next_player if !@showing_next_player
                           }
                         end
                       }
@@ -506,9 +507,10 @@ class MathBowling
       @all_videos ||= @videos_by_answer_result_and_pin_state.values.map(&:values).flatten
     end
 
-    def show_next_player
+    def show_next_player      
+      self.video_playing_time = nil
       if @game.in_progress? && (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
-        @saved_timer = self.timer
+        @saved_timer ||= self.timer
         self.timer = TIMER_DURATION_DISABLED
         @showing_next_player = true
         @question_container.swt_widget.getChildren.each do |child|
@@ -568,7 +570,7 @@ class MathBowling
     end
 
     def show_name_form
-      @saved_timer = self.timer
+      @saved_timer ||= self.timer
       self.timer = TIMER_DURATION_DISABLED
       @game.current_players.each {|player| player.name = nil}
       @question_container.swt_widget.getChildren.each do |child|
@@ -582,6 +584,7 @@ class MathBowling
     end
 
     def enter_name
+      return if @game.current_player.name.to_s.strip.empty?
       current_player_index = @game.current_player.index
       @game.switch_player
       if current_player_index < (@game.player_count - 1)
@@ -609,6 +612,14 @@ class MathBowling
           end
         end
       end
+    end
+
+    def register_can_change_names
+      handle_can_change_names = lambda do |value|
+        self.can_change_names = @game.player_count.to_i > 1 && !video_playing_time
+      end
+      observe(@game, :player_count, &handle_can_change_names)
+      observe(self, :video_playing_time, &handle_can_change_names)
     end
 
     def player_color
