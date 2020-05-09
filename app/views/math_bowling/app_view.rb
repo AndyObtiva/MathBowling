@@ -4,6 +4,8 @@ require_relative 'game_view'
 require_relative 'app_menu_bar'
 require_relative 'game_menu_bar'
 
+require 'models/math_bowling/game'
+
 class MathBowling
   class AppView
     include Glimmer::UI::CustomShell
@@ -84,7 +86,7 @@ class MathBowling
               medium: :center,
               hard: :left
             }
-            @difficulty_buttons = %i[easy medium hard].map { |difficulty|
+            @difficulty_buttons = Game::DIFFICULTIES.map { |difficulty|
               button {
                 layout_data(difficulty_button_horizontal_alignment[difficulty], :center, true, true) {
                   minimum_width 113.33

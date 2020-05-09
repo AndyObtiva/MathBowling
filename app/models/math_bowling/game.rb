@@ -20,6 +20,7 @@ class MathBowling
     ]
     PLAYER_COUNT_MAX = 4
     DIFFICULT_QUESTION_EVERY = 5
+    DIFFICULTIES = %i[easy medium hard]
     NUMBER_UPPER_LIMIT = {
       easy: 10,
       medium: 10,
@@ -61,7 +62,7 @@ class MathBowling
           first_number = 
           case @difficulty
           when :easy
-            (rand*(number_upper_limit / 2 + 1)).to_i + 1
+            (rand*(number_upper_limit / 2)).to_i + 1
           when :medium
             @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*number_upper_limit).to_i + 1 : (rand*(number_upper_limit / 2 + 1)).to_i + (number_upper_limit / 2)
           when :hard

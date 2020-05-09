@@ -88,8 +88,6 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
 1. [DONE] Multiple math problem difficulties (Easy / Medium / Hard)
 1. Fix odd player #1 box layout issue on some older Macs
-1. Update player count menu to have a "Start Game" root and difficulty sub-menu-items
-1. Add a difficulty menu with radio buttons allowing change of difficulty in the middle of a game
 1. Players must enter name just like in bowling software
 
 2.1.0 Release:

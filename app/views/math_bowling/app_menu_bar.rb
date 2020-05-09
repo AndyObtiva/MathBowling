@@ -1,5 +1,7 @@
 require_relative 'game_rules_dialog'
 
+require 'models/math_bowling/game'
+
 class MathBowling
   class AppMenuBar
     include Glimmer::UI::CustomWidget
@@ -10,13 +12,21 @@ class MathBowling
       menu_bar {
         menu {
           text '&Game'
-          4.times.map { |n|
-            menu_item {
-              text "&#{n+1} Player#{('s' unless n == 0)}"
-              on_widget_selected {
-                app_view.hide
-                game_view.hide
-                game_view.show(player_count: n+1)
+          menu {
+            text "Start &Game"
+            4.times.map { |n|
+              menu {
+                text "&#{n+1} Player#{('s' unless n == 0)}"
+                Game::DIFFICULTIES.each do |difficulty|
+                  menu_item {
+                    text difficulty.to_s.titlecase
+                    on_widget_selected {
+                      app_view.hide
+                      game_view.hide
+                      game_view.show(player_count: n+1, difficulty: difficulty)
+                    }
+                  }
+                end
               }
             }
           }

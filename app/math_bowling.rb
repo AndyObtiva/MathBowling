@@ -2,6 +2,8 @@ require 'glimmer'
 require 'glimmer-cw-video'
 require 'puts_debuggerer'
 
+$LOAD_PATH.unshift(File.expand_path('..', __FILE__))
+
 require_relative 'models/math_bowling/game'
 require_relative 'models/math_bowling/video_repository'
 require_relative 'views/math_bowling/app_view'
