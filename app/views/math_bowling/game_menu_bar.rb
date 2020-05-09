@@ -1,5 +1,7 @@
 require_relative 'app_menu_bar'
 
+require 'models/math_bowling/game'
+
 class MathBowling
   class GameMenuBar
     include Glimmer::UI::CustomWidget
@@ -10,6 +12,18 @@ class MathBowling
       app_menu_bar(app_view: app_view, game_view: game_view) {
         menu {
           text '&Action'
+          menu {
+            text "Change &Difficulty"
+            Game::DIFFICULTIES.each do |difficulty|
+              menu_item(:radio) {
+                text difficulty.to_s.titlecase
+                selection bind(game_view, 'game.difficulty') {|d| d == difficulty}
+                on_widget_selected {
+                  game_view.game.difficulty = difficulty
+                }
+              }              
+            end
+          }
           menu_item {
             text "&Restart Game"
             on_widget_selected {
