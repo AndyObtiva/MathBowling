@@ -87,8 +87,8 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Improve answer result announcement by announcing Strikes, Double Strikes, Triple Strikes, and Spares explicitly (not just with symbols)
 1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
 1. [DONE] Multiple math problem difficulties (Easy / Medium / Hard)
+1. [DONE] Players can enter name just like in bowling software
 1. Fix odd player #1 box layout issue on some older Macs
-1. Players must enter name just like in bowling software
 
 2.1.0 Release:
 

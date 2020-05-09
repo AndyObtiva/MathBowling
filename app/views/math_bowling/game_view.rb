@@ -6,6 +6,7 @@ class MathBowling
 
     FILE_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
     TIMER_DURATION = 30
+    TIMER_DURATION_DISABLED = 86400 # stop timer temporarily by setting to a very high value
 
     attr_accessor :question_container,
                   :answer_result_announcement, :answer_result_announcement_background,
@@ -45,15 +46,15 @@ class MathBowling
         text "Math Bowling"
         background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
         on_event_show {
+          @saved_timer = nil
           @game.start if @game.not_started?
-          show_question
+          if @game.player_count == 1 || @game.all_player_names_entered?
+            show_question
+          else
+            show_name_form
+          end          
           body_root.pack
-          Thread.new do      
-            sleep(0.25)
-            async_exec do
-              @initially_focused_widget&.swt_widget&.setFocus
-            end
-          end
+          focus_default_widget
         }
         on_event_hide {
           show_question
@@ -91,7 +92,7 @@ class MathBowling
               }
               background @background
               on_key_pressed {|key_event|
-                show_next_player unless @showing_next_player
+                show_next_player if @video_playing_time && !@showing_next_player
               }
               # Intentionally pre-initializing video widgets for all videos to avoid initial loading time upon playing a video (trading memory for speed)
               @videos_by_answer_result_and_pin_state = VideoRepository.index_by_answer_result_and_pin_state do |answer_result, pin_state|
@@ -141,7 +142,6 @@ class MathBowling
                 layout_data { exclude false }
                 grid_layout(1, false) {
                   margin_width 0
-#                   margin_height 15
                   vertical_spacing 0
                 }
                 label(:center) {
@@ -169,7 +169,7 @@ class MathBowling
                 }
                 on_verify_text {|verify_event|
                   final_text = "#{@answer_text.swt_widget.getText}#{verify_event.text}"
-                  verify_event.doit = false unless final_text.match(/^[0-9]{0,3}$/)
+                  verify_event.doit = !!final_text.match(/^[0-9]{0,3}$/)
                 }
               }
               button(:center) {
@@ -188,6 +188,80 @@ class MathBowling
                   @game.roll if key_event.keyCode == swt(:cr)
                 }
               }
+              @name_form_container = composite {
+                grid_layout(1, false) {
+                  margin_width 0
+                  margin_height 0
+                  vertical_spacing 10
+                }
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background @background
+                composite {
+                  background @background
+                  layout_data { exclude false }
+                  grid_layout(1, false) {
+                    margin_width 0
+                    vertical_spacing 0
+                  }
+                  label(:center) {
+                    background bind(self, :player_color, computed_by: "game.current_player.index")
+                    foreground :yellow
+                    text bind(@game, 'current_player.index') {|i| "Player #{i+1} - Please Enter Your Name" }
+                    font @font
+                    layout_data {
+                      horizontal_alignment :fill
+                      vertical_alignment :center
+                      minimum_width 630
+                      minimum_height 100
+                      grab_excess_horizontal_space true
+                    }
+                  }
+                }
+                @name_text = text(:center, :border) {
+                  focus true
+                  text bind(@game, "current_player.name")
+                  font @font
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                  on_key_pressed {|key_event|
+                    enter_name if key_event.keyCode == swt(:cr)
+                  }
+                  on_verify_text {|verify_event|
+                    final_text = "#{@name_text.swt_widget.getText}#{verify_event.text}"
+                    verify_event.doit = final_text.size <= 6
+                  }
+                }
+                @enter_name_button = button(:center) {
+                  focus true
+                  text 'Enter Name'
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                    height_hint 42
+                  }
+                  enabled bind(@game, 'current_player.name') { |name| !name.to_s.empty? }
+                  font @font_button
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  foreground :yellow
+                  on_widget_selected {
+                    enter_name
+                  }
+                  on_key_pressed {|key_event|
+                    enter_name if key_event.keyCode == swt(:cr)
+                  }
+                }
+              }
               @next_player_announcement_container = composite {
                 grid_layout(1, false) {
                   margin_width 0
@@ -202,7 +276,7 @@ class MathBowling
                 label(:center) {
                   background bind(self, :player_color, computed_by: "game.current_player.index")
                   foreground :white
-                  text 'NEXT PLAYER'
+                  text bind(@game, 'current_player.name') { |name| "#{name} is up next!" }
                   font @font.merge(height: 80)
                   layout_data {
                     horizontal_alignment :fill
@@ -220,7 +294,7 @@ class MathBowling
                   }
                   background bind(self, :player_color, computed_by: "game.current_player.index")
                   foreground :yellow
-                  text bind(@game, 'current_player.index') { |i| "Player #{i+1} Continue" }
+                  text 'Continue'
                   font @font_button
                   on_widget_selected {
                     show_question
@@ -398,11 +472,7 @@ class MathBowling
 
     def handle_roll_button_text
       observe(self, :timer) do
-        roll_text = "Enter Answer (#{self.timer} seconds left)"
-        if player_count.to_i > 1
-          roll_text = "Player #{self.game&.current_player&.number} #{roll_text}"
-        end
-        self.roll_button_text = roll_text
+        self.roll_button_text = "Enter Answer (#{self.timer} seconds left)"
       end
     end
 
@@ -438,7 +508,8 @@ class MathBowling
 
     def show_next_player
       if @game.in_progress? && (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
-        self.timer = 86400 # stop timer temporarily by setting to a very high value
+        @saved_timer = self.timer
+        self.timer = TIMER_DURATION_DISABLED
         @showing_next_player = true
         @question_container.swt_widget.getChildren.each do |child|
           child.getLayoutData.exclude = true
@@ -474,6 +545,8 @@ class MathBowling
       @next_player_announcement_container.swt_widget.getLayoutData&.exclude = true
       @game_over_announcement_container.swt_widget.setVisible(false)
       @game_over_announcement_container.swt_widget.getLayoutData&.exclude = true
+      @name_form_container.swt_widget.setVisible(false)
+      @name_form_container.swt_widget.getLayoutData&.exclude = true #TODO check if this is even needed 
       all_videos.each do |video|
         video.swt_widget&.getLayoutData&.exclude = true
         video.swt_widget&.setVisible(false)
@@ -485,7 +558,56 @@ class MathBowling
       @question_container.swt_widget.pack
       if @game.in_progress?
         @initially_focused_widget.swt_widget.setFocus
-        self.timer = TIMER_DURATION
+        if @saved_timer
+          self.timer = @saved_timer
+          @saved_timer = nil
+        else
+          self.timer = TIMER_DURATION
+        end
+      end
+    end
+
+    def show_name_form
+      @saved_timer = self.timer
+      self.timer = TIMER_DURATION_DISABLED
+      @game.current_players.each {|player| player.name = nil}
+      @question_container.swt_widget.getChildren.each do |child|
+        child.getLayoutData.exclude = true
+        child.setVisible(false)
+      end
+      @name_form_container.swt_widget.setVisible(true)
+      @name_form_container.swt_widget.getLayoutData&.exclude = false
+      body_root.pack
+      focus_name_form
+    end
+
+    def enter_name
+      current_player_index = @game.current_player.index
+      @game.switch_player
+      if current_player_index < (@game.player_count - 1)
+        focus_name_form
+      else
+        @game.current_player = @game.game_current_player if @game.game_current_player
+        @game.game_current_player = nil
+        show_question
+        body_root.pack
+      end
+    end
+
+    def focus_name_form
+      @name_text.swt_widget.setFocus
+    end
+
+    def focus_default_widget
+      Thread.new do      
+        sleep(0.25)
+        async_exec do
+          if @name_text&.swt_widget&.getVisible
+            focus_name_form
+          else
+            @initially_focused_widget&.swt_widget&.setFocus
+          end
+        end
       end
     end
 

@@ -2,7 +2,7 @@ require_relative 'score_sheet'
 
 class MathBowling
   class Player
-    attr_accessor :score_sheet, :index
+    attr_accessor :score_sheet, :index, :name
 
     def initialize(index)
       self.index = index

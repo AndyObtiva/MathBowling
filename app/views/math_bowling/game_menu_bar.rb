@@ -25,6 +25,15 @@ class MathBowling
             end
           }
           menu_item {
+            text "Change &Names"
+            enabled bind(game_view.game, :player_count) {|pc| pc.to_i > 1}
+            on_widget_selected {
+              game_view.game.game_current_player = game_view.game.current_player
+              game_view.game.current_player = game_view.game.players.first
+              game_view.show_name_form
+            }
+          }
+          menu_item {
             text "&Restart Game"
             on_widget_selected {
               game_view.game.restart

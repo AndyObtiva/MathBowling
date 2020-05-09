@@ -28,7 +28,7 @@ class MathBowling
     }
 
     # players refers to current players in game. all players refers to all potential players (4 max)
-    attr_accessor :player_count, :players, :current_players, :current_player, :question, :answer, :answer_result, 
+    attr_accessor :player_count, :players, :current_players, :current_player, :game_current_player, :question, :answer, :answer_result, 
                   :is_one_player, :is_two_players, :roll_done, :correct_answer, :remaining_pins, :fallen_pins,
                   :last_player_index, :difficulty
 
@@ -51,6 +51,7 @@ class MathBowling
       self.current_player = current_players.first
       self.generate_question
       self.answer_result = nil
+      self.game_current_player = nil
     end
 
     def generate_question
@@ -187,6 +188,10 @@ class MathBowling
           'WIN'
         end
       end
+    end
+
+    def all_player_names_entered?
+      current_players.map(&:name).map(&:to_s).count(&:empty?) == 0
     end
 
     def calculate_answer

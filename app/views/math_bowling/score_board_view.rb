@@ -34,13 +34,13 @@ class MathBowling
           }
           background @background
           label(:center) {
-            text bind(game, "players[#{player_index}].number")
+            text bind(game, "players[#{player_index}].name") { |name| "\n#{name}" }
             layout_data 100, 100
             background @background
             foreground bind(game, "current_player.index") {|n|
               (game.in_progress? && n == player_index) || (game.not_in_progress? && game.winners.map(&:index).include?(player_index)) ? :yellow : :white
             }
-            font CONFIG[:scoreboard_font].merge(height: 80)
+            font CONFIG[:scoreboard_font].merge(height: 26)
           }
         }
         ScoreSheet::COUNT_FRAME.times.map do |frame_index|

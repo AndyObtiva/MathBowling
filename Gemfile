@@ -9,7 +9,7 @@ gem 'glimmer-cw-video', '0.1.0'
 gem 'puts_debuggerer', '0.8.1'
 
 group :development do
-  gem 'glimmer-cs-gladiator', '0.1.0'
+  gem 'glimmer-cs-gladiator', '0.1.1'
 end
 
 group :test do
