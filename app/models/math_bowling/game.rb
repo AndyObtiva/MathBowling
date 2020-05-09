@@ -10,8 +10,8 @@ class MathBowling
       '/' => '÷',
     }
     POSSIBLE_FIRST_NUMBERS = {
-      '-' => (1..10).reduce({}) {|hash, a| hash.merge(a => (1..10).map {|b| a + b }) },
-      '/' => (1..10).reduce({}) {|hash, a| hash.merge(a => (1..10).map {|b| a * b }) },
+      '-' => (1..20).reduce({}) {|hash, a| hash.merge(a => (1..20).map {|b| a + b }) },
+      '/' => (1..20).reduce({}) {|hash, a| hash.merge(a => (1..20).map {|b| a * b }) },
     }
     ANSWER_RESULTS = [
       'CORRECT',
@@ -20,6 +20,11 @@ class MathBowling
     ]
     PLAYER_COUNT_MAX = 4
     DIFFICULT_QUESTION_EVERY = 5
+    NUMBER_UPPER_LIMIT = {
+      easy: 10,
+      medium: 10,
+      hard: 20
+    }
 
     # players refers to current players in game. all players refers to all potential players (4 max)
     attr_accessor :player_count, :players, :current_players, :current_player, :question, :answer, :answer_result, 
@@ -52,13 +57,22 @@ class MathBowling
         teh_question = ''
       else
         begin          
-          first_number = @difficulty == :easy && @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*10).to_i + 1 : (rand*6).to_i + 5
-          operator = @question_index%DIFFICULT_QUESTION_EVERY != 0 ? QUESTION_OPERATIONS[(rand*4).to_i] : '*'
+          number_upper_limit = NUMBER_UPPER_LIMIT[@difficulty]
+          first_number = 
+          case @difficulty
+          when :easy
+            (rand*(number_upper_limit / 2 + 1)).to_i + 1
+          when :medium
+            @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*number_upper_limit).to_i + 1 : (rand*(number_upper_limit / 2 + 1)).to_i + (number_upper_limit / 2)
+          when :hard
+            (rand*number_upper_limit).to_i + 1
+          end
+          operator = @difficulty == :medium && @question_index%DIFFICULT_QUESTION_EVERY == 0 ? '*' : QUESTION_OPERATIONS[(rand*4).to_i]
           if ['-', '/'].include?(operator)            
             last_number = first_number
-            first_number = POSSIBLE_FIRST_NUMBERS[operator][last_number][(rand*10).to_i]
+            first_number = POSSIBLE_FIRST_NUMBERS[operator][last_number][(rand*number_upper_limit).to_i]
           else
-            last_number = @difficulty == :easy && @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*10).to_i + 1 : (rand*6).to_i + 5
+            last_number = @difficulty == :easy && @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*number_upper_limit).to_i + 1 : (rand*(number_upper_limit / 2 + 1)).to_i + (number_upper_limit / 2)
           end
           teh_question = "#{first_number} #{TRANSLATION[operator]} #{last_number}"
           teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
