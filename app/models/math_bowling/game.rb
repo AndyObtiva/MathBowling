@@ -68,7 +68,7 @@ class MathBowling
             (rand*number_upper_limit).to_i + 1
           end
           operator = @difficulty == :medium && @question_index%DIFFICULT_QUESTION_EVERY == 0 ? '*' : QUESTION_OPERATIONS[(rand*4).to_i]
-          if ['-', '/'].include?(operator)            
+          if ['-', '/'].include?(operator)
             last_number = first_number
             first_number = POSSIBLE_FIRST_NUMBERS[operator][last_number][(rand*number_upper_limit).to_i]
           else

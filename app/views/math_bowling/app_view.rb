@@ -20,12 +20,6 @@ class MathBowling
         }
         background_image File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__)
         text "Math Bowling"
-#         on_event_show {
-#           @player_count = nil
-#           @difficulty = nil
-#           @player_count_view.swt_widget.setVisible true
-#           @player_count_view.swt_widget.layoutData.exclude = false
-#         }
         on_shell_activated {
           @initially_focused_widget.swt_widget.setFocus
         }
@@ -78,14 +72,23 @@ class MathBowling
             @initially_focused_widget = @player_count_buttons.first
           }
           @difficulty_view = composite {
-            fill_layout :horizontal
-            layout_data(:fill, :fill, true, true) {
+            grid_layout 3, true
+            layout_data(:center, :center, true, true) {
               exclude true
+              minimum_width 440
             }
             visible false
             background :transparent
+            difficulty_button_horizontal_alignment = {
+              easy: :right,
+              medium: :center,
+              hard: :left
+            }
             @difficulty_buttons = %i[easy medium hard].map { |difficulty|
               button {
+                layout_data(difficulty_button_horizontal_alignment[difficulty], :center, true, true) {
+                  minimum_width 113.33
+                }
                 text difficulty.to_s.titlecase
                 font CONFIG[:font]
                 background CONFIG[:button_background]
