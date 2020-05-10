@@ -589,7 +589,7 @@ class MathBowling
     end
 
     def enter_name
-      return if @game.current_player.name.to_s.strip.empty?
+      return if @game.current_player.name.to_s.strip.empty? || @game.current_players.map(&:name).count(@game.current_player.name) > 1
       current_player_index = @game.current_player.index
       @game.switch_player
       if current_player_index < (@game.player_count - 1)
