@@ -45,5 +45,3 @@ class MathBowling
     app_view.open
   end
 end
-
-MathBowling.new.launch
