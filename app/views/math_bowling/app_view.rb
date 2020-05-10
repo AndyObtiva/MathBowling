@@ -22,8 +22,11 @@ class MathBowling
         }
         background_image File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__)
         text "Math Bowling"
+        on_event_show {
+          focus_default_widget
+        }
         on_shell_activated {
-          @initially_focused_widget.swt_widget.setFocus
+          focus_default_widget
         }
         on_about {
           display_about_dialog
@@ -127,5 +130,15 @@ class MathBowling
       message_box.setMessage(message)
       message_box.open
     end
+
+    def focus_default_widget
+      Thread.new do      
+        sleep(0.25)
+        async_exec do
+          @initially_focused_widget.swt_widget.setFocus
+        end
+      end
+    end
+
   end
 end

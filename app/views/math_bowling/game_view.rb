@@ -23,12 +23,12 @@ class MathBowling
           if @game.over?
             @restart_button.swt_widget.setFocus
           else
-            @initially_focused_widget.swt_widget.setFocus
+            @answer_text.swt_widget.setFocus
           end
         end
       end
       observe(@game, :answer_result) do |answer_result|
-        @initially_focused_widget.swt_widget.setFocus if answer_result.nil?
+        @answer_text.swt_widget.setFocus if answer_result.nil?
       end
     }
 
@@ -49,7 +49,7 @@ class MathBowling
         on_event_show {
           @saved_timer = nil
           @game.start if @game.not_started?
-          if @game.player_count == 1 || @game.all_player_names_entered?
+          if @game.player_count == 1
             show_question
           else
             show_name_form
@@ -58,7 +58,7 @@ class MathBowling
           focus_default_widget
         }
         on_event_hide {
-          show_question
+          show_question # stops videos if still running
           @game.quit
         }
         composite {
@@ -159,7 +159,7 @@ class MathBowling
                   }
                 }
               }
-              @initially_focused_widget = @answer_text = text(:center, :border) {
+              @answer_text = text(:center, :border) {
                 focus true
                 text bind(@game, "answer")
                 font @font
@@ -251,7 +251,7 @@ class MathBowling
                     grab_excess_horizontal_space true
                     height_hint 42
                   }
-                  enabled bind(@game, 'current_player.name') { |name| !name.to_s.empty? }
+#                   enabled bind(@game, 'current_player.name') { |name| !name.to_s.empty? } # disabled because it looks ugly
                   font @font_button
                   background bind(self, :player_color, computed_by: "game.current_player.index")
                   foreground :yellow
@@ -276,8 +276,8 @@ class MathBowling
                 background @background
                 label(:center) {
                   background bind(self, :player_color, computed_by: "game.current_player.index")
-                  foreground :white
-                  text bind(@game, 'current_player.name') { |name| "#{name} is up next!" }
+                  foreground :yellow
+                  text bind(@game, 'current_player.name') { |name| "#{name} is next!" }
                   font @font.merge(height: 80)
                   layout_data {
                     horizontal_alignment :fill
@@ -293,9 +293,8 @@ class MathBowling
                     grab_excess_horizontal_space true
                     height_hint 42
                   }
-                  background bind(self, :player_color, computed_by: "game.current_player.index")
-                  foreground :yellow
                   text 'Continue'
+                  background CONFIG[:button_background]
                   font @font_button
                   on_widget_selected {
                     show_question
@@ -355,7 +354,7 @@ class MathBowling
               font CONFIG[:font]
               on_widget_selected {
                 @game.restart
-                show_question
+                show_next_player
               }
             }
             button {
@@ -473,7 +472,13 @@ class MathBowling
 
     def handle_roll_button_text
       observe(self, :timer) do
-        self.roll_button_text = "Enter Answer (#{self.timer} seconds left)"
+        if @game.in_progress?
+          self.roll_button_text = "Enter Answer (#{self.timer} seconds left)"
+          # disabled because it doesn't look good
+#           if @game.player_count.to_i > 1
+#             self.roll_button_text = "#{@game.current_player.name} - #{self.roll_button_text}"
+#           end
+        end
       end
     end
 
@@ -510,7 +515,7 @@ class MathBowling
     def show_next_player      
       self.video_playing_time = nil
       if @game.in_progress? && (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
-        @saved_timer ||= self.timer
+        @saved_timer = self.timer if self.timer.to_i <= TIMER_DURATION
         self.timer = TIMER_DURATION_DISABLED
         @showing_next_player = true
         @question_container.swt_widget.getChildren.each do |child|
@@ -559,7 +564,7 @@ class MathBowling
       end
       @question_container.swt_widget.pack
       if @game.in_progress?
-        @initially_focused_widget.swt_widget.setFocus
+        focus_default_widget
         if @saved_timer
           self.timer = @saved_timer
           @saved_timer = nil
@@ -570,7 +575,7 @@ class MathBowling
     end
 
     def show_name_form
-      @saved_timer ||= self.timer
+      @saved_timer = self.timer if self.timer <= TIMER_DURATION
       self.timer = TIMER_DURATION_DISABLED
       @game.current_players.each {|player| player.name = nil}
       @question_container.swt_widget.getChildren.each do |child|
@@ -594,6 +599,7 @@ class MathBowling
         @game.game_current_player = nil
         show_question
         body_root.pack
+        @answer_text.swt_widget.setFocus
       end
     end
 
@@ -605,10 +611,10 @@ class MathBowling
       Thread.new do      
         sleep(0.25)
         async_exec do
-          if @name_text&.swt_widget&.getVisible
-            focus_name_form
+          if @name_form_container&.swt_widget&.layoutData&.exclude
+            @answer_text&.swt_widget&.setFocus
           else
-            @initially_focused_widget&.swt_widget&.setFocus
+            focus_name_form
           end
         end
       end
