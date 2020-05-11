@@ -2,6 +2,8 @@
 
 ![Math Bowling Screenshot](images/Math-Bowling-Screenshot.png)
 
+[Click to view a 4-Player demo video](https://github.com/AndyObtiva/MathBowling/raw/development/videos/MathBowling-2.0.0-Demo-4Players.mp4)
+
 <span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.0.0 for Mac](https://www.dropbox.com/s/af8upm1rh005jzk/Math%20Bowling-2.0.0.dmg?dl=1)</span>
 
 Math Bowling is an elementary level educational math game.
