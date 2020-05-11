@@ -95,6 +95,9 @@ class MathBowling
               on_key_pressed {|key_event|
                 show_next_player if @video_playing_time && !@showing_next_player
               }
+              on_focus_gained {
+                focus_default_widget
+              }
               # Intentionally pre-initializing video widgets for all videos to avoid initial loading time upon playing a video (trading memory for speed)
               @videos_by_answer_result_and_pin_state = VideoRepository.index_by_answer_result_and_pin_state do |answer_result, pin_state|
                 VideoRepository.video_paths_by_answer_result_and_pin_state[answer_result][pin_state].map do |video_path|
@@ -611,10 +614,13 @@ class MathBowling
       Thread.new do      
         sleep(0.25)
         async_exec do
-          if @name_form_container&.swt_widget&.layoutData&.exclude
-            @answer_text&.swt_widget&.setFocus
-          else
+#           if @name_form_container&.swt_widget&.layoutData&.exclude
+          if @name_form_container&.swt_widget&.isVisible
             focus_name_form
+          elsif @continue_button&.swt_widget&.isVisible
+            @continue_button.swt_widget.setFocus
+          else
+            @answer_text&.swt_widget&.setFocus
           end
         end
       end

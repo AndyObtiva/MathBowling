@@ -83,16 +83,17 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Fix answer result announcement not showing on game over.
 1. [DONE] Fix layout issue when switching player count game type after game over
 1. [DONE] Fix initial focus on app and game screens
+1. [DONE] Fix issue with keyboard focus disappearing when widget tabbing reaches end of cycle
 1. [DONE] Improve math problem display by adding '= ?' and removing verbose question
 1. [DONE] Improve answer result announcement by announcing Strikes, Double Strikes, Triple Strikes, and Spares explicitly (not just with symbols)
 1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
 1. [DONE] Multiple math problem difficulties (Easy / Medium / Hard)
 1. [DONE] Players can enter name just like in bowling software
-1. Fix issue with keyboard focus disappearing when widget tabbing reaches end of cycle
 
 2.1.0 Release:
 
 1. Implement correct layout on Windows
+1. Add button/label/menu-item mnemonics (for ALT shortcuts)
 1. Package for Windows
 
 2.2.0 Release:
