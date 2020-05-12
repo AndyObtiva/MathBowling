@@ -11,7 +11,7 @@ class MathBowling
     attr_accessor :question_container, :can_change_names,
                   :answer_result_announcement, :answer_result_announcement_background,
                   :timer, :roll_button_text, :video_playing_time, :showing_next_player
-    attr_reader :game, :player_count
+    attr_reader :game
 
     before_body {
       @game = MathBowling::Game.new
@@ -44,12 +44,12 @@ class MathBowling
       shell(:no_resize) {
         @background = :transparent
         @foreground = :black
-        text "Math Bowling"
+        text CONFIG[:game_title]
         background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
         on_event_show {
           @saved_timer = nil
-          @game.start if @game.not_started?
           if @game.player_count == 1
+            @game.start if @game.not_started?
             show_question
           else
             show_name_form
@@ -213,7 +213,7 @@ class MathBowling
                   label(:center) {
                     background bind(self, :player_color, computed_by: "game.current_player.index")
                     foreground :yellow
-                    text bind(@game, 'current_player.index') {|i| "Player #{i+1} - Please Enter Your Name" }
+                    text bind(@game, 'current_player.index') {|i| "Player #{i.to_i+1} - Please Enter Your Name" }
                     font @font
                     layout_data {
                       horizontal_alignment :fill
@@ -226,7 +226,7 @@ class MathBowling
                 }
                 @name_text = text(:center, :border) {
                   focus true
-                  text bind(@game, "current_player.name")
+                  text bind(@game, "name_current_player.name")
                   font @font
                   layout_data {
                     horizontal_alignment :fill
@@ -254,7 +254,7 @@ class MathBowling
                     grab_excess_horizontal_space true
                     height_hint 42
                   }
-#                   enabled bind(@game, 'current_player.name') { |name| !name.to_s.empty? } # disabled because it looks ugly
+#                   enabled bind(@game, 'name_current_player.name') { |name| !name.to_s.empty? } # disabled because it looks ugly
                   font @font_button
                   background bind(self, :player_color, computed_by: "game.current_player.index")
                   foreground :yellow
@@ -355,6 +355,7 @@ class MathBowling
               background CONFIG[:button_background]
               text "&Restart Game"
               font CONFIG[:font]
+              enabled bind(@game, :name_current_player, on_read: :!)
               on_widget_selected {
                 @game.restart
                 show_next_player
@@ -581,6 +582,7 @@ class MathBowling
       @saved_timer = self.timer if self.timer <= TIMER_DURATION
       self.timer = TIMER_DURATION_DISABLED
       @game.current_players.each {|player| player.name = nil}
+      @game.name_current_player = @game.current_players.first
       @question_container.swt_widget.getChildren.each do |child|
         child.getLayoutData.exclude = true
         child.setVisible(false)
@@ -592,14 +594,14 @@ class MathBowling
     end
 
     def enter_name
-      return if @game.current_player.name.to_s.strip.empty? || @game.current_players.map(&:name).count(@game.current_player.name) > 1
-      current_player_index = @game.current_player.index
-      @game.switch_player
-      if current_player_index < (@game.player_count - 1)
+      return if @game.name_current_player.name.to_s.strip.empty? || @game.current_players.map(&:name).count(@game.name_current_player.name) > 1
+      name_current_player_index = @game.name_current_player.index
+      @game.switch_name_player
+      if name_current_player_index < (@game.player_count - 1)
         focus_name_form
       else
-        @game.current_player = @game.game_current_player if @game.game_current_player
-        @game.game_current_player = nil
+        @game.name_current_player = nil
+        @game.start if @game.not_started?
         show_question
         body_root.pack
         @answer_text.swt_widget.setFocus
@@ -614,7 +616,6 @@ class MathBowling
       Thread.new do      
         sleep(0.25)
         async_exec do
-#           if @name_form_container&.swt_widget&.layoutData&.exclude
           if @name_form_container&.swt_widget&.isVisible
             focus_name_form
           elsif @continue_button&.swt_widget&.isVisible
@@ -643,14 +644,14 @@ class MathBowling
     end
 
     def winner_color
-      (@game.winner.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
+      (@game.winner&.index.to_i % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
     end
 
     def show(player_count: 1, difficulty: :easy)
-      self.player_count = player_count
+      @game.quit
+      @game.player_count = player_count
       @game.difficulty = difficulty
       super()
     end
-
   end
 end

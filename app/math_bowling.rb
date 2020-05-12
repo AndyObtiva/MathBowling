@@ -38,6 +38,7 @@ class MathBowling
       height: 60,
     ),
     title_foreground: rgb(138, 31, 41),
+    game_title: 'Math Bowling 2',
     button_background: rgb(245, 245, 220),
   }
 

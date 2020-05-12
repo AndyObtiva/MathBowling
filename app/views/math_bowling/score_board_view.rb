@@ -38,7 +38,10 @@ class MathBowling
             layout_data 100, 100
             background @background
             foreground bind(game, "current_player.index") {|n|
-              (game.in_progress? && n == player_index) || (game.not_in_progress? && game.winners.map(&:index).include?(player_index)) ? :yellow : :white
+              (game.in_progress? && n == player_index) || (game.over? && game.winners.map(&:index).include?(player_index)) ? :yellow : :white
+            }
+            foreground bind(game, "name_current_player.index") {|n|
+              n == player_index ? :yellow : :white
             }
             font CONFIG[:scoreboard_font].merge(height: 26)
           }
@@ -61,7 +64,10 @@ class MathBowling
             layout_data 150, 100
             background @background
             foreground bind(game, "current_player.index") {|n|
-              (game.in_progress? && n == player_index) || (game.not_in_progress? && game.winners.map(&:index).include?(player_index)) ? :yellow : :white
+              (game.in_progress? && n == player_index) || (game.over? && game.winners.map(&:index).include?(player_index)) ? :yellow : :white
+            }
+            foreground bind(game, "name_current_player.index") {|n|
+              n == player_index ? :yellow : :white
             }
             font CONFIG[:scoreboard_font].merge(height: 80)
           }

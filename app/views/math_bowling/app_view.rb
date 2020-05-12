@@ -21,7 +21,7 @@ class MathBowling
           margin_height 35
         }
         background_image File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__)
-        text "Math Bowling"
+        text CONFIG[:game_title]
         on_event_show {
           focus_default_widget
         }
@@ -44,7 +44,7 @@ class MathBowling
         app_menu_bar(app_view: self, game_view: @game_view)
         label(:center) {
           layout_data :fill, :fill, true, true
-          text "Math Bowling"
+          text CONFIG[:game_title]
           font CONFIG[:title_font]
           foreground CONFIG[:title_foreground]
         }

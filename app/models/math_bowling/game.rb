@@ -27,8 +27,8 @@ class MathBowling
       hard: 20
     }
 
-    # players refers to current players in game. all players refers to all potential players (4 max)
-    attr_accessor :player_count, :players, :current_players, :current_player, :game_current_player, :question, :answer, :answer_result, 
+    attr_reader :player_count
+    attr_accessor :players, :current_players, :current_player, :name_current_player, :game_current_player, :question, :answer, :answer_result, 
                   :is_one_player, :is_two_players, :roll_done, :correct_answer, :remaining_pins, :fallen_pins,
                   :last_player_index, :difficulty
 
@@ -47,11 +47,9 @@ class MathBowling
       self.last_player_index = 0
       self.remaining_pins = 10
       self.players.each(&:reset)
-      self.current_players = players[0...player_count]
       self.current_player = current_players.first
       self.generate_question
       self.answer_result = nil
-      self.game_current_player = nil
     end
 
     def generate_question
@@ -125,7 +123,7 @@ class MathBowling
     end
 
     def quit
-      self.current_players = nil
+      self.players.each(&:reset)
       self.current_player = nil
       self.question = nil
       self.answer = ''
@@ -135,9 +133,14 @@ class MathBowling
       self.current_player = current_players[(current_players.index(current_player) + 1) % player_count]
     end
 
+    def switch_name_player
+      self.name_current_player = current_players[(current_players.index(name_current_player) + 1) % player_count]
+    end
+
     def player_count=(value)
       quit
       @player_count = value
+      @current_players = players[0...@player_count]
     end
 
     def not_started?
@@ -149,7 +152,9 @@ class MathBowling
     end
 
     def in_progress?
-      started? && !current_player.score_sheet.game_over?
+      started? and
+        current_player&.score_sheet and
+        !current_player.score_sheet.game_over?
     end
 
     def not_in_progress?
@@ -158,11 +163,11 @@ class MathBowling
 
     def over?
       started? and
-        current_players.map {|player| player.score_sheet.game_over?}.reduce(:&)
+        current_players.map {|player| player&.score_sheet&.game_over?}.reduce(:&)
     end
 
     def winner_total_score
-      total_scores = players.to_a.map(&:score_sheet).map(&:total_score)
+      total_scores = current_players.to_a.map(&:score_sheet).map(&:total_score)
       total_scores.max
     end
 
@@ -170,7 +175,7 @@ class MathBowling
       if single_player?
         [players.first]
       else
-        players.to_a.select {|p| p.score_sheet.total_score == winner_total_score}
+        current_players.to_a.select {|p| p.score_sheet.total_score == winner_total_score}
       end
     end
 

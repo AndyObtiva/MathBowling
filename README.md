@@ -92,6 +92,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
 1. [DONE] Multiple math problem difficulties (Easy / Medium / Hard)
 1. [DONE] Players can enter name just like in bowling software
+1. Fix focus in packaged application mode
 
 2.1.0 Release:
 
