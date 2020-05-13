@@ -2,7 +2,7 @@
 
 ![Math Bowling Screenshot](Math-Bowling-Screenshot.png)
 
-<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.0.0 for Mac](https://www.dropbox.com/s/af8upm1rh005jzk/Math%20Bowling-2.0.0.dmg?dl=1)</span>
+<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.0.0 for Mac](https://www.dropbox.com/s/af8upm1rh005jzk/Math%20Bowling%202-2.0.0.dmg?dl=1)</span>
 
 Math Bowling is an elementary level educational math game.
 
@@ -81,7 +81,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Multiple videos for each scoring type
 1. [DONE] Improve clarity of switching player turns
 
-[DONE] 2.0.0 Release ([download](https://www.dropbox.com/s/af8upm1rh005jzk/Math%20Bowling-2.0.0.dmg?dl=1)):
+[DONE] 2.0.0 Release ([download](https://www.dropbox.com/s/af8upm1rh005jzk/Math%20Bowling%202-2.0.0.dmg?dl=1)):
 
 1. [DONE] Fix answer result announcement not showing on game over.
 1. [DONE] Fix layout issue when switching player count game type after game over
@@ -92,7 +92,6 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
 1. [DONE] Multiple math problem difficulties (Easy / Medium / Hard)
 1. [DONE] Players can enter name just like in bowling software
-1. Fix focus in packaged application mode
 
 2.1.0 Release:
 
