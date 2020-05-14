@@ -96,6 +96,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 2.1.0 Release:
 
 1. Provide option to choose math basic operation (+ * - /) to solve problems for.
+1. Indicate winner names at the end of a game
 
 2.1.1 Release:
 
