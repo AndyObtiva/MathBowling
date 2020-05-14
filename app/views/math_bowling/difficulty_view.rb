@@ -1,25 +1,34 @@
 require 'models/math_bowling/game_options'
 
 class MathBowling
-  class PlayerCountView
+  class DifficultyView
     include Glimmer::UI::CustomWidget
+
+    BUTTON_HORIZONTAL_ALIGNMENT = {
+      easy: :right,
+      medium: :center,
+      hard: :left
+    }
 
     options :game_options
 
     after_body {
-      @initially_focused_widget = @player_count_buttons.first
+      @initially_focused_widget = @difficulty_buttons.first
     }
 
     body {
       composite {
-        fill_layout :horizontal
-        @player_count_buttons = 4.times.map { |n|
+        grid_layout 3, true
+        @difficulty_buttons = Game::DIFFICULTIES.map { |difficulty|
           button {
-            text "&#{n+1} Player#{('s' unless n == 0)}"
+            layout_data(BUTTON_HORIZONTAL_ALIGNMENT[difficulty], :center, true, true) {
+              minimum_width 113.33
+            }
+            text difficulty.to_s.titlecase
             font CONFIG[:font]
             background CONFIG[:button_background]
             on_widget_selected {
-              game_options.player_count = n+1
+              game_options.difficulty = difficulty
             }
           }
         }

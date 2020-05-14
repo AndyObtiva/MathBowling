@@ -2,6 +2,7 @@
 
 require_relative 'game_view'
 require_relative 'player_count_view'
+require_relative 'difficulty_view'
 require_relative 'app_menu_bar'
 require_relative 'game_menu_bar'
 
@@ -25,7 +26,15 @@ class MathBowling
         @difficulty_view.swt_widget.layoutData.exclude = false
         @difficulty_view.swt_widget.setVisible true
         @action_container.swt_widget.pack
-        @difficulty_buttons.first.swt_widget.setFocus # see if you can do on show of button instead
+        @difficulty_view.focus_default_widget
+      end
+      observe(@game_options, :difficulty) do |new_player_count|
+        @difficulty_view.swt_widget.layoutData.exclude = true
+        @difficulty_view.swt_widget.setVisible false
+        @player_count_view.swt_widget.layoutData.exclude = false
+        @player_count_view.swt_widget.setVisible true
+        @action_container.swt_widget.pack
+        @game_view.show(**@game_options.to_h)
       end
     }
 
@@ -75,38 +84,13 @@ class MathBowling
             }
             background :transparent
           }
-          @difficulty_view = composite {
-            grid_layout 3, true
+          @difficulty_view = difficulty_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude true
               minimum_width 440
             }
             visible false
             background :transparent
-            difficulty_button_horizontal_alignment = {
-              easy: :right,
-              medium: :center,
-              hard: :left
-            }
-            @difficulty_buttons = Game::DIFFICULTIES.map { |difficulty|
-              button {
-                layout_data(difficulty_button_horizontal_alignment[difficulty], :center, true, true) {
-                  minimum_width 113.33
-                }
-                text difficulty.to_s.titlecase
-                font CONFIG[:font]
-                background CONFIG[:button_background]
-                on_widget_selected {
-                  @game_options.difficulty = difficulty
-                  @difficulty_view.swt_widget.layoutData.exclude = true
-                  @difficulty_view.swt_widget.setVisible false
-                  @player_count_view.swt_widget.layoutData.exclude = false
-                  @player_count_view.swt_widget.setVisible true
-                  @action_container.swt_widget.pack
-                  @game_view.show(**@game_options.to_h)
-                }
-              }
-            }
           }
         }
         button {
@@ -131,16 +115,7 @@ class MathBowling
     end
 
     def focus_default_widget
-      Thread.new do      
-        sleep(0.25)
-        async_exec do
-          if @initially_focused_widget
-            @initially_focused_widget.swt_widget.setFocus
-          else
-            @player_count_view.focus_default_widget
-          end
-        end
-      end
+      @player_count_view.focus_default_widget
     end
 
   end
