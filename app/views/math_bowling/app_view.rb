@@ -1,16 +1,33 @@
 # Glimmer.logger.level = Logger::DEBUG
 
 require_relative 'game_view'
+require_relative 'player_count_view'
 require_relative 'app_menu_bar'
 require_relative 'game_menu_bar'
 
 require 'models/math_bowling/game'
+require 'models/math_bowling/game_options'
 
 class MathBowling
   class AppView
     include Glimmer::UI::CustomShell
 
     FILE_PATH_IMAGE_MATH_BOWLING = "../../../../images/math-bowling.gif"
+
+    before_body {
+      @game_options = GameOptions.new
+    }
+
+    after_body {
+      observe(@game_options, :player_count) do |new_player_count|
+        @player_count_view.swt_widget.layoutData.exclude = true
+        @player_count_view.swt_widget.setVisible false
+        @difficulty_view.swt_widget.layoutData.exclude = false
+        @difficulty_view.swt_widget.setVisible true
+        @action_container.swt_widget.pack
+        @difficulty_buttons.first.swt_widget.setFocus # see if you can do on show of button instead
+      end
+    }
 
     body {
       shell(:no_resize) {
@@ -52,29 +69,11 @@ class MathBowling
           grid_layout 1, false
           layout_data :fill, :fill, true, true
           background :transparent
-          @player_count_view = composite {
-            fill_layout :horizontal
+          @player_count_view = player_count_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude false
             }
             background :transparent
-            @player_count_buttons = 4.times.map { |n|
-              button {
-                text "&#{n+1} Player#{('s' unless n == 0)}"
-                font CONFIG[:font]
-                background CONFIG[:button_background]
-                on_widget_selected {
-                  @player_count = n+1
-                  @player_count_view.swt_widget.layoutData.exclude = true
-                  @player_count_view.swt_widget.setVisible false
-                  @difficulty_view.swt_widget.layoutData.exclude = false
-                  @difficulty_view.swt_widget.setVisible true
-                  @action_container.swt_widget.pack
-                  @difficulty_buttons.first.swt_widget.setFocus # see if you can do on show of button instead
-                }
-              }
-            }
-            @initially_focused_widget = @player_count_buttons.first
           }
           @difficulty_view = composite {
             grid_layout 3, true
@@ -98,13 +97,13 @@ class MathBowling
                 font CONFIG[:font]
                 background CONFIG[:button_background]
                 on_widget_selected {
-                  @difficulty = difficulty
+                  @game_options.difficulty = difficulty
                   @difficulty_view.swt_widget.layoutData.exclude = true
                   @difficulty_view.swt_widget.setVisible false
                   @player_count_view.swt_widget.layoutData.exclude = false
                   @player_count_view.swt_widget.setVisible true
                   @action_container.swt_widget.pack
-                  @game_view.show(player_count: @player_count, difficulty: @difficulty)
+                  @game_view.show(**@game_options.to_h)
                 }
               }
             }
@@ -135,7 +134,11 @@ class MathBowling
       Thread.new do      
         sleep(0.25)
         async_exec do
-          @initially_focused_widget.swt_widget.setFocus
+          if @initially_focused_widget
+            @initially_focused_widget.swt_widget.setFocus
+          else
+            @player_count_view.focus_default_widget
+          end
         end
       end
     end
