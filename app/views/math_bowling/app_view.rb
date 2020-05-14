@@ -21,18 +21,14 @@ class MathBowling
 
     after_body {
       observe(@game_options, :player_count) do |new_player_count|
-        @player_count_view.swt_widget.layoutData.exclude = true
-        @player_count_view.swt_widget.setVisible false
-        @difficulty_view.swt_widget.layoutData.exclude = false
-        @difficulty_view.swt_widget.setVisible true
+        @player_count_view.body_root.hide
+        @difficulty_view.body_root.show
         @action_container.swt_widget.pack
         @difficulty_view.focus_default_widget
       end
       observe(@game_options, :difficulty) do |new_player_count|
-        @difficulty_view.swt_widget.layoutData.exclude = true
-        @difficulty_view.swt_widget.setVisible false
-        @player_count_view.swt_widget.layoutData.exclude = false
-        @player_count_view.swt_widget.setVisible true
+        @difficulty_view.body_root.hide
+        @player_count_view.body_root.show
         @action_container.swt_widget.pack
         @game_view.show(**@game_options.to_h)
       end

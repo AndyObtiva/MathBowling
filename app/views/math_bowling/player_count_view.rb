@@ -1,5 +1,7 @@
 require 'models/math_bowling/game_options'
 
+require_relative 'excludable_composite'
+
 class MathBowling
   class PlayerCountView
     include Glimmer::UI::CustomWidget
@@ -11,7 +13,7 @@ class MathBowling
     }
 
     body {
-      composite {
+      excludable_composite {
         fill_layout :horizontal
         @player_count_buttons = 4.times.map { |n|
           button {

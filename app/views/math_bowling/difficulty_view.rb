@@ -1,5 +1,7 @@
 require 'models/math_bowling/game_options'
 
+require_relative 'excludable_composite'
+
 class MathBowling
   class DifficultyView
     include Glimmer::UI::CustomWidget
@@ -17,7 +19,7 @@ class MathBowling
     }
 
     body {
-      composite {
+      excludable_composite {
         grid_layout 3, true
         @difficulty_buttons = Game::DIFFICULTIES.map { |difficulty|
           button {
