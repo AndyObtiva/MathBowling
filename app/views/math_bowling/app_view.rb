@@ -3,6 +3,7 @@
 require_relative 'game_view'
 require_relative 'player_count_view'
 require_relative 'difficulty_view'
+require_relative 'math_operation_view'
 require_relative 'app_menu_bar'
 require_relative 'game_menu_bar'
 
@@ -23,12 +24,21 @@ class MathBowling
       observe(@game_options, :player_count) do |new_player_count|
         @player_count_view.body_root.hide
         @difficulty_view.body_root.show
+        @math_operation_view.body_root.hide
         @action_container.swt_widget.pack
         @difficulty_view.focus_default_widget
       end
       observe(@game_options, :difficulty) do |new_player_count|
+        @player_count_view.body_root.hide
         @difficulty_view.body_root.hide
+        @math_operation_view.body_root.show
+        @action_container.swt_widget.pack
+        @math_operation_view.focus_default_widget
+      end
+      observe(@game_options, :math_operations) do |new_player_count|
         @player_count_view.body_root.show
+        @difficulty_view.body_root.hide
+        @math_operation_view.body_root.hide
         @action_container.swt_widget.pack
         @game_view.show(**@game_options.to_h)
       end
@@ -81,6 +91,14 @@ class MathBowling
             background :transparent
           }
           @difficulty_view = difficulty_view(game_options: @game_options) {
+            layout_data(:center, :center, true, true) {
+              exclude true
+              minimum_width 440
+            }
+            visible false
+            background :transparent
+          }
+          @math_operation_view = math_operation_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude true
               minimum_width 440

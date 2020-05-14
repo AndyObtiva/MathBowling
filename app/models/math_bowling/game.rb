@@ -2,7 +2,7 @@ require_relative 'player'
 
 class MathBowling
   class Game
-    QUESTION_OPERATIONS = %w[+ - * /]
+    MATH_OPERATIONS = %w[+ - * /]
     TRANSLATION = {
       '+' => '+',
       '-' => '−',
@@ -30,13 +30,14 @@ class MathBowling
     attr_reader :player_count
     attr_accessor :players, :current_players, :current_player, :name_current_player, :game_current_player, :question, :answer, :answer_result, 
                   :is_one_player, :is_two_players, :roll_done, :correct_answer, :remaining_pins, :fallen_pins,
-                  :last_player_index, :difficulty
+                  :last_player_index, :difficulty, :math_operations
 
     def initialize
       self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
       @question_index = -2
       @remaining_pins = 10
       @last_player_index = 0
+      @math_operations ||= MATH_OPERATIONS
     end
 
     def single_player?
@@ -67,7 +68,7 @@ class MathBowling
           when :hard
             (rand*number_upper_limit).to_i + 1
           end
-          operator = @difficulty == :medium && @question_index%DIFFICULT_QUESTION_EVERY == 0 ? '*' : QUESTION_OPERATIONS[(rand*4).to_i]
+          operator = @difficulty == :medium && @question_index%DIFFICULT_QUESTION_EVERY == 0 && math_operations.include?('*') ? '*' : math_operations[(rand*4).to_i]
           if ['-', '/'].include?(operator)
             last_number = first_number
             first_number = POSSIBLE_FIRST_NUMBERS[operator][last_number][(rand*number_upper_limit).to_i]
