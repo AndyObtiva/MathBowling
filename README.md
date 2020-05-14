@@ -1,4 +1,4 @@
-# Math Bowling 2.0.0
+# Math Bowling 2
 
 ![Math Bowling Screenshot](Math-Bowling-Screenshot.png)
 
