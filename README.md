@@ -95,8 +95,10 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 
 2.1.0 Release:
 
-1. Provide option to choose math basic operation (+ * - /) to solve problems for.
-1. Indicate winner names at the end of a game
+1. Fix issue with player 1 sticking when changing names
+1. Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
+1. Provide option to practice specific math basic operations only (out of + * - /).
+1. Indicate winner names at the end of a game in addition to already displayed winner score
 
 2.1.1 Release:
 
