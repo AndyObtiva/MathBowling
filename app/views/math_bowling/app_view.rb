@@ -22,25 +22,31 @@ class MathBowling
 
     after_body {
       observe(@game_options, :player_count) do |new_player_count|
-        @player_count_view.body_root.hide
-        @difficulty_view.body_root.show
-        @math_operation_view.body_root.hide
-        @action_container.swt_widget.pack
-        @difficulty_view.focus_default_widget
+        unless new_player_count.nil?
+          @player_count_view.body_root.hide
+          @difficulty_view.body_root.show
+          @math_operation_view.body_root.hide
+          @action_container.swt_widget.pack
+          @difficulty_view.focus_default_widget
+        end
       end
-      observe(@game_options, :difficulty) do |new_player_count|
-        @player_count_view.body_root.hide
-        @difficulty_view.body_root.hide
-        @math_operation_view.body_root.show
-        @action_container.swt_widget.pack
-        @math_operation_view.focus_default_widget
+      observe(@game_options, :difficulty) do |new_difficulty|
+        unless new_difficulty.nil?
+          @player_count_view.body_root.hide
+          @difficulty_view.body_root.hide
+          @math_operation_view.body_root.show
+          @action_container.swt_widget.pack
+          @math_operation_view.focus_default_widget
+        end
       end
-      observe(@game_options, :math_operations) do |new_player_count|
-        @player_count_view.body_root.show
-        @difficulty_view.body_root.hide
-        @math_operation_view.body_root.hide
-        @action_container.swt_widget.pack
-        @game_view.show(**@game_options.to_h)
+      observe(@game_options, :math_operations) do |new_math_operations|
+        unless new_math_operations.empty?
+          @player_count_view.body_root.show
+          @difficulty_view.body_root.hide
+          @math_operation_view.body_root.hide
+          @action_container.swt_widget.pack
+          @game_view.show(**@game_options.to_h)
+        end
       end
     }
 
@@ -70,6 +76,7 @@ class MathBowling
         @game_view = game_view { |game_view|
           game_menu_bar(app_view: self, game_view: game_view)
           on_event_hide {
+            @game_options.reset
             body_root.show
           }
         }
@@ -112,6 +119,7 @@ class MathBowling
           text "Quit"
           font CONFIG[:font]
           background CONFIG[:button_background]
+          visible bind(@game_options, :player_count) {|pc| pd(pc, header: true, caller: true); pd(!pc); !pc}
           on_widget_selected {
             exit(true)
           }

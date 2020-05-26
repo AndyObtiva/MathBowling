@@ -7,18 +7,21 @@ class MathBowling
     attr_accessor :player_count, :difficulty, :math_operations
 
     MATH_OPERATION_ATTRIBUTE_MAPPING = {
-      'all' => :all_selected,
       '+'   => :plus_selected,
       '-'   => :minus_selected,
       '*'   => :multiply_selected,
       '/'   => :divide_selected,
+      'all' => :all_selected,
     }
     
     def initialize
-      self.plus_selected = true
-      self.minus_selected = true
-      self.multiply_selected = true
-      self.divide_selected = true
+      reset
+    end
+    
+    def reset      
+      self.player_count = nil
+      self.difficulty = nil
+      self.math_operations = []      
     end
 
     MATH_OPERATION_ATTRIBUTE_MAPPING.reject {|op, attr| op == 'all' }.each do |op, attr|
@@ -26,7 +29,9 @@ class MathBowling
         @math_operations.to_a.include?(op)
       end
       define_method "#{attr}=" do |selected|
-        self.math_operations = self.math_operations.to_a + [op] if selected && !send(attr)
+        if selected && !send(attr)
+          self.math_operations << op
+        end
       end
     end
 

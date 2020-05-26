@@ -73,32 +73,32 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Icon/Background for MacOS Package
 
 [DONE] 1.1.0 Release ([download](https://www.dropbox.com/s/d8n1jrhb915r3f1/Math%20Bowling-1.1.0.dmg?dl=1)):
-1. [DONE] Fix issue with game font not showing up on some older Macs
-1. [DONE] Fix video scrollbar issue on some older Macs
-1. [DONE] Improve wording of buttons and answer result announcements
-1. [DONE] Improve difficulty of math problems
 1. [DONE] Spare shot video
 1. [DONE] Multiple videos for each scoring type
+1. [DONE] Improve wording of buttons and answer result announcements
+1. [DONE] Improve difficulty of math problems
 1. [DONE] Improve clarity of switching player turns
+1. [DONE] Fix issue with game font not showing up on some older Macs
+1. [DONE] Fix video scrollbar issue on some older Macs
 
 [DONE] 2.0.0 Release ([download](https://www.dropbox.com/s/af8upm1rh005jzk/Math%20Bowling%202-2.0.0.dmg?dl=1)):
 
+1. [DONE] Multiple math problem difficulties (Easy / Medium / Hard)
+1. [DONE] Players can enter name just like in bowling software
+1. [DONE] Improve math problem display by adding '= ?' and removing verbose question
+1. [DONE] Improve answer result announcement by announcing Strikes, Double Strikes, Triple Strikes, and Spares explicitly (not just with symbols)
+1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
 1. [DONE] Fix answer result announcement not showing on game over.
 1. [DONE] Fix layout issue when switching player count game type after game over
 1. [DONE] Fix initial focus on app and game screens
 1. [DONE] Fix issue with keyboard focus disappearing when widget tabbing reaches end of cycle
-1. [DONE] Improve math problem display by adding '= ?' and removing verbose question
-1. [DONE] Improve answer result announcement by announcing Strikes, Double Strikes, Triple Strikes, and Spares explicitly (not just with symbols)
-1. [DONE] Improve next player announcement by keeping it until player hits enter or presses continue button
-1. [DONE] Multiple math problem difficulties (Easy / Medium / Hard)
-1. [DONE] Players can enter name just like in bowling software
 
 2.1.0 Release:
 
-1. Fix issue with player 1 sticking when changing names
-1. Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
-1. Provide option to practice specific math basic operations only (out of + * - /).
+1. [DONE] Provide option to solve specific math operation problems only (one of + * - /).
+1. [DONE] Change time for answering easier + & - operations to 10 seconds only
 1. Indicate winner names at the end of a game in addition to already displayed winner score
+1. Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
 
 2.1.1 Release:
 

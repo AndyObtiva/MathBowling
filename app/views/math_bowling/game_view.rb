@@ -5,7 +5,6 @@ class MathBowling
     include Glimmer::UI::CustomShell
 
     FILE_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
-    TIMER_DURATION = 30
     TIMER_DURATION_DISABLED = 86400 # stop timer temporarily by setting to a very high value
 
     attr_accessor :question_container, :can_change_names,
@@ -457,6 +456,10 @@ class MathBowling
       end
     end
 
+    def timer_duration
+      %w[+ -].include?(@game.operator) ? 10 : 30
+    end
+
     def set_timer
       timer_thread = Thread.new do
         loop do
@@ -470,7 +473,7 @@ class MathBowling
         end
       end
       observe(@game, :question) do |new_question|
-        self.timer = TIMER_DURATION
+        self.timer = timer_duration
       end
     end
 
@@ -519,7 +522,7 @@ class MathBowling
     def show_next_player      
       self.video_playing_time = nil
       if @game.in_progress? && (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
-        @saved_timer = self.timer if self.timer.to_i <= TIMER_DURATION
+        @saved_timer = self.timer if self.timer.to_i <= timer_duration
         self.timer = TIMER_DURATION_DISABLED
         @showing_next_player = true
         @question_container.swt_widget.getChildren.each do |child|
@@ -573,13 +576,13 @@ class MathBowling
           self.timer = @saved_timer
           @saved_timer = nil
         else
-          self.timer = TIMER_DURATION
+          self.timer = timer_duration
         end
       end
     end
 
     def show_name_form
-      @saved_timer = self.timer if self.timer <= TIMER_DURATION
+      @saved_timer = self.timer if self.timer <= timer_duration
       self.timer = TIMER_DURATION_DISABLED
       @game.current_players.each {|player| player.name = nil}
       @game.name_current_player = @game.current_players.first

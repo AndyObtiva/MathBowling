@@ -8,6 +8,7 @@ class MathBowling
       '-' => '−',
       '*' => '×',
       '/' => '÷',
+      'all' => 'All Math Operations',
     }
     POSSIBLE_FIRST_NUMBERS = {
       '-' => (1..20).reduce({}) {|hash, a| hash.merge(a => (1..20).map {|b| a + b }) },
@@ -30,7 +31,7 @@ class MathBowling
     attr_reader :player_count
     attr_accessor :players, :current_players, :current_player, :name_current_player, :game_current_player, :question, :answer, :answer_result, 
                   :is_one_player, :is_two_players, :roll_done, :correct_answer, :remaining_pins, :fallen_pins,
-                  :last_player_index, :difficulty, :math_operations
+                  :last_player_index, :difficulty, :math_operations, :operator
 
     def initialize
       self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
@@ -68,7 +69,7 @@ class MathBowling
           when :hard
             (rand*number_upper_limit).to_i + 1
           end
-          operator = @difficulty == :medium && @question_index%DIFFICULT_QUESTION_EVERY == 0 && math_operations.include?('*') ? '*' : math_operations[(rand*4).to_i]
+          @operator = @difficulty == :medium && @question_index%DIFFICULT_QUESTION_EVERY == 0 && math_operations.include?('*') ? '*' : math_operations[(rand*math_operations.size).to_i]
           if ['-', '/'].include?(operator)
             last_number = first_number
             first_number = POSSIBLE_FIRST_NUMBERS[operator][last_number][(rand*number_upper_limit).to_i]
