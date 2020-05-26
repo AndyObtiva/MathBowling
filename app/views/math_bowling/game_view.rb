@@ -211,9 +211,9 @@ class MathBowling
                     vertical_spacing 0
                   }
                   label(:center) {
-                    background bind(self, :player_color, computed_by: "game.current_player.index")
+                    background bind(self, :name_player_color, computed_by: "game.name_current_player.index")
                     foreground :yellow
-                    text bind(@game, 'current_player.index') {|i| "Player #{i.to_i+1} - Please Enter Your Name" }
+                    text bind(@game, 'name_current_player.index') {|i| "Player #{i.to_i+1} - Please Enter Your Name" }
                     font @font
                     layout_data {
                       horizontal_alignment :fill
@@ -256,7 +256,7 @@ class MathBowling
                   }
 #                   enabled bind(@game, 'name_current_player.name') { |name| !name.to_s.empty? } # disabled because it looks ugly
                   font @font_button
-                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  background bind(self, :name_player_color, computed_by: "game.name_current_player.index")
                   foreground :yellow
                   on_widget_selected {
                     enter_name
@@ -640,6 +640,14 @@ class MathBowling
         CONFIG[:colors][:player1]
       else
         (@game.current_player.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
+      end
+    end
+
+    def name_player_color
+      if @game.name_current_player.nil?
+        CONFIG[:colors][:player1]
+      else
+        (@game.name_current_player.index % 2) == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       end
     end
 
