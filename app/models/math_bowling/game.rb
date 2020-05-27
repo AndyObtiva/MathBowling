@@ -36,6 +36,7 @@ class MathBowling
     def initialize
       self.players = PLAYER_COUNT_MAX.times.map { |player_index| MathBowling::Player.new(player_index) }
       @question_index = -2
+      @question_history = 4.times.reduce({}) {|h, n| h.merge(n => [])}
       @remaining_pins = 10
       @last_player_index = 0
       @math_operations ||= MATH_OPERATIONS
@@ -46,6 +47,7 @@ class MathBowling
     end
 
     def start
+      @question_history = 4.times.reduce({}) {|h, n| h.merge(n => [])}
       self.last_player_index = 0
       self.remaining_pins = 10
       self.players.each(&:reset)
@@ -79,9 +81,10 @@ class MathBowling
           teh_question = "#{first_number} #{TRANSLATION[operator]} #{last_number}"
           teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
           positive_integer_answer = (teh_answer.to_i == teh_answer) && (teh_answer >= 0)
-          @question_index += 1 if positive_integer_answer
-        end until positive_integer_answer
+          @question_index += 1 if positive_integer_answer && !@question_history[current_player.index].include?(teh_question)
+        end until positive_integer_answer && !@question_history[current_player.index].include?(teh_question)
       end
+      @question_history[current_player.index] << teh_question
       self.answer = ''
       self.question = teh_question
     end
