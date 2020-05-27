@@ -334,7 +334,20 @@ class MathBowling
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :yellow
                   text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "Winner Score: #{@game.winner_total_score}" }
-                  font CONFIG[:scoreboard_font].merge(height: 80)
+                  font CONFIG[:scoreboard_font].merge(height: 36)
+                  layout_data {
+                    horizontal_alignment :fill
+                    vertical_alignment :center
+                    minimum_width 630
+                    minimum_height 100
+                    grab_excess_horizontal_space true
+                  }
+                }
+                label(:center) {
+                  background bind(self, :winner_color, computed_by: "game.current_player.index")
+                  foreground :yellow
+                  text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "Winner#{'s' if @game.winners.size > 1}: #{@game.winners.map(&:name).join(" / ")}" }
+                  font CONFIG[:scoreboard_font].merge(height: 36)
                   layout_data {
                     horizontal_alignment :fill
                     vertical_alignment :center

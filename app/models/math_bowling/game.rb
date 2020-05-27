@@ -80,7 +80,7 @@ class MathBowling
             last_number = @difficulty == :easy && @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*number_upper_limit).to_i + 1 : (rand*(number_upper_limit / 2 + 1)).to_i + (number_upper_limit / 2)
           end
           teh_question = "#{first_number} #{TRANSLATION[operator]} #{last_number}"
-          teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
+          @teh_answer = teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
           positive_integer_answer = (teh_answer.to_i == teh_answer) && (teh_answer >= 0)
           teh_question_data = [operator, [first_number, last_number].sort]
           @question_index += 1 if positive_integer_answer && !@question_history[current_player.index].include?(teh_question_data)
@@ -121,7 +121,10 @@ class MathBowling
     end
 
     def demo
-      roll until over?
+      until over?
+        self.answer = @teh_answer
+        roll
+      end
     end
 
     def restart

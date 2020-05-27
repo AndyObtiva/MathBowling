@@ -98,7 +98,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Provide option to solve specific math operation problems only (one of + * - /).
 1. [DONE] Change time for answering easier + & - operations to 10 seconds only
 1. [DONE] Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
-1. Indicate winner names at the end of a game in addition to already displayed winner score
+1. [DONE] Indicate winner names at the end of a game in addition to already displayed winner score
 
 2.1.1 Release:
 
