@@ -119,7 +119,7 @@ class MathBowling
           text "Quit"
           font CONFIG[:font]
           background CONFIG[:button_background]
-          visible bind(@game_options, :player_count) {|pc| pd(pc, header: true, caller: true); pd(!pc); !pc}
+          visible bind(@game_options, :player_count) {|pc| !pc}
           on_widget_selected {
             exit(true)
           }

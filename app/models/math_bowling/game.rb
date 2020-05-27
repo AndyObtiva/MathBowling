@@ -58,6 +58,7 @@ class MathBowling
 
     def generate_question
       if current_player.score_sheet.current_frame.nil?
+        teh_question_data = nil
         teh_question = ''
       else
         begin          
@@ -81,10 +82,11 @@ class MathBowling
           teh_question = "#{first_number} #{TRANSLATION[operator]} #{last_number}"
           teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
           positive_integer_answer = (teh_answer.to_i == teh_answer) && (teh_answer >= 0)
-          @question_index += 1 if positive_integer_answer && !@question_history[current_player.index].include?(teh_question)
-        end until positive_integer_answer && !@question_history[current_player.index].include?(teh_question)
+          teh_question_data = [operator, [first_number, last_number].sort]
+          @question_index += 1 if positive_integer_answer && !@question_history[current_player.index].include?(teh_question_data)
+        end until positive_integer_answer && !@question_history[current_player.index].include?(teh_question_data)
       end
-      @question_history[current_player.index] << teh_question
+      @question_history[current_player.index] << teh_question_data unless teh_question_data.nil?
       self.answer = ''
       self.question = teh_question
     end
