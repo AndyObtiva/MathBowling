@@ -2,7 +2,7 @@
 
 ![Math Bowling Screenshot](Math-Bowling-Screenshot.png)
 
-<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.1.0 for Mac]()</span>
+<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.1.0 for Mac](https://www.dropbox.com/s/3w0ld9zptkiknkv/Math%20Bowling%202-2.1.0.dmg?dl=1)</span>
 
 Math Bowling is an elementary level educational math game.
 
@@ -93,12 +93,12 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Fix initial focus on app and game screens
 1. [DONE] Fix issue with keyboard focus disappearing when widget tabbing reaches end of cycle
 
-2.1.0 Release:
+[DONE] 2.1.0 Release ([download](https://www.dropbox.com/s/3w0ld9zptkiknkv/Math%20Bowling%202-2.1.0.dmg?dl=1)):
 
 1. [DONE] Provide option to solve specific math operation problems only (one of + * - /).
 1. [DONE] Change time for answering easier + & - operations to 10 seconds only
-1. [DONE] Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
 1. [DONE] Indicate winner names at the end of a game in addition to already displayed winner score
+1. [DONE] Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
 
 2.1.1 Release:
 
