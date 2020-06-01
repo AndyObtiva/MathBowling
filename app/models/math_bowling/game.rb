@@ -219,7 +219,7 @@ class MathBowling
       if value == 'all'
         self.math_operations = %w[+ - * /] 
       else
-        self.math_operations = value
+        self.math_operations = value.to_collection
       end
     end
 

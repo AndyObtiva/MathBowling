@@ -1,5 +1,7 @@
 require_relative 'score_board_view'
 
+using ArrayIncludeMethods
+
 class MathBowling
   class GameView
     include Glimmer::UI::CustomShell
@@ -470,7 +472,7 @@ class MathBowling
     end
 
     def timer_duration
-      %w[+ -].include?(@game.operator) ? 10 : 30
+      %w[+ -].include?(@game.operator) || %w[+ -].include_all?(@game.math_operations) ? 10 : 30
     end
 
     def set_timer
@@ -535,7 +537,7 @@ class MathBowling
     def show_next_player      
       self.video_playing_time = nil
       if @game.in_progress? && (@game.player_count > 1)
-        @saved_timer = self.timer if self.timer.to_i <= timer_duration
+        @saved_timer = timer_duration
         self.timer = TIMER_DURATION_DISABLED
         @showing_next_player = true
         @question_container.swt_widget.getChildren.each do |child|

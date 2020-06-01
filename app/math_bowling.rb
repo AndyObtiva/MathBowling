@@ -2,6 +2,7 @@ require 'glimmer'
 require 'glimmer-cw-video'
 require 'puts_debuggerer'
 require 'to_collection'
+require 'array_include_methods'
 
 $LOAD_PATH.unshift(File.expand_path('..', __FILE__))
 
