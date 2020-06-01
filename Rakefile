@@ -1,5 +1,3 @@
-require 'glimmer/rake_task'
-
 Glimmer::Package.javapackager_extra_args =
   " -native dmg" +
   " -name 'Math Bowling 2'" +

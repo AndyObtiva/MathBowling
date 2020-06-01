@@ -99,6 +99,10 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Change time for answering easier + & - operations to 10 seconds only
 1. [DONE] Indicate winner names at the end of a game in addition to already displayed winner score
 1. [DONE] Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
+1. Fix timer
+1. Improve player's turn announcement by showing again to the same player on the 2nd roll
+1. Improve by allowing mid-game change of math operation via menu
+1. Improve start game menu to include math operation option and to allow clicking on number of players
 
 2.1.1 Release:
 
