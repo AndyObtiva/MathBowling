@@ -279,7 +279,7 @@ class MathBowling
                 label(:center) {
                   background bind(self, :player_color, computed_by: "game.current_player.index")
                   foreground :yellow
-                  text bind(@game, 'current_player.name') { |name| "#{name} is next!" }
+                  text bind(@game, 'current_player.name') { |name| "#{name} Get Ready!" }
                   font @font.merge(height: 80)
                   layout_data {
                     horizontal_alignment :fill
@@ -534,7 +534,7 @@ class MathBowling
 
     def show_next_player      
       self.video_playing_time = nil
-      if @game.in_progress? && (@game.player_count > 1) && (@game.current_player.index != @game.last_player_index)
+      if @game.in_progress? && (@game.player_count > 1)
         @saved_timer = self.timer if self.timer.to_i <= timer_duration
         self.timer = TIMER_DURATION_DISABLED
         @showing_next_player = true
