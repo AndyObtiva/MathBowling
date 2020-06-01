@@ -24,6 +24,18 @@ class MathBowling
               }              
             end
           }
+          menu {
+            text "Change Math &Operation"
+            Game::MATH_OPERATION_TRANSLATION.each do |math_operation, math_operation_translation|
+              menu_item(:radio) {
+                text math_operation_translation.titlecase
+                selection bind(game_view, 'game.math_operation') {|o| o == math_operation}
+                on_widget_selected {
+                  game_view.game.math_operation = math_operation
+                }
+              }              
+            end
+          }
           menu_item {
             text "Change &Names"
             enabled bind(game_view, :can_change_names)

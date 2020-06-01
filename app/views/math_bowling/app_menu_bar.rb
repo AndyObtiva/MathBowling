@@ -26,7 +26,7 @@ class MathBowling
                         on_widget_selected {
                           app_view.hide
                           game_view.hide
-                          game_view.show(player_count: n+1, difficulty: difficulty, math_operations: math_operation)
+                          game_view.show(player_count: n+1, difficulty: difficulty, math_operation: math_operation)
                         }
                       }                    
                     }

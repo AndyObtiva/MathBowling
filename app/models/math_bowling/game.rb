@@ -1,5 +1,7 @@
 require_relative 'player'
 
+using ToCollection
+
 class MathBowling
   class Game
     MATH_OPERATIONS = %w[+ - * /]    
@@ -202,6 +204,22 @@ class MathBowling
         else
           'WIN'
         end
+      end
+    end
+    
+    def math_operation
+      if math_operations.to_collection.size == 4
+        'all'
+      else
+        math_operations
+      end
+    end
+    
+    def math_operation=(value)
+      if value == 'all'
+        self.math_operations = %w[+ - * /] 
+      else
+        self.math_operations = value
       end
     end
 

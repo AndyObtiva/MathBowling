@@ -39,8 +39,8 @@ class MathBowling
           @math_operation_view.focus_default_widget
         end
       end
-      observe(@game_options, :math_operations) do |new_math_operations|
-        unless new_math_operations.empty?
+      observe(@game_options, :math_operation) do |new_math_operation|
+        unless new_math_operation.nil?
           @player_count_view.body_root.show
           @difficulty_view.body_root.hide
           @math_operation_view.body_root.hide
