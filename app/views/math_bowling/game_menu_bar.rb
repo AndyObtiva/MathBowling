@@ -40,8 +40,6 @@ class MathBowling
             text "Change &Names"
             enabled bind(game_view, :can_change_names)
             on_widget_selected {
-              game_view.game.game_current_player = game_view.game.current_player
-              game_view.game.current_player = game_view.game.players.first
               game_view.show_name_form
             }
           }

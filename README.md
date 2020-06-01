@@ -103,7 +103,7 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Improve start game menu to include math operation option
 1. [DONE] Improve by allowing mid-game change of math operation via menu
 1. [DONE] Fix timer
-1. Fix issue with resuming from changing player names in the middle of a game resumes at the wrong player
+1. [DONE] Fix issue with resuming from "change names" resumes at the wrong player
 
 2.1.1 Release:
 
