@@ -100,10 +100,10 @@ Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](http
 1. [DONE] Indicate winner names at the end of a game in addition to already displayed winner score
 1. [DONE] Improve by not showing the same question twice in a game when possible (and not to the same player otherwise)
 1. [DONE] Improve player's turn announcement by showing again to the same player on the 2nd roll
+1. [DONE] Improve start game menu to include math operation option
+1. Improve by allowing mid-game change of math operation via menu
 1. Fix timer
 1. Fix issue with resuming from changing player names in the middle of a game resumes at the wrong player
-1. Improve by allowing mid-game change of math operation via menu
-1. Improve start game menu to include math operation option and to allow clicking on number of players
 
 2.1.1 Release:
 

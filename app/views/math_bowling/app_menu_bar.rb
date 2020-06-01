@@ -17,16 +17,21 @@ class MathBowling
             4.times.map { |n|
               menu {
                 text "&#{n+1} Player#{('s' unless n == 0)}"
-                Game::DIFFICULTIES.each do |difficulty|
-                  menu_item {
-                    text difficulty.to_s.titlecase
-                    on_widget_selected {
-                      app_view.hide
-                      game_view.hide
-                      game_view.show(player_count: n+1, difficulty: difficulty)
+                Game::DIFFICULTIES.each { |difficulty|
+                  menu {
+                    text difficulty.to_s.titlecase                    
+                    Game::MATH_OPERATION_TRANSLATION.each { |math_operation, math_operation_translation|
+                      menu_item {
+                        text math_operation_translation.titlecase
+                        on_widget_selected {
+                          app_view.hide
+                          game_view.hide
+                          game_view.show(player_count: n+1, difficulty: difficulty, math_operations: math_operation)
+                        }
+                      }                    
                     }
                   }
-                end
+                }
               }
             }
           }

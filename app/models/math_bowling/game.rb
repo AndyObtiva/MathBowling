@@ -2,8 +2,8 @@ require_relative 'player'
 
 class MathBowling
   class Game
-    MATH_OPERATIONS = %w[+ - * /]
-    TRANSLATION = {
+    MATH_OPERATIONS = %w[+ - * /]    
+    MATH_OPERATION_TRANSLATION = {
       '+' => '+',
       '-' => '−',
       '*' => '×',
@@ -79,7 +79,7 @@ class MathBowling
           else
             last_number = @difficulty == :easy && @question_index%DIFFICULT_QUESTION_EVERY != 0 ? (rand*number_upper_limit).to_i + 1 : (rand*(number_upper_limit / 2 + 1)).to_i + (number_upper_limit / 2)
           end
-          teh_question = "#{first_number} #{TRANSLATION[operator]} #{last_number}"
+          teh_question = "#{first_number} #{MATH_OPERATION_TRANSLATION[operator]} #{last_number}"
           @teh_answer = teh_answer = eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
           positive_integer_answer = (teh_answer.to_i == teh_answer) && (teh_answer >= 0)
           teh_question_data = [operator, [first_number, last_number].sort]
@@ -212,7 +212,7 @@ class MathBowling
     def calculate_answer
       return if question.nil?
       first_number, operator, last_number = question.split(' ')
-      operator = TRANSLATION.invert[operator]
+      operator = MATH_OPERATION_TRANSLATION.invert[operator]
       eval("#{first_number.to_f} #{operator} #{last_number.to_f}")
     end
   end

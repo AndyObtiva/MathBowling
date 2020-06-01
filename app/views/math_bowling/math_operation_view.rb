@@ -22,7 +22,7 @@ class MathBowling
               width_hint math_operation == 'all' ? 200 : 50
               horizontal_span math_operation == 'all' ? 4 : 1
             }
-            text (Game::TRANSLATION[math_operation]).titlecase
+            text (Game::MATH_OPERATION_TRANSLATION[math_operation]).titlecase
             font CONFIG[:font]
             background CONFIG[:button_background]
             on_widget_selected {
