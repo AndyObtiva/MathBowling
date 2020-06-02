@@ -211,7 +211,7 @@ class MathBowling
       if math_operations.to_collection.size == 4
         'all'
       else
-        math_operations
+        math_operations.first
       end
     end
     
