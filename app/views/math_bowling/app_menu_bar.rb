@@ -24,8 +24,8 @@ class MathBowling
                       menu_item {
                         text math_operation_translation.titlecase
                         on_widget_selected {
-                          app_view.hide
                           game_view.hide
+                          app_view.hide
                           game_view.show(player_count: n+1, difficulty: difficulty, math_operation: math_operation)
                         }
                       }                    

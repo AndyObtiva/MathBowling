@@ -54,6 +54,7 @@ class MathBowling
           @difficulty_view.body_root.hide
           @math_operation_view.body_root.hide
           @action_container.swt_widget.pack
+          self.hide
           @game_view.show(**@game_options.to_h)
         end
       end
