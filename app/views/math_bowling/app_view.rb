@@ -18,6 +18,15 @@ class MathBowling
 
     before_body {
       @game_options = GameOptions.new
+      display {
+        on_about {
+          display_about_dialog
+        }
+        on_preferences {
+          # No need for preferences. Just display about dialog.
+          display_about_dialog
+        }
+      }
     }
 
     after_body {
@@ -65,13 +74,6 @@ class MathBowling
         }
         on_shell_activated {
           focus_default_widget
-        }
-        on_about {
-          display_about_dialog
-        }
-        on_preferences {
-          # No need for preferences. Just display about dialog.
-          display_about_dialog
         }
         @game_view = game_view { |game_view|
           game_menu_bar(app_view: self, game_view: game_view)
