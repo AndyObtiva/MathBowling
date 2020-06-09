@@ -178,7 +178,7 @@ class MathBowling
                 }
               }
               button(:center) {
-                text bind(self, 'roll_button_text')
+                text bind(self, :roll_button_text)
                 layout_data {
                   height 42
                 }
@@ -271,47 +271,6 @@ class MathBowling
                 grid_layout(1, false) {
                   margin_width 0
                   margin_height 0
-                  vertical_spacing 10
-                }
-                layout_data {
-                  exclude true
-                }
-                visible false
-                background @background
-                label(:center) {
-                  background bind(self, :player_color, computed_by: "game.current_player.index")
-                  foreground :yellow
-                  text bind(@game, 'current_player.name') { |name| "#{name} Get Ready!" }
-                  font @font.merge(height: 80)
-                  layout_data {
-                    horizontal_alignment :fill
-                    vertical_alignment :center
-                    minimum_width 630
-                    minimum_height 100
-                    grab_excess_horizontal_space true
-                  }
-                }
-                @continue_button = button(:center) {
-                  layout_data {
-                    horizontal_alignment :fill
-                    grab_excess_horizontal_space true
-                    height_hint 42
-                  }
-                  text 'Continue'
-                  background CONFIG[:button_background]
-                  font @font_button
-                  on_widget_selected {
-                    show_question
-                  }
-                  on_key_pressed {|key_event|
-                    show_question if key_event.keyCode == swt(:cr)
-                  }
-                }
-              }
-              @game_over_announcement_container = composite {
-                grid_layout(1, false) {
-                  margin_width 0
-                  margin_height 0
                   vertical_spacing 0
                 }
                 layout_data {
@@ -319,6 +278,83 @@ class MathBowling
                 }
                 visible false
                 background @background
+                composite {
+                  grid_layout(1, false) {
+                    margin_top 0
+                    margin_bottom 5
+                  }
+                  layout_data {
+                    horizontal_alignment :fill
+                    grab_excess_horizontal_space true
+                  }
+                  background bind(self, :player_color, computed_by: "game.current_player.index")
+                  label(:center) {
+                    background bind(self, :player_color, computed_by: "game.current_player.index")
+                    foreground :yellow
+                    text bind(@game, 'current_player.name')
+                    font @font.merge(height: 80)
+                    layout_data {
+                      horizontal_alignment :fill
+                      vertical_alignment :center
+                      minimum_width 630
+                      minimum_height 100
+                      grab_excess_horizontal_space true
+                    }
+                  }
+                  label(:center) {
+                    background bind(self, :player_color, computed_by: "game.current_player.index")
+                    foreground :yellow
+                    text 'Get Ready!'
+                    font @font.merge(height: 36)
+                    layout_data {
+                      horizontal_alignment :fill
+                      vertical_alignment :center
+                      minimum_width 630
+                      minimum_height 100
+                      grab_excess_horizontal_space true
+                    }
+                  }
+                }
+                composite {
+                  grid_layout(1, false) {
+                    margin_width 0
+                    margin_height 10
+                  }
+                  layout_data {
+                    horizontal_alignment :fill
+                    grab_excess_horizontal_space true
+                  }
+                  background @background
+                  @continue_button = button(:center) {
+                    layout_data {
+                      horizontal_alignment :fill
+                      grab_excess_horizontal_space true
+                      height_hint 42
+                    }
+                    text 'Continue'
+                    background CONFIG[:button_background]
+                    font @font_button
+                    on_widget_selected {
+                      show_question
+                    }
+                    on_key_pressed {|key_event|
+                      show_question if key_event.keyCode == swt(:cr)
+                    }
+                  }
+                }
+              }
+              @game_over_announcement_container = composite {
+                grid_layout(1, false) {
+                  margin_width 0
+                  margin_top 0
+                  margin_bottom 5
+                  vertical_spacing 0
+                }
+                layout_data {
+                  exclude true
+                }
+                visible false
+                background bind(self, :winner_color, computed_by: "game.current_player.index")
                 label(:center) {
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :white
@@ -550,7 +586,7 @@ class MathBowling
         @next_player_announcement_container.swt_widget.getLayoutData.exclude = false
         @next_player_announcement_container.swt_widget.setVisible(true)
         @question_container.swt_widget.pack
-        @continue_button.swt_widget.setFocus
+        focus_default_widget
       else
         show_question
       end

@@ -80,6 +80,9 @@ class MathBowling
           game_menu_bar(app_view: self, game_view: game_view)
           on_event_hide {
             @game_options.reset
+            @player_count_view.body_root.show
+            @difficulty_view.body_root.hide
+            @math_operation_view.body_root.hide
             body_root.show
           }
         }
@@ -141,6 +144,12 @@ class MathBowling
 
     def focus_default_widget
       @player_count_view.focus_default_widget
+      Thread.new do      
+        sleep(0.25)
+        async_exec do
+          @player_count_view.focus_default_widget
+        end
+      end
     end
 
   end

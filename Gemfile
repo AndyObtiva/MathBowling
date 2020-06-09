@@ -11,7 +11,7 @@ gem 'array_include_methods', '1.0.1'
 gem 'puts_debuggerer', '~> 0.8.0'
 
 group :development do
-  gem 'glimmer-cs-gladiator', '~> 0.1.0'
+  gem 'glimmer-cs-gladiator'
 end
 
 group :test do
