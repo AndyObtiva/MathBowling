@@ -9,7 +9,7 @@ Math Bowling is an elementary level educational math game.
 - [4-Player Demo Video](https://github.com/AndyObtiva/MathBowling/raw/2.0.0/MathBowling-2.0.0-Demo-4Players.mp4) 
 - [2-Player Extended Demo Video](https://github.com/AndyObtiva/MathBowling/raw/2.0.0/MathBowling-2.0.0-Demo-2Players.mp4)
 
-Developed with [Glimmer](https://github.com/AndyObtiva/Glimmer) and [JRuby](https://www.jruby.org/).
+A Ruby desktop application developed with [Glimmer](https://github.com/AndyObtiva/Glimmer).
 
 # Game Rules
 
