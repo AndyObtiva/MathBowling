@@ -1,4 +1,4 @@
-# Math Bowling 2
+# <img alt="Math Bowling Logo" src="images/math-bowling-logo.png" height=85 /> Math Bowling 2
 
 ![Math Bowling Screenshot](Math-Bowling-Screenshot.png)
 
