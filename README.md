@@ -121,4 +121,10 @@ A Ruby desktop application developed with [Glimmer](https://github.com/AndyObtiv
 
 # License
 
-Copyright (c) 2019-2020 Andy Maleh. See LICENSE.txt for further details.
+[MIT](https://opensource.org/licenses/MIT)
+
+Copyright (c) 2019-2020 - Andy Maleh. See [LICENSE.txt](LICENSE.txt) for further details.
+
+--
+
+Built with [Glimmer](https://github.com/AndyObtiva/glimmer) (Ruby Desktop Development GUI Library).
