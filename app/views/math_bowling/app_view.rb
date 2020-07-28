@@ -70,7 +70,7 @@ class MathBowling
         }
         background_image File.expand_path(FILE_PATH_IMAGE_MATH_BOWLING, __FILE__)
         text CONFIG[:game_title]
-        on_event_show {
+        on_swt_show {
           focus_default_widget
         }
         on_shell_activated {
@@ -78,7 +78,7 @@ class MathBowling
         }
         @game_view = game_view { |game_view|
           game_menu_bar(app_view: self, game_view: game_view)
-          on_event_hide {
+          on_swt_hide {
             @game_options.reset
             @player_count_view.body_root.show
             @difficulty_view.body_root.hide

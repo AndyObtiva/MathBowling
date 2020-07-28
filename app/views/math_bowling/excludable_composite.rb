@@ -4,10 +4,10 @@ class MathBowling
 
     body {
       composite(swt_style) {
-        on_event_hide {
+        on_swt_hide {
           swt_widget.layoutData.exclude = true
         }
-        on_event_show {
+        on_swt_show {
           swt_widget.layoutData.exclude = false
         }
       }

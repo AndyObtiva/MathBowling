@@ -7,12 +7,12 @@ class MathBowling
     def initialize
       @frames = COUNT_FRAME.times.map {|index| MathBowling::Frame.new(index + 1)}
       next_frames = @frames.rotate(1)
-      next_frames.last = nil
+      next_frames[-1] = nil
       @frames.zip(next_frames).each do |frame, next_frame|
         frame.next_frame = next_frame
       end
       previous_frames = @frames.rotate(-1)
-      previous_frames.first = nil
+      previous_frames[0] = nil
       @frames.zip(previous_frames).each do |frame, previous_frame|
         frame.previous_frame = previous_frame
       end

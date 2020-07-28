@@ -47,7 +47,7 @@ class MathBowling
         @foreground = :black
         text CONFIG[:game_title]
         background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
-        on_event_show {
+        on_swt_show {
           @saved_timer = nil
           if @game.player_count == 1
             @game.start if @game.not_started?
@@ -58,7 +58,7 @@ class MathBowling
           body_root.pack
           focus_default_widget
         }
-        on_event_hide {
+        on_swt_hide {
           show_question # stops videos if still running
           @game.quit
         }
