@@ -92,6 +92,7 @@ class MathBowling
           text CONFIG[:game_title]
           font CONFIG[:title_font]
           foreground CONFIG[:title_foreground]
+          background :transparent
         }
         @action_container = composite {
           grid_layout 1, false
