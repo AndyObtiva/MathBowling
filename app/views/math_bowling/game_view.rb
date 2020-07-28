@@ -7,7 +7,10 @@ class MathBowling
     include Glimmer::UI::CustomShell
 
     FILE_IMAGE_BACKGROUND = "../../../../images/math-bowling-background.jpg"
+    
     TIMER_DURATION_DISABLED = 86400 # stop timer temporarily by setting to a very high value
+    TIMER_DURATION_ADD_SUBTRACT = 15
+    TIMER_DURATION_MULTIPLY_DIVIDE = 30
 
     attr_accessor :question_container, :can_change_names,
                   :answer_result_announcement, :answer_result_announcement_background,
@@ -509,7 +512,7 @@ class MathBowling
     end
 
     def timer_duration
-      %w[+ -].include?(@game.operator) || %w[+ -].include_all?(@game.math_operations) ? 10 : 30
+      %w[+ -].include?(@game.operator) || %w[+ -].include_all?(@game.math_operations) ? TIMER_DURATION_ADD_SUBTRACT : TIMER_DURATION_MULTIPLY_DIVIDE
     end
 
     def set_timer
