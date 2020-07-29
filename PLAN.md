@@ -93,7 +93,8 @@
 2.1.1 Release:
 
 1. Package for Windows
-1. Implement correct layout on Windows
+1. [DONE] Implement correct layout on Windows
+1. [DONE] Added comma next to name in player's turn announcement
 1. [DONE] Add menu-item mnemonics (for ALT shortcuts on Windows)
 1. [DONE] Change game rule for timer to 15 seconds for Add/Subtract operations
 

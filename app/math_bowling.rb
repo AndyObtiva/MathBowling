@@ -33,6 +33,11 @@ class MathBowling
       player2: DEFAULT[:charcoal],
     },
     font: DEFAULT[:font],
+    answer_result_announcement_font: {
+      height: 22,
+      style: :italic
+    },
+    button_font: { height: 28 },
     scoreboard_name_font: {
       height: 26
     },
@@ -46,15 +51,19 @@ class MathBowling
     title_foreground: rgb(138, 31, 41),
     game_title: 'Math Bowling 2',
     button_background: rgb(245, 245, 220),
+    label_button_minimum_height: 100,
   }
 
 
   if OS.windows?
     DEFAULT[:font][:height] = 14 
     CONFIG[:font][:height] = 14 
+    CONFIG[:answer_result_announcement_font][:height] = 14 
+    CONFIG[:button_font][:height] = 20 
     CONFIG[:scoreboard_name_font][:height] = 18 
-    CONFIG[:frame_font][:height] = 24 
+    CONFIG[:frame_font][:height] = 22 
     CONFIG[:scoreboard_total_font][:height] = 54 
+    CONFIG[:label_button_minimum_height] = 100 
   end
 
   def launch

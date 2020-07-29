@@ -19,8 +19,8 @@ class MathBowling
 
     before_body {
       @game = MathBowling::Game.new
-      @font = CONFIG[:font].merge(height: 36)
-      @font_button = CONFIG[:font].merge(height: 28)
+      @font = CONFIG[:frame_font]
+      @font_button = CONFIG[:button_font]
       @answer_result_announcement = "\n" # to take correct multi-line size
       @mutex = Mutex.new
       observe(@game, :roll_done) do |roll_done|
@@ -90,6 +90,7 @@ class MathBowling
                 horizontal_alignment :center
                 vertical_alignment :center
                 grab_excess_horizontal_space true
+                minimum_height(450) if OS.windows?
               }
               row_layout {
                 type :vertical
@@ -137,13 +138,13 @@ class MathBowling
                 background bind(self, 'answer_result_announcement_background')
                 text bind(self, 'answer_result_announcement')
                 visible bind(@game, 'answer_result')
-                font @font.merge height: 22, style: :italic
+                font CONFIG[:answer_result_announcement_font]
                 layout_data { exclude false }
               }
               label(:center) {
                 background CONFIG[:button_background]
                 text bind(@game, 'current_player.score_sheet.current_frame.remaining_pins') {|pins| "#{pins} PIN#{'S' if pins != 1} LEFT"}
-                font @font.merge height: 36
+                font CONFIG[:frame_font]
                 layout_data { exclude false }
               }
               @math_question_container = composite {
@@ -162,7 +163,7 @@ class MathBowling
                     horizontal_alignment :fill
                     vertical_alignment :center
                     minimum_width 630
-                    minimum_height 100
+                    minimum_height CONFIG[:label_button_minimum_height]
                     grab_excess_horizontal_space true
                   }
                 }
@@ -224,7 +225,7 @@ class MathBowling
                       horizontal_alignment :fill
                       vertical_alignment :center
                       minimum_width 630
-                      minimum_height 100
+                      minimum_height CONFIG[:label_button_minimum_height]
                       grab_excess_horizontal_space true
                     }
                   }
@@ -237,7 +238,7 @@ class MathBowling
                     horizontal_alignment :fill
                     vertical_alignment :center
                     minimum_width 630
-                    minimum_height 100
+                    minimum_height CONFIG[:label_button_minimum_height]
                     grab_excess_horizontal_space true
                   }
                   on_key_pressed {|key_event|
@@ -255,7 +256,7 @@ class MathBowling
                     horizontal_alignment :fill
                     vertical_alignment :center
                     minimum_width 630
-                    minimum_height 100
+                    minimum_height CONFIG[:label_button_minimum_height]
                     grab_excess_horizontal_space true
                     height_hint 42
                   }
@@ -295,13 +296,13 @@ class MathBowling
                   label(:center) {
                     background bind(self, :player_color, computed_by: "game.current_player.index")
                     foreground :yellow
-                    text bind(@game, 'current_player.name')
-                    font @font.merge(height: 80)
+                    text bind(@game, 'current_player.name') { |player_name| "#{player_name}," }
+                    font CONFIG[:scoreboard_total_font]
                     layout_data {
                       horizontal_alignment :fill
                       vertical_alignment :center
                       minimum_width 630
-                      minimum_height 100
+                      minimum_height CONFIG[:label_button_minimum_height]
                       grab_excess_horizontal_space true
                     }
                   }
@@ -309,12 +310,12 @@ class MathBowling
                     background bind(self, :player_color, computed_by: "game.current_player.index")
                     foreground :yellow
                     text 'Get Ready!'
-                    font @font.merge(height: 36)
+                    font CONFIG[:frame_font]
                     layout_data {
                       horizontal_alignment :fill
                       vertical_alignment :center
                       minimum_width 630
-                      minimum_height 100
+                      minimum_height CONFIG[:label_button_minimum_height]
                       grab_excess_horizontal_space true
                     }
                   }
@@ -363,12 +364,12 @@ class MathBowling
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :white
                   text 'GAME OVER'
-                  font @font.merge(height: 80)
+                  font CONFIG[:scoreboard_total_font]
                   layout_data {
                     horizontal_alignment :fill
                     vertical_alignment :center
                     minimum_width 630
-                    minimum_height 100
+                    minimum_height CONFIG[:label_button_minimum_height]
                     grab_excess_horizontal_space true
                   }
                 }
@@ -376,12 +377,12 @@ class MathBowling
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :yellow
                   text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "#{'Winner ' if @game.player_count.to_i > 1}Score: #{@game.winner_total_score}" }
-                  font height: 36
+                  font CONFIG[:frame_font]
                   layout_data {
                     horizontal_alignment :fill
                     vertical_alignment :center
                     minimum_width 630
-                    minimum_height 100
+                    minimum_height CONFIG[:label_button_minimum_height]
                     grab_excess_horizontal_space true
                   }
                 }
@@ -389,13 +390,13 @@ class MathBowling
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :yellow
                   text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "Winner#{'s' if @game.winners.size > 1}: #{@game.winners.map(&:name).join(" / ")}" }
-                  font height: 36
+                  font CONFIG[:frame_font]
                   visible bind(@game, :player_count, read_only: true) {|pc| pc.to_i > 1}
                   layout_data {
                     horizontal_alignment :fill
                     vertical_alignment :center
                     minimum_width 630
-                    minimum_height 100
+                    minimum_height CONFIG[:label_button_minimum_height]
                     grab_excess_horizontal_space true
                   }
                 }
@@ -403,7 +404,9 @@ class MathBowling
             }
           }
           composite {
-            fill_layout :horizontal
+            fill_layout(:horizontal) {
+              spacing 15
+            }
             layout_data :center, :center, true, true
             background @background
             @restart_button = button {
@@ -589,7 +592,7 @@ class MathBowling
         @answer_result_announcement_label.swt_widget.getLayoutData&.exclude = false
         @next_player_announcement_container.swt_widget.getLayoutData.exclude = false
         @next_player_announcement_container.swt_widget.setVisible(true)
-        @question_container.swt_widget.pack
+        OS.mac? ? @question_container.swt_widget.pack : body_root.pack
         focus_default_widget
       else
         show_question
