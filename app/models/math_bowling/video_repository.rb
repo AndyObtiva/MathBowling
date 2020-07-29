@@ -7,7 +7,7 @@ class MathBowling
     class << self
       def video_paths_by_answer_result_and_pin_state
         @video_paths_by_answer_result_and_pin_state ||= index_by_answer_result_and_pin_state do |answer_result, pin_state|
-          Dir.glob(File.join(APP_ROOT, 'videos', "bowling-#{answer_result.downcase}-#{pin_state}*")).to_a
+          Dir.glob(File.join(APP_ROOT, 'videos', "bowling-#{answer_result.downcase}-#{pin_state}*")).to_a.reject { |video_file| OS.windows? && video_file.include?('bowling-correct-full1.mp4') } # rejecting problematic video on Windows
         end
       end
   
