@@ -27,7 +27,7 @@ class MathBowling
             layout_data(BUTTON_HORIZONTAL_ALIGNMENT[difficulty], :center, true, true) {
               minimum_width 113.33
             }
-            text difficulty.to_s.titlecase
+            text "&#{difficulty.to_s.titlecase}"
             font CONFIG[:font]
             background CONFIG[:button_background]
             on_widget_selected {

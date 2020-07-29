@@ -36,6 +36,7 @@ class MathBowling
           @difficulty_view.body_root.show
           @math_operation_view.body_root.hide
           @action_container.swt_widget.pack
+          #body_root.swt_widget.pack_
           @difficulty_view.focus_default_widget
         end
       end
@@ -45,6 +46,7 @@ class MathBowling
           @difficulty_view.body_root.hide
           @math_operation_view.body_root.show
           @action_container.swt_widget.pack
+          #body_root.swt_widget.pack
           @math_operation_view.focus_default_widget
         end
       end
@@ -54,6 +56,7 @@ class MathBowling
           @difficulty_view.body_root.hide
           @math_operation_view.body_root.hide
           @action_container.swt_widget.pack
+          #body_root.swt_widget.pack
           self.hide
           @game_view.show(**@game_options.to_h)
         end
@@ -62,6 +65,8 @@ class MathBowling
 
     body {
       shell(:no_resize) {
+        minimum_size(510, 280) if OS.mac?
+        minimum_size(590, 350) if OS.windows?
         grid_layout {
           num_columns 1
           make_columns_equal_width true
@@ -101,13 +106,14 @@ class MathBowling
           @player_count_view = player_count_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude false
+              minimum_width OS.mac? ? 440 : 500
             }
             background :transparent
           }
           @difficulty_view = difficulty_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude true
-              minimum_width 440
+              minimum_width OS.mac? ? 440 : 500
             }
             visible false
             background :transparent
@@ -115,7 +121,7 @@ class MathBowling
           @math_operation_view = math_operation_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude true
-              minimum_width 440
+              minimum_width OS.mac? ? 440 : 500
             }
             visible false
             background :transparent
@@ -123,7 +129,7 @@ class MathBowling
         }
         button {
           layout_data :center, :center, true, true
-          text "Quit"
+          text "&Quit"
           font CONFIG[:font]
           background CONFIG[:button_background]
           visible bind(@game_options, :player_count) {|pc| !pc}

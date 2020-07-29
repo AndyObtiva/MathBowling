@@ -14,7 +14,9 @@ class MathBowling
 
     body {
       excludable_composite {
-        fill_layout :horizontal
+        fill_layout(:horizontal) {
+          spacing 15
+        }
         background :transparent
         @player_count_buttons = 4.times.map { |n|
           button {
