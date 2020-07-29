@@ -97,6 +97,7 @@
 1. [DONE] Added comma next to name in player's turn announcement
 1. [DONE] Add menu-item mnemonics (for ALT shortcuts on Windows)
 1. [DONE] Change game rule for timer to 15 seconds for Add/Subtract operations
+1. [DONE] Add a splash screen
 
 2.1.2 Release:
 
