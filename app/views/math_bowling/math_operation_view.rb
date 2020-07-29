@@ -22,6 +22,7 @@ class MathBowling
             layout_data(:center, :center, true, true) {
               width_hint math_operation == 'all' ? 200 : 50
               horizontal_span math_operation == 'all' ? 4 : 1
+              vertical_indent(5) if math_operation == 'all'
             }
             text (Game::MATH_OPERATION_TRANSLATION[math_operation]).titlecase
             font CONFIG[:font]
