@@ -43,7 +43,7 @@ class MathBowling
             foreground bind(game, "name_current_player.index") {|n|
               n == player_index ? :yellow : :white
             }
-            font CONFIG[:scoreboard_font].merge(height: 26)
+            font CONFIG[:scoreboard_name_font]
           }
         }
         ScoreSheet::COUNT_FRAME.times.map do |frame_index|
@@ -69,7 +69,7 @@ class MathBowling
             foreground bind(game, "name_current_player.index") {|n|
               n == player_index ? :yellow : :white
             }
-            font CONFIG[:scoreboard_font].merge(height: 80)
+            font CONFIG[:scoreboard_total_font]
           }
         }
       }

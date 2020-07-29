@@ -21,6 +21,7 @@ class MathBowling
     body {
       excludable_composite {
         grid_layout 3, true
+        background :transparent
         @difficulty_buttons = Game::DIFFICULTIES.map { |difficulty|
           button {
             layout_data(BUTTON_HORIZONTAL_ALIGNMENT[difficulty], :center, true, true) {

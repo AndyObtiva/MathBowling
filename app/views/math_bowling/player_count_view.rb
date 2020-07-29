@@ -15,6 +15,7 @@ class MathBowling
     body {
       excludable_composite {
         fill_layout :horizontal
+        background :transparent
         @player_count_buttons = 4.times.map { |n|
           button {
             text "&#{n+1} Player#{('s' unless n == 0)}"

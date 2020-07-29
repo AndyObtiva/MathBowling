@@ -33,7 +33,12 @@ class MathBowling
       player2: DEFAULT[:charcoal],
     },
     font: DEFAULT[:font],
-    scoreboard_font: {
+    scoreboard_name_font: {
+      height: 26
+    },
+    frame_font: { height: 36 },
+    scoreboard_total_font: {
+      height: 80
     },
     title_font: DEFAULT[:font].merge(
       height: 60,
@@ -42,6 +47,15 @@ class MathBowling
     game_title: 'Math Bowling 2',
     button_background: rgb(245, 245, 220),
   }
+
+
+  if OS.windows?
+    DEFAULT[:font][:height] = 14 
+    CONFIG[:font][:height] = 14 
+    CONFIG[:scoreboard_name_font][:height] = 18 
+    CONFIG[:frame_font][:height] = 24 
+    CONFIG[:scoreboard_total_font][:height] = 54 
+  end
 
   def launch
     app_view.open

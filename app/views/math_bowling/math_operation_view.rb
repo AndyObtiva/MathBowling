@@ -16,6 +16,7 @@ class MathBowling
     body {
       excludable_composite {
         grid_layout 4, true
+        background :transparent
         @math_operation_buttons = GameOptions::MATH_OPERATION_ATTRIBUTE_MAPPING.map { |math_operation, attribute|
           button {
             layout_data(:center, :center, true, true) {

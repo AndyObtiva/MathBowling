@@ -22,6 +22,7 @@ class MathBowling
       @font = CONFIG[:font].merge(height: 36)
       @font_button = CONFIG[:font].merge(height: 28)
       @answer_result_announcement = "\n" # to take correct multi-line size
+      @mutex = Mutex.new
       observe(@game, :roll_done) do |roll_done|
         if roll_done
           if @game.over?
@@ -375,7 +376,7 @@ class MathBowling
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :yellow
                   text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "#{'Winner ' if @game.player_count.to_i > 1}Score: #{@game.winner_total_score}" }
-                  font CONFIG[:scoreboard_font].merge(height: 36)
+                  font height: 36
                   layout_data {
                     horizontal_alignment :fill
                     vertical_alignment :center
@@ -388,7 +389,7 @@ class MathBowling
                   background bind(self, :winner_color, computed_by: "game.current_player.index")
                   foreground :yellow
                   text bind(self, 'game.status', computed_by: ["game.current_player" ,"game.current_player.score_sheet.current_frame"]) {|s| "Winner#{'s' if @game.winners.size > 1}: #{@game.winners.map(&:name).join(" / ")}" }
-                  font CONFIG[:scoreboard_font].merge(height: 36)
+                  font height: 36
                   visible bind(@game, :player_count, read_only: true) {|pc| pc.to_i > 1}
                   layout_data {
                     horizontal_alignment :fill
@@ -673,13 +674,15 @@ class MathBowling
     def focus_default_widget
       Thread.new do      
         sleep(0.25)
-        async_exec do
-          if @name_form_container&.swt_widget&.isVisible
-            focus_name_form
-          elsif @continue_button&.swt_widget&.isVisible
-            @continue_button.swt_widget.setFocus
-          else
-            @answer_text&.swt_widget&.setFocus
+        @mutex.synchronize do
+          async_exec do
+            if @name_form_container&.swt_widget&.isVisible
+              focus_name_form
+            elsif @continue_button&.swt_widget&.isVisible
+              @continue_button.swt_widget.setFocus
+            else
+              @answer_text&.swt_widget&.setFocus
+            end
           end
         end
       end

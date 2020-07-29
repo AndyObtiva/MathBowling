@@ -13,7 +13,7 @@ class MathBowling
     body {
       @background = player_index % 2 == 0 ? CONFIG[:colors][:player1] : CONFIG[:colors][:player2]
       @foreground = :white
-      @font = CONFIG[:scoreboard_font].merge(height: 36)
+      @font = CONFIG[:frame_font]
       composite {
         row_layout {
           type :vertical
