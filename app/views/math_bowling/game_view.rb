@@ -628,7 +628,7 @@ class MathBowling
         @game_over_announcement_container.swt_widget.setVisible(true)
         @game_over_announcement_container.swt_widget.getLayoutData&.exclude = false
       end
-      @question_container.swt_widget.pack
+      OS.mac? || @game.player_count > 1 ? @question_container.swt_widget.pack : body_root.pack
       if @game.in_progress?
         focus_default_widget
         if @saved_timer
