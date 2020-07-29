@@ -16,7 +16,7 @@ class MathBowling
             text "Change &Difficulty"
             Game::DIFFICULTIES.each do |difficulty|
               menu_item(:radio) {
-                text difficulty.to_s.titlecase
+                text "&#{difficulty.to_s.titlecase}"
                 selection bind(game_view, 'game.difficulty') {|d| d == difficulty}
                 on_widget_selected {
                   game_view.game.difficulty = difficulty
@@ -28,7 +28,7 @@ class MathBowling
             text "Change Math &Operation"
             Game::MATH_OPERATION_TRANSLATION.each do |math_operation, math_operation_translation|
               menu_item(:radio) {
-                text math_operation_translation.titlecase
+                text "&#{math_operation_translation.titlecase}"
                 selection bind(game_view, 'game.math_operation') {|op| op == math_operation}
                 on_widget_selected {
                   game_view.game.math_operation = math_operation

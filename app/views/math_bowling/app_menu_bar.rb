@@ -19,10 +19,10 @@ class MathBowling
                 text "&#{n+1} Player#{('s' unless n == 0)}"
                 Game::DIFFICULTIES.each { |difficulty|
                   menu {
-                    text difficulty.to_s.titlecase                    
+                    text "&#{difficulty.to_s.titlecase}"
                     Game::MATH_OPERATION_TRANSLATION.each { |math_operation, math_operation_translation|
                       menu_item {
-                        text math_operation_translation.titlecase
+                        text "&#{math_operation_translation.titlecase}"
                         on_widget_selected {
                           game_view.hide
                           app_view.hide

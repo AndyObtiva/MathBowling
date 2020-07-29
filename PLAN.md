@@ -94,7 +94,7 @@
 
 1. Package for Windows
 1. Implement correct layout on Windows
-1. Add button/label/menu-item mnemonics (for ALT shortcuts)
+1. [DONE] Add menu-item mnemonics (for ALT shortcuts on Windows)
 1. [DONE] Change game rule for timer to 15 seconds for Add/Subtract operations
 
 2.1.2 Release:
