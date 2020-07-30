@@ -2,7 +2,7 @@ require 'glimmer/rake_task'
 
 Glimmer::Package.javapackager_extra_args =
   # General Options
-  " -native #{ENV['NATIVE'] || ('dmg' if OS.mac?)}" +
+  " -native #{ENV['NATIVE'] || ('dmg' if OS.mac?) || ('msi' if OS.windows?)}" +
   " -name 'Math Bowling 2'" +
   " -title 'Math Bowling 2'" +
   " -Bicon='images/math-bowling-logo.png'" +
