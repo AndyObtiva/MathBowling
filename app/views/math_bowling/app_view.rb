@@ -67,6 +67,7 @@ class MathBowling
       shell(:no_resize) {
         minimum_size(510, 280) if OS.mac?
         minimum_size(590, 350) if OS.windows?
+        image APP_ICON if OS.windows?
         grid_layout {
           num_columns 1
           make_columns_equal_width true

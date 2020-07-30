@@ -68,6 +68,7 @@ class MathBowling
   }
 
   APP_ROOT = File.expand_path(File.join('..', '..'), __FILE__)
+  APP_ICON = File.join(APP_ROOT, 'package', 'windows', 'Math Bowling 2.ico')
 
   VERSION = File.read(File.expand_path('../../VERSION',__FILE__))
 

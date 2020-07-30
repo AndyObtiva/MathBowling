@@ -90,15 +90,18 @@
 1. [DONE] Fix timer
 1. [DONE] Fix issue with resuming from "change names" resumes at the wrong player
 
-2.1.1 Release:
+2.2.0 Release:
 
-1. Package for Windows
+1. [DONE] Package for Windows
 1. [DONE] Implement correct layout on Windows
 1. [DONE] Added comma next to name in player's turn announcement
 1. [DONE] Add menu-item mnemonics (for ALT shortcuts on Windows)
 1. [DONE] Change game rule for timer to 15 seconds for Add/Subtract operations
 1. [DONE] Add a splash screen
+1. [DONE] Fix issue with font
+1. [DONE] Add toolbar icon
+1. [DONE] Add Windows start menu icon
 
-2.1.2 Release:
+2.3.0 Release:
 
 1. Package for Linux

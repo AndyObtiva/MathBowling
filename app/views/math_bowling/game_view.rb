@@ -51,6 +51,7 @@ class MathBowling
         @foreground = :black
         text CONFIG[:game_title]
         background_image File.expand_path(FILE_IMAGE_BACKGROUND, __FILE__)
+        image APP_ICON if OS.windows?
         on_swt_show {
           @saved_timer = nil
           if @game.player_count == 1
