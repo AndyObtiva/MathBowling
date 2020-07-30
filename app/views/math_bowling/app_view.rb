@@ -107,14 +107,14 @@ class MathBowling
           @player_count_view = player_count_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude false
-              minimum_width OS.mac? ? 440 : 500
+              minimum_width 500
             }
             background :transparent
           }
           @difficulty_view = difficulty_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude true
-              minimum_width OS.mac? ? 440 : 500
+              minimum_width 500
             }
             visible false
             background :transparent
@@ -122,7 +122,7 @@ class MathBowling
           @math_operation_view = math_operation_view(game_options: @game_options) {
             layout_data(:center, :center, true, true) {
               exclude true
-              minimum_width OS.mac? ? 440 : 500
+              minimum_width 500
             }
             visible false
             background :transparent

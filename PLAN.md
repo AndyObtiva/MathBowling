@@ -90,7 +90,7 @@
 1. [DONE] Fix timer
 1. [DONE] Fix issue with resuming from "change names" resumes at the wrong player
 
-[DONE] 2.2.0 Release ([download](https://www.dropbox.com/s/9s4114w4sh12ftu/Math%20Bowling%202-2.2.0.msi?dl=1)):
+[DONE] 2.2.0 Release ([download for Mac](https://www.dropbox.com/s/m8u19d522n21l5j/Math%20Bowling%202-2.2.0.dmg?dl=1)) ([download for Windows](https://www.dropbox.com/s/9s4114w4sh12ftu/Math%20Bowling%202-2.2.0.msi?dl=1)):
 
 1. [DONE] Package for Windows
 1. [DONE] Implement correct layout on Windows

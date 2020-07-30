@@ -2,6 +2,12 @@
 
 # This binary must be run with glimmer command or passing -J-XstartOnFirstThread JRuby JVM option
 
-require_relative '../app/math_bowling'
+require_relative '../app/views/math_bowling/splash'
 
-MathBowling.new.launch
+Thread.new do
+  require_relative '../app/math_bowling'
+
+  MathBowling.new.launch
+end
+
+MathBowling::Splash.open
