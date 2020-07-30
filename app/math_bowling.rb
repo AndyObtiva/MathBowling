@@ -46,6 +46,7 @@ require 'bundler'
 Bundler.require
 
 require 'facets'
+require 'fileutils'
 
 $LOAD_PATH.unshift(File.expand_path('..', __FILE__))
 
@@ -57,7 +58,13 @@ class MathBowling
   include Glimmer
 
   sync_exec {
-    display.swt_display.loadFont(File.expand_path('../../fonts/AbadiMTCondensedExtraBold.ttf', __FILE__))
+    # Extracting font file first from packaged JAR file since SWT can only read extracted files
+    font_file = File.expand_path('../../fonts/AbadiMTCondensedExtraBold.ttf', __FILE__)
+    font_file_binary_content = File.binread(font_file)
+    FileUtils.mkdir_p('fonts') 
+    extracted_font_file = 'fonts/AbadiMTCondensedExtraBold.ttf'
+    File.binwrite(extracted_font_file, font_file_binary_content)
+    display.swt_display.loadFont(extracted_font_file)
   }
 
   APP_ROOT = File.expand_path(File.join('..', '..'), __FILE__)
