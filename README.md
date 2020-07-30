@@ -4,7 +4,9 @@
 
 Math Bowling is an elementary level educational math game.
 
-<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Logo" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.1.0 for Mac](https://www.dropbox.com/s/3w0ld9zptkiknkv/Math%20Bowling%202-2.1.0.dmg?dl=1)</span>
+<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Download for Mac" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.1.0 for Mac](https://www.dropbox.com/s/3w0ld9zptkiknkv/Math%20Bowling%202-2.1.0.dmg?dl=1)</span>
+
+<span style="font-size: 1.9em; position: relative; top: 5px">[<img alt="Math Bowling Download for Windows" src="images/math-bowling-logo.png" width="40" />Download Math Bowling 2.2.0 for Windows](https://www.dropbox.com/s/9s4114w4sh12ftu/Math%20Bowling%202-2.2.0.msi?dl=0)</span>
 
 ## Demo Videos
 
